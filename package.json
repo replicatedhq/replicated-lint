@@ -1,0 +1,61 @@
+{
+    "name": "replicated-lint",
+    "author": "Replicated, Inc.",
+    "version": "0.1.0",
+    "engines": {
+        "node": ">=4.3.2"
+    },
+    "license": "MIT",
+    "repository": "https://github.com/replicatedhq/replicated-lint.git",
+    "bugs": {
+        "url": "https://github.com/replicatedhq/replicated-lint/issues"
+    },
+    "description": "Yaml Linting Tools for Replicated yaml",
+    "keywords": [
+        "yaml",
+        "rules",
+        "lint",
+        "replicated",
+        "studio"
+    ],
+    "main": "dist/index.js",
+    "typings": "dist/index",
+    "files": [
+        "dist/"
+    ],
+    "scripts": {
+        "prepublish": "rm -rf ./dist && tslint --project ./tsconfig.json && tsc -p .",
+        "test": "rm -rf ./dist && tslint --project ./tsconfig.json && tsc -p . && mocha ./dist/test/*.js",
+        "cover": "rm -rf ./dist && tslint --project ./tsconfig.json && tsc -p . && istanbul cover _mocha -- ./dist/test/*.js",
+        "cover-xml": "rm -rf ./dist && tslint --project ./tsconfig.json && tsc -p . && istanbul cover _mocha -- -R mocha-junit-reporter ./dist/test/*.js",
+        "mintest": "tslint --project ./tsconfig.json && mocha --recursive -R 'min'  -r ts-node/register src/**/*.ts",
+        "tdd": "./tdd",
+        "report-coverage": "codeclimate-test-reporter < ./coverage/lcov.info",
+        "publish-if-version-changed": "publish"
+    },
+    "devDependencies": {
+        "@types/chai": "^3.4.34",
+        "@types/lodash": "^4.14.52",
+        "@types/node": "^7.0.0",
+        "chai": "^3.5.0",
+        "codeclimate-test-reporter": "^0.4.1",
+        "coveralls": "^2.13.0",
+        "istanbul": "^0.4.5",
+        "mocha": "^3.2.0",
+        "mocha-junit-reporter": "^1.13.0",
+        "publish": "^0.6.0",
+        "ts-node": "^3.0.6",
+        "tslint": "^4.3.1",
+        "typemoq": "^1.4.1",
+        "typescript": "^2.2.2"
+    },
+    "dependencies": {
+        "@types/js-yaml": "^3.5.31",
+        "gaze-run-interrupt": "^1.0.1",
+        "js-yaml": "^3.8.4",
+        "line-column": "^1.0.2",
+        "lodash": "^4.17.4",
+        "ruler": "^1.0.0",
+        "yaml-ast-parser": "^0.0.33"
+    }
+}

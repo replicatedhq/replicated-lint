@@ -1,6 +1,6 @@
 # replicated-lint
 
-Yaml Linting Tools for Replciated yaml
+Yaml Linting Tools for Replicated yaml
 
 ## Usage
 

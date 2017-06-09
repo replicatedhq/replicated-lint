@@ -1452,10 +1452,6 @@ pinkie@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
 
-pluck@0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/pluck/-/pluck-0.0.3.tgz#cfb6c9cebc3a5eb0df3a2367af768cc5fd86b47b"
-
 postinstall-build@^2.1.3:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/postinstall-build/-/postinstall-build-2.1.3.tgz#9d1886ab2949619f4c206afbe1aea95debe45c94"
@@ -1695,12 +1691,6 @@ rimraf@2, rimraf@^2.5.2, rimraf@~2.5.4:
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.5.4.tgz#96800093cbf1a0c86bd95b4625467535c29dfa04"
   dependencies:
     glob "^7.0.5"
-
-ruler@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/ruler/-/ruler-1.0.0.tgz#7aa30b2e3aacfe24190cab5c8ac967c96471225f"
-  dependencies:
-    pluck "0.0.3"
 
 semver-diff@^2.0.0:
   version "2.1.0"

@@ -5,10 +5,7 @@ exports.apiVersion = {
     name: "ReplicatedAPIVersion",
     type: "error",
     message: "replicated_api_version must be present",
-    test: new lint_1.RulerPredicate({
-        path: "replicated_api_version",
-        comparator: "exists",
-    }),
+    test: new lint_1.Exists("replicated_api_version"),
 };
 exports.all = [
     exports.apiVersion,

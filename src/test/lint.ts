@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { RulerPredicate, lint, lintMultidoc } from "../lint";
+import { lint, lintMultidoc, Neq } from "../lint";
 
 describe("lint", () => {
   describe("Passing valid yaml", () => {
@@ -136,11 +136,7 @@ describe("lint with rules", () => {
 foo:
   bar: baz
       `, [{
-        test: new RulerPredicate({
-          comparator: "not",
-          path: "foo.bar",
-          value: "baz",
-        }),
+        test: new Neq("foo.bar", "baz"),
         type: "error",
         name: "foo-dot-bar-not-baz",
         message: "foo.bar can't be baz!",
@@ -170,11 +166,7 @@ foo:
 foo:
   bar: boz
       `, [{
-          test: new RulerPredicate({
-            comparator: "not",
-            path: "foo.bar",
-            value: "baz",
-          }),
+          test: new Neq("foo.bar", "baz"),
           type: "error",
           name: "foo-dot-bar-not-baz",
           message: "foo.bar can't be baz!",

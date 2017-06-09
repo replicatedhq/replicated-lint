@@ -1,6 +1,5 @@
 import * as yaml from "js-yaml";
 import * as _ from "lodash";
-import * as ruler from "ruler";
 import * as ast from "yaml-ast-parser";
 import * as lineColumn from "line-column";
 import { YAMLNode } from "yaml-ast-parser";
@@ -42,22 +41,31 @@ export interface Predicate<T> {
   test(root: T): RuleMatched;
 }
 
-export class RulerPredicate implements Predicate<any> {
+export class Neq implements Predicate<any> {
 
-  constructor(private readonly matcher: Matcher) {
+  constructor(private readonly path: string,
+              private readonly value: string) {
   }
 
   public test(object: any): RuleMatched {
-    const matched = ruler(this.matcher).test(object);
-    const paths = [this.matcher.path];
-    return { matched, paths };
+    return {
+      matched: _.get(object, this.path) === this.value,
+      paths: [this.path],
+    };
   }
 }
 
-export interface Matcher {
-  comparator: string;
-  path: string;
-  value?: any;
+export class Exists implements Predicate<any> {
+
+  constructor(private readonly path: string) {
+  }
+
+  public test(object: any): RuleMatched {
+    return {
+      matched: !_.get(object, this.path),
+      paths: [this.path],
+    };
+  }
 }
 
 export interface Range {

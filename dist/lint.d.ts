@@ -24,15 +24,16 @@ export interface RuleMatched {
 export interface Predicate<T> {
     test(root: T): RuleMatched;
 }
-export declare class RulerPredicate implements Predicate<any> {
-    private readonly matcher;
-    constructor(matcher: Matcher);
+export declare class Neq implements Predicate<any> {
+    private readonly path;
+    private readonly value;
+    constructor(path: string, value: string);
     test(object: any): RuleMatched;
 }
-export interface Matcher {
-    comparator: string;
-    path: string;
-    value?: any;
+export declare class Exists implements Predicate<any> {
+    private readonly path;
+    constructor(path: string);
+    test(object: any): RuleMatched;
 }
 export interface Range {
     start: Position;

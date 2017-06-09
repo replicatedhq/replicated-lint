@@ -2,22 +2,36 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var yaml = require("js-yaml");
 var _ = require("lodash");
-var ruler = require("ruler");
 var ast = require("yaml-ast-parser");
 var lineColumn = require("line-column");
 var ast_1 = require("./ast");
-var RulerPredicate = (function () {
-    function RulerPredicate(matcher) {
-        this.matcher = matcher;
+var Neq = (function () {
+    function Neq(path, value) {
+        this.path = path;
+        this.value = value;
     }
-    RulerPredicate.prototype.test = function (object) {
-        var matched = ruler(this.matcher).test(object);
-        var paths = [this.matcher.path];
-        return { matched: matched, paths: paths };
+    Neq.prototype.test = function (object) {
+        return {
+            matched: _.get(object, this.path) === this.value,
+            paths: [this.path],
+        };
     };
-    return RulerPredicate;
+    return Neq;
 }());
-exports.RulerPredicate = RulerPredicate;
+exports.Neq = Neq;
+var Exists = (function () {
+    function Exists(path) {
+        this.path = path;
+    }
+    Exists.prototype.test = function (object) {
+        return {
+            matched: !_.get(object, this.path),
+            paths: [this.path],
+        };
+    };
+    return Exists;
+}());
+exports.Exists = Exists;
 var DOC_SEPARATOR_LENGTH = 3;
 function lintMultidoc(inYaml, rules) {
     var docs = inYaml.split("---").slice(1);

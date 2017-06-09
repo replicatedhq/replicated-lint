@@ -12,17 +12,25 @@ function findNodes(root, path) {
 exports.findNodes = findNodes;
 function nodePosition(node, path, lineColumnFinder, offset) {
     offset = offset || 0;
+    var start = lineColumnFinder.fromIndex(node.startPosition + offset);
+    if (!start) {
+        console.log("start" + path);
+    }
+    var end = lineColumnFinder.fromIndex(node.endPosition + offset) || {
+        line: 0,
+        col: 0,
+    };
     return {
         path: path,
         start: {
             position: node.startPosition,
-            line: lineColumnFinder.fromIndex(node.startPosition + offset).line - 1,
-            column: lineColumnFinder.fromIndex(node.startPosition + offset).col - 1,
+            line: start.line - 1,
+            column: start.col - 1,
         },
         end: {
             position: node.endPosition,
-            line: lineColumnFinder.fromIndex(node.endPosition + offset).line - 1,
-            column: lineColumnFinder.fromIndex(node.endPosition + offset).col - 1,
+            line: end.line - 1,
+            column: end.col - 1,
         },
     };
 }
@@ -32,9 +40,6 @@ function astPosition(root, path, lineColumnFinder, offset) {
         return [];
     }
     var nodes = findNodes(root, path);
-    if (_.isEmpty(nodes)) {
-        return [];
-    }
     return _.map(nodes, function (n) { return nodePosition(n, path, lineColumnFinder, offset); });
 }
 exports.astPosition = astPosition;

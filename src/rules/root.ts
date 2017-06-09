@@ -1,13 +1,10 @@
-import { RulerPredicate, YAMLRule } from "../lint";
+import { Exists, YAMLRule } from "../lint";
 
 export const apiVersion: YAMLRule = {
   name: "ReplicatedAPIVersion",
   type: "error",
   message: "replicated_api_version must be present",
-  test: new RulerPredicate({
-    path: "replicated_api_version",
-    comparator: "exists",
-  }),
+  test: new Exists("replicated_api_version"),
 };
 
 export const all: YAMLRule[] = [

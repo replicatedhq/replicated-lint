@@ -20,19 +20,28 @@ export function findNodes(root: YAMLNode, path: string): YAMLNode[] {
   return findNodeRec([root], tokenize(path));
 }
 
-export function nodePosition(node: YAMLNode, path, lineColumnFinder: any, offset?: number) {
+export function nodePosition(node: YAMLNode, path, lineColumnFinder: any, offset?: number): Range {
   offset = offset || 0;
+  const start = lineColumnFinder.fromIndex(node.startPosition + offset);
+  if (!start) {
+    console.log("start" + path);
+  }
+
+  const end = lineColumnFinder.fromIndex(node.endPosition + offset) || {
+      line: 0,
+      col: 0,
+    };
   return {
     path,
     start: {
       position: node.startPosition,
-      line: lineColumnFinder.fromIndex(node.startPosition + offset!).line - 1, // sigh
-      column: lineColumnFinder.fromIndex(node.startPosition + offset!).col - 1,
+      line: start.line - 1, // sigh
+      column: start.col - 1,
     },
     end: {
       position: node.endPosition,
-      line: lineColumnFinder.fromIndex(node.endPosition + offset!).line - 1,
-      column: lineColumnFinder.fromIndex(node.endPosition + offset!).col - 1,
+      line: end.line - 1,
+      column: end.col - 1,
     },
   };
 }
@@ -42,7 +51,11 @@ export function nodePosition(node: YAMLNode, path, lineColumnFinder: any, offset
  * from `line-column` package to convert positions to 0-indexed line/column values
  */
 export function astPosition(root: YAMLNode, path: string, lineColumnFinder: any, offset?: number): Range[] {
+  if (_.isEmpty(path)) {
+    return [];
+  }
   const nodes = findNodes(root, path);
+
   return _.map(nodes, (n: YAMLNode) => nodePosition(n, path, lineColumnFinder, offset));
 }
 

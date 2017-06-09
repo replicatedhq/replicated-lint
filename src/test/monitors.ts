@@ -26,6 +26,67 @@ monitors:
     )).to.be.empty;
   });
 
+  it("passes if no cpuacct monitors are present", () => {
+
+    let inYaml = `
+# GetELK
+
+---
+# kind: replicated
+replicated_api_version: 2.8.0
+name: GetELK
+components:
+  - name: Logstash
+    containers:
+      - image_name: quay.io/getelk/logstash
+`;
+
+    expect(lint(inYaml, [cpuMonitorContainerExists],
+    )).to.be.empty;
+  });
+
+  it("errors if monitors exists but components is empty", () => {
+
+    let inYaml = `
+# GetELK
+
+---
+# kind: replicated
+replicated_api_version: 2.8.0
+name: GetELK
+monitors:
+  cpuacct: 
+    - "Logstash,quay.io/getelk/logstash:latest"
+`;
+
+    expect(lint(inYaml, [cpuMonitorContainerExists],
+    )).to.deep.equal([
+      {
+        "message": "monitors.cpuacct entries must have matching component+container",
+        "type": "error",
+        "positions": [
+          {
+            "path": "monitors.cpuacct",
+            "end": {
+              "column": -1,
+              "line": -1,
+              "position": 147,
+            },
+            "start": {
+              "column": 2,
+              "line": 8,
+              "position": 89,
+            },
+          },
+        ],
+        "received": [
+          "Logstash,quay.io/getelk/logstash:latest",
+        ],
+        "rule": "CPUMonitorContainerExists",
+      },
+    ]);
+  });
+
   it("errors if cpuacct missing from components", () => {
 
     let inYaml = `

@@ -3,7 +3,20 @@ import { Predicate, RuleMatched, YAMLRule } from "../lint";
 
 class Tester implements Predicate<any> {
   public test(root: any): RuleMatched {
+    if (!_.has(root, "monitors.cpuacct")) {
+      return { matched: false };
+    }
+
+    if (_.isEmpty(_.get(root, "components"))) {
+      return { matched: true, paths: ["monitors.cpuacct"] };
+    }
+
     const cpuaccts: string[] = root.monitors.cpuacct;
+
+    if (_.isEmpty(cpuaccts)) {
+      return { matched: false };
+    }
+
     const violations = _.filter(_.map(cpuaccts, (cpuacct, index) => {
       const [name, image] = cpuacct.split(",");
 

@@ -5,7 +5,16 @@ var Tester = (function () {
     function Tester() {
     }
     Tester.prototype.test = function (root) {
+        if (!_.has(root, "monitors.cpuacct")) {
+            return { matched: false };
+        }
+        if (_.isEmpty(_.get(root, "components"))) {
+            return { matched: true, paths: ["monitors.cpuacct"] };
+        }
         var cpuaccts = root.monitors.cpuacct;
+        if (_.isEmpty(cpuaccts)) {
+            return { matched: false };
+        }
         var violations = _.filter(_.map(cpuaccts, function (cpuacct, index) {
             var _a = cpuacct.split(","), name = _a[0], image = _a[1];
             var componentIndex = _.findIndex(root.components, { name: name });

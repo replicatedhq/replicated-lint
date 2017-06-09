@@ -28,7 +28,13 @@ function nodePosition(node, path, lineColumnFinder, offset) {
 }
 exports.nodePosition = nodePosition;
 function astPosition(root, path, lineColumnFinder, offset) {
+    if (_.isEmpty(path)) {
+        return [];
+    }
     var nodes = findNodes(root, path);
+    if (_.isEmpty(nodes)) {
+        return [];
+    }
     return _.map(nodes, function (n) { return nodePosition(n, path, lineColumnFinder, offset); });
 }
 exports.astPosition = astPosition;

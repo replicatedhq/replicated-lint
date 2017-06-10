@@ -4,7 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/replicatedhq/replicated-lint/badges/gpa.svg)](https://codeclimate.com/github/replicatedhq/replicated-lint) 
 [![Test Coverage](https://codeclimate.com/github/replicatedhq/replicated-lint/badges/coverage.svg)](https://codeclimate.com/github/replicatedhq/replicated-lint) 
 
-Yaml Linting Tools for Replicated yaml
+YAML linting tools for Replicated applications.
 
 Under heavy development.
 

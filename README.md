@@ -6,10 +6,13 @@
 
 YAML linting tools for Replicated applications.
 
-Under heavy development.
+This feature is in *alpha*, APIs and behaviors are subject to change without notice.
 
 ## Usage
 
+```
+npm install --save replicated-lint
+```
 
 ```typescript
 import * as linter from "replicated-lint";

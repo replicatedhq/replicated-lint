@@ -3,10 +3,10 @@ import { expect } from "chai";
 import { lint } from "../lint";
 import { cpuMonitorContainerExists } from "../rules/monitors";
 
-describe("cpuMonitorContainerExists", () => {
+describe("cpu-monitor-container-exists", () => {
   it("passes if cpuacct matches a component container", () => {
 
-    let inYaml = `
+    const inYaml = `
 # GetELK
 
 ---
@@ -28,7 +28,7 @@ monitors:
 
   it("passes if no cpuacct monitors are present", () => {
 
-    let inYaml = `
+    const inYaml = `
 # GetELK
 
 ---
@@ -47,7 +47,7 @@ components:
 
   it("errors if monitors exists but components is empty", () => {
 
-    let inYaml = `
+    const inYaml = `
 # GetELK
 
 ---
@@ -82,14 +82,14 @@ monitors:
         "received": [
           "Logstash,quay.io/getelk/logstash:latest",
         ],
-        "rule": "CPUMonitorContainerExists",
+        "rule": "cpu-monitor-container-exists",
       },
     ]);
   });
 
   it("errors if cpuacct missing from components", () => {
 
-    let inYaml = `
+    const inYaml = `
 # GetELK
 
 ---
@@ -137,14 +137,14 @@ monitors:
           },
         ],
         "received": "Logstash,quay.io/getelk/logstash:latest",
-        "rule": "CPUMonitorContainerExists",
+        "rule": "cpu-monitor-container-exists",
       },
     ]);
   });
 
   it("errors if cpuacct missing from component containers ", () => {
 
-    let inYaml = `
+    const inYaml = `
 # GetELK
 
 ---
@@ -194,7 +194,7 @@ monitors:
           },
         ],
         "received": "Logstash,quay.io/getelk/logstash",
-        "rule": "CPUMonitorContainerExists",
+        "rule": "cpu-monitor-container-exists",
       },
     ]);
   });

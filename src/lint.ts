@@ -165,7 +165,7 @@ export function lint(inYaml: string, rules?: YAMLRule[], lineColumnFinder?: any,
 function loadYamlError(err: any, inYaml: string, lineColumnFinder: any, offset: any): RuleTrigger {
   return {
     type: "error",
-    rule: "validYaml",
+    rule: "valid-yaml",
     received: inYaml,
     positions: [
       {
@@ -183,7 +183,7 @@ function loadYamlError(err: any, inYaml: string, lineColumnFinder: any, offset: 
 function noDocError(inYaml: string): RuleTrigger {
   return {
     type: "warn",
-    rule: "notEmpty",
+    rule: "not-empty",
     received: inYaml,
     message: "No document provided",
   };

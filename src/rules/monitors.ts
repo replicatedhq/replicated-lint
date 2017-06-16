@@ -47,7 +47,7 @@ class Tester implements Predicate<any> {
 }
 
 export const cpuMonitorContainerExists: YAMLRule = {
-  name: "CPUMonitorContainerExists",
+  name: "cpu-monitor-container-exists",
   type: "error",
   message: "monitors.cpuacct entries must have matching component+container",
   test: new Tester(),

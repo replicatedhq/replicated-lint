@@ -1,4 +1,4 @@
-dist/test/*
+dist/
 test-results.xml
 
 *.DS_Store

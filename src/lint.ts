@@ -4,11 +4,12 @@ import * as ast from "yaml-ast-parser";
 import * as lineColumn from "line-column";
 import { YAMLNode } from "yaml-ast-parser";
 import { astPosition } from "./ast";
+import { defaultRegistry, Registry } from "./engine";
 
 export type RuleType =
   "error" |
   "warn" |
-  "optimization";
+  "info";
 
 export interface LintedDoc {
   index: number;
@@ -25,47 +26,32 @@ export interface RuleTrigger {
   err?: Error;
 }
 
+export interface Example {
+  yaml: string;
+  description: string;
+}
+
+export interface Examples {
+  right: Example[];
+  wrong: Example[];
+}
+
 export interface YAMLRule {
-  test: Predicate<any>;
+  test: any;
   type: RuleType;
   name: string;
   message: string;
+  links?: string[];
+  examples?: Examples;
 }
 
-export interface RuleMatched {
+export interface RuleMatchedAt {
   matched: boolean;
   paths?: string[];
 }
 
 export interface Predicate<T> {
-  test(root: T): RuleMatched;
-}
-
-export class Neq implements Predicate<any> {
-
-  constructor(private readonly path: string,
-              private readonly value: string) {
-  }
-
-  public test(object: any): RuleMatched {
-    return {
-      matched: _.get(object, this.path) === this.value,
-      paths: [this.path],
-    };
-  }
-}
-
-export class Exists implements Predicate<any> {
-
-  constructor(private readonly path: string) {
-  }
-
-  public test(object: any): RuleMatched {
-    return {
-      matched: !_.get(object, this.path),
-      paths: [this.path],
-    };
-  }
+  test(root: T): RuleMatchedAt;
 }
 
 export interface Range {
@@ -85,7 +71,7 @@ const DOC_SEPARATOR_LENGTH = 3;
 /**
  * uses a hack to split on yaml docs. Avoid using if posible
  */
-export function lintMultidoc(inYaml: string, rules?: YAMLRule[]): LintedDoc[] {
+export function lintMultidoc(inYaml: string, rules?: YAMLRule[], registry?: Registry): LintedDoc[] {
   let docs = inYaml.split(`---`).slice(1);
 
   let offset = inYaml.indexOf(`---`) + 3;
@@ -93,7 +79,7 @@ export function lintMultidoc(inYaml: string, rules?: YAMLRule[]): LintedDoc[] {
   const lineColumnFinder = lineColumn(inYaml);
 
   return _.map(docs, (doc, index) => {
-    const vetted = lint(doc, rules, lineColumnFinder, offset);
+    const vetted = lint(doc, rules, registry, lineColumnFinder, offset);
     offset += doc.length + DOC_SEPARATOR_LENGTH;
     return ({
       index,
@@ -109,9 +95,10 @@ export function lintMultidoc(inYaml: string, rules?: YAMLRule[]): LintedDoc[] {
  * @param rules            set of rules to apply
  * @returns RuleTrigger[]  will be empty if linting passes
  */
-export function lint(inYaml: string, rules?: YAMLRule[], lineColumnFinder?: any, positionOffset?: number): RuleTrigger[] {
+export function lint(inYaml: string, rules?: YAMLRule[], maybeRegistry?: Registry, maybeLineColumnFinder?: any, positionOffset?: number): RuleTrigger[] {
   const offset: number = positionOffset || 0;
-  lineColumnFinder = lineColumnFinder || lineColumn(inYaml);
+  const registry: Registry = maybeRegistry || defaultRegistry;
+  const lineColumnFinder: any = maybeLineColumnFinder || lineColumn(inYaml);
 
   if (!inYaml) {
     return [noDocError(inYaml)];
@@ -136,7 +123,16 @@ export function lint(inYaml: string, rules?: YAMLRule[], lineColumnFinder?: any,
   const ruleTriggers: RuleTrigger[] = [];
 
   _.forEach(rules!, (rule: YAMLRule) => {
-    const result = rule.test.test(root);
+
+    let result: RuleMatchedAt = { matched: false };
+    const compiled = registry.compile(rule.test);
+    try {
+      result = compiled.test(root);
+    } catch (err) {
+      console.log(`error testing rule ${rule.type}:${rule.name}`, err);
+      // ignore errors for now
+    }
+
     if (result.matched) {
       let positions = _.flatMap(result.paths!,
         path => astPosition(yamlAST, path, lineColumnFinder, offset),
@@ -165,7 +161,7 @@ export function lint(inYaml: string, rules?: YAMLRule[], lineColumnFinder?: any,
 function loadYamlError(err: any, inYaml: string, lineColumnFinder: any, offset: any): RuleTrigger {
   return {
     type: "error",
-    rule: "validYaml",
+    rule: "mesg-yaml-valid",
     received: inYaml,
     positions: [
       {
@@ -183,7 +179,7 @@ function loadYamlError(err: any, inYaml: string, lineColumnFinder: any, offset: 
 function noDocError(inYaml: string): RuleTrigger {
   return {
     type: "warn",
-    rule: "notEmpty",
+    rule: "mesg-yaml-not-empty",
     received: inYaml,
     message: "No document provided",
   };

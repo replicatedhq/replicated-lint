@@ -1,0 +1,79 @@
+import { YAMLRule } from "../lint";
+
+export const componentClusterCount: YAMLRule = {
+  name: "prop-component-cluster-count",
+  type: "info",
+  message: "If you set min and max of a cluster_host_count to 1, then you will not be able to have multiple of that container anywhere in the cluster.",
+  test: {
+    type: "AnyOf",
+    path: "components",
+    pred: {
+      type: "And",
+      preds: [
+        { type: "Truthy", path: "cluster" },
+        { type: "Exists", path: "cluster_host_count" },
+        { type: "Eq", path: "cluster_host_count.min", value: 1 },
+        { type: "Eq", path: "cluster_host_count.max", value: 1 },
+      ],
+    },
+  },
+  examples: {
+    wrong: [{
+      description: "cluster_host_count.min and cluster_host_count.max are both set to 1",
+      yaml: `
+---
+components:
+- name: DB
+  cluster: true
+  tags:
+  - db
+  cluster_host_count:
+    min: 1
+    max: 1
+  containers:
+  - source: public
+    image_name: redis
+    version: latest
+      `,
+    }],
+    right: [
+      {
+        description: "cluster_host_count.min and cluster_host_count.max is a range",
+        yaml: `
+---
+components:
+- name: DB
+  cluster: true
+  tags:
+  - db
+  cluster_host_count:
+    min: 1
+    max: 3
+  containers:
+  - source: public
+    image_name: redis
+    version: latest
+      `,
+      },
+      {
+        description: "cluster_host_count.min and cluster_host_count.max are unset",
+        yaml: `
+---
+components:
+- name: DB
+  cluster: true
+  tags:
+  - db
+  containers:
+  - source: public
+    image_name: redis
+    version: latest
+      `,
+      },
+    ],
+  },
+};
+
+export const all: YAMLRule[] = [
+  componentClusterCount,
+];

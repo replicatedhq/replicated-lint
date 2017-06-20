@@ -1,3 +1,7 @@
 0.1.0 / 2017-06-09
     * Initial release
+0.3.0 / 2017-06-17
+    * Implementation of ruleset, accept raw json and compile to rule predicates
+0.3.1 / 2017-06-17
+    * Fix bug in testproc rule that caused it to fire when `test_proc` was not present on the config item/group
 

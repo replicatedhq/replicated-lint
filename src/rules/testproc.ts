@@ -124,15 +124,27 @@ export const testProcValidCommand: YAMLRule = {
           type: "AnyOf",
           path: "items",
           pred: {
-            type: "NotMatch",
-            path: "test_proc.command",
-            pattern: "^(regex_match|json_validate|ldap_auth|file_exists|smtp_auth|certificate_verify|aws_auth|github_app_auth|resolve_host)$",
+            type: "And",
+            preds: [
+              { type: "Truthy", path: "test_proc"},
+              {
+                type: "NotMatch",
+                path: "test_proc.command",
+                pattern: "^(regex_match|json_validate|ldap_auth|file_exists|smtp_auth|certificate_verify|aws_auth|github_app_auth|resolve_host)$",
+              },
+            ],
           },
         },
         {
-          type: "NotMatch",
-          path: "test_proc.command",
-          pattern: "^(regex_match|json_validate|ldap_auth|file_exists|smtp_auth|certificate_verify|aws_auth|github_app_auth|resolve_host)$",
+          type: "And",
+          preds: [
+            { type: "Truthy", path: "test_proc"},
+            {
+              type: "NotMatch",
+              path: "test_proc.command",
+              pattern: "^(regex_match|json_validate|ldap_auth|file_exists|smtp_auth|certificate_verify|aws_auth|github_app_auth|resolve_host)$",
+            },
+          ],
         },
       ],
     },
@@ -188,7 +200,36 @@ config:
       display_name: Is docs.replicated.com reachable?
       command: resolve_host
       args:
-      - docs.replicated.com
+      - docs.replicated.com`,
+      },
+      {
+        description: "item's `test_proc.command` is set to `resolve_host`",
+        yaml: `
+---
+config:
+- name: hostname
+  title: Hostname
+  description: Ensure this domain name is routable on your network.
+  items:
+  - name: hostname
+    title: Hostname
+    value: '{{repl ConsoleSetting "tls.hostname"}}'
+    type: text
+    test_proc:
+      display_name: Check DNS
+      command: resolve_host
+      `,
+      },
+      {
+        description: "no test procs specified",
+        yaml: `
+---
+config:
+- name: configs
+  title: Configuration
+  items:
+  - name: docs_host
+    type: text
       `,
       },
     ],

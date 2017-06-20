@@ -344,6 +344,67 @@ export class ConfigOptionIsCircular implements Predicate<ConfigOption> {
   }
 }
 
+interface InvalidMontior {
+  index: number;
+  path: string;
+}
+
+class MonitorContainerMissing implements Predicate<any> {
+  public static fromJson(self: any): MonitorContainerMissing {
+    return new MonitorContainerMissing(self.monitorPath);
+  }
+  constructor(private readonly monitorPath: string) {
+  }
+
+  public test(root: any): RuleMatchedAt {
+    if (!_.has(root, this.monitorPath)) {
+      return { matched: false };
+    }
+
+    if (_.isEmpty(_.get(root, "components"))) {
+      return { matched: true, paths: [this.monitorPath] };
+    }
+
+    const monitors: string[] = _.get(root, this.monitorPath) as string[];
+
+    if (_.isEmpty(monitors)) {
+      return { matched: false };
+    }
+
+    const violations: InvalidMontior[] = _.filter(_.map(monitors, (monitor, index) => {
+      return this.checkMonitor(root.components, monitor, index);
+    })) as any;
+
+    if (_.isEmpty(violations)) {
+      return { matched: false };
+    }
+
+    return {
+      matched: true,
+      paths: [
+        ..._.map(violations, v => `${this.monitorPath}.${v.index}`),
+        ..._.map(violations, v => v.path),
+      ],
+    };
+  }
+
+  private checkMonitor(components: any[], monitor: string, index: number): InvalidMontior | undefined {
+    const [name, image] = monitor.split(",");
+
+    // fail if component missing
+    const componentIndex: any = _.findIndex(components, { name });
+    if (componentIndex === -1) {
+      return { index, path: "components" };
+    }
+
+    // fail if container missing
+    const container = _.find(components[componentIndex].containers, { image_name: image });
+    if (!container) {
+      return { index, path: `components.${componentIndex}` };
+    }
+  }
+}
+
 export interface JsonReadable<T> {
   name?: string; // e.g. obj.constructor.name
   fromJson(self: any, registry: Registry): T;
@@ -373,6 +434,7 @@ const defaultPredicates: PredicateRegistry = {
   FalseyIfPresent,
   GT,
   Or,
+  MonitorContainerMissing,
 };
 
 export class MutableRegistry implements Registry {

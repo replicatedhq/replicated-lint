@@ -38,7 +38,7 @@ export class TraverseSearcher implements ValueSearcher {
   public searchContains(obj: any, pred: string): FoundValue[] {
     const found: FoundValue[] = [];
     this.traverser.traverse(obj, [], (value, pathParts) => {
-      if (value.indexOf(pred) !== -1) {
+      if (value && _.isFunction(value.indexOf) && value.indexOf(pred) !== -1) {
         found.push({
           value,
           path: pathParts.join("."),

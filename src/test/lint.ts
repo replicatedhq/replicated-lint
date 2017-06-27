@@ -13,6 +13,7 @@ foo:
       type: "error",
       name: "foo-dot-bar-not-baz",
       message: "foo.bar can't be baz!",
+      links: ["some-link-to-docs"],
     }])).to.deep.equal([{
       type: "error",
       positions: [{
@@ -31,6 +32,7 @@ foo:
       received: "baz",
       rule: "foo-dot-bar-not-baz",
       message: "foo.bar can't be baz!",
+      links: ["some-link-to-docs"],
     }]);
 
     it("should not error when foo.bar is not baz ", () => {

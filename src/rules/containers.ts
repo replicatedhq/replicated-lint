@@ -3,7 +3,7 @@ import { YAMLRule } from "../lint";
 export const notClusteredIfNamedContainer: YAMLRule = {
   name: "prop-component-container-unnamed-when-cluster-true",
   type: "warn",
-  message: "If you have clustering turned on, setting `container.name` will prevent multiple instances of the container from being scheduled on a single node",
+  message: "With clustering turned on, setting `container.name` will prevent multiple instances of the container from being scheduled on a single node",
   test: {
     type: "AnyOf",
     path: "components",

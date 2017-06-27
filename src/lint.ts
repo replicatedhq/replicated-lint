@@ -22,6 +22,7 @@ export interface RuleTrigger {
   received: any;
   message: string;
 
+  links?: string[];
   positions?: Range[];
   err?: Error;
 }
@@ -151,6 +152,7 @@ export function lint(inYaml: string, rules?: YAMLRule[], maybeRegistry?: Registr
         received: _.map(result.paths!, p => _.get(root, p))[0],
         message: rule.message,
         positions,
+        links: rule.links,
       });
     }
   });

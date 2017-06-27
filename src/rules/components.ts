@@ -3,7 +3,7 @@ import { YAMLRule } from "../lint";
 export const componentClusterCount: YAMLRule = {
   name: "prop-component-cluster-count",
   type: "info",
-  message: "If you set min and max of a cluster_host_count to 1, then you will not be able to have multiple of that container anywhere in the cluster.",
+  message: "If cluster_host_count.min and cluster_host_count.max are both set to 1, then it be impossible to run multiple instances of this container anywhere in the cluster.",
   test: {
     type: "AnyOf",
     path: "components",

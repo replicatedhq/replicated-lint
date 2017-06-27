@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { rules } from "../";
 import * as pad from "pad";
 

@@ -3,7 +3,7 @@ import { YAMLRule } from "../lint";
 export const cpuMonitorContainerExists: YAMLRule = {
   name: "prop-monitors-cpuacct-container-exists",
   type: "error",
-  message: "monitors.cpuacct entries must have matching component+container",
+  message: "Entries in `monitors.cpuacct` must have matching component+container",
   test: {
     type: "MonitorContainerMissing",
     monitorPath: "monitors.cpuacct",
@@ -54,12 +54,12 @@ monitors:
 };
 
 export const memMonitorContainerExists: YAMLRule = {
-  name: "prop-monitors-memacct-container-exists",
+  name: "prop-monitors-memory-container-exists",
   type: "error",
-  message: "monitors.memacct entries must have matching component+container",
+  message: "Entries in `monitors.memory` must have matching component+container",
   test: {
     type: "MonitorContainerMissing",
-    monitorPath: "monitors.memacct",
+    monitorPath: "monitors.memory",
   },
   examples: {
     wrong: [
@@ -72,7 +72,7 @@ components:
     containers:
       - image_name: quay.io/getelk/logstash
 monitors:
-  memacct:
+  memory:
     - Logstash,quay.io/getelk/logstash
     `,
       },
@@ -85,7 +85,7 @@ components:
     containers:
       - image_name: quay.io/getelk/elasticsearch
 monitors:
-  memacct:
+  memory:
     - Logstash,quay.io/getelk/logstash
     `,
       },
@@ -99,7 +99,7 @@ components:
     containers:
       - image_name: quay.io/getelk/logstash
 monitors:
-  memacct:
+  memory:
     - Logstash,quay.io/getelk/logstash
       `,
     }],

@@ -79,8 +79,43 @@ cat docs/yamls/check-testproc-runonsave.yml | replicated-lint
 
 ```
 
+## Developing
 
 
+### Installing Dependencies
+
+We compile to ES5 and test on nodejs 7.8.0, but earlier versions of node should work as well.
+
+```
+npm install -g yarn
+yarn
+```
+
+### Running the tests
+
+To run the tests once
+
+```
+yarn test
+```
+
+To watch files and re-run tests on changes, use the `tdd` script
+
+```
+./tdd
+```
+
+### Regenerating the documentation
+
+```
+yarn docs
+```
+
+this will write the docs to `docs/gen.md`
+
+
+
+## Advanced Usage
 
 ### Custom Rule Sets
 

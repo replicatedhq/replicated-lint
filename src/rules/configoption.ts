@@ -4,7 +4,7 @@ export const configOptionExists: YAMLRule = {
   name: "tmpl-configoption-exists",
   type: "warn",
   message: "Options referenced with `{{repl ConfigOption }}` must be present in the `config` section",
-  test: { type: "ConfigOptionExists" },
+  test: { ConfigOptionExists: {} },
   examples: {
     wrong: [{
       description: "Config Option `not_existent` is not defined in `config` section",
@@ -76,13 +76,13 @@ export const configOptionNotCircular: YAMLRule = {
   type: "error",
   message: "A Config Options's fields may not reference the Config Option they describe",
   test: {
-    type: "AnyOf",
-    path: "config",
-    pred: {
-      type: "AnyOf",
-      path: "items",
+    AnyOf: {
+      path: "config",
       pred: {
-        type: "ConfigOptionIsCircular",
+        AnyOf: {
+          path: "items",
+          pred: { ConfigOptionIsCircular: {} },
+        },
       },
     },
   },
@@ -127,17 +127,20 @@ export const configOptionPasswordType: YAMLRule = {
   type: "warn",
   message: "It looks like this Config Option may contain sensitive data -- consider setting `type: password`",
   test: {
-    type: "AnyOf",
-    path: "config",
-    pred: {
-      type: "AnyOf",
-      path: "items",
+    AnyOf: {
+      path: "config",
       pred: {
-        type: "And",
-        preds: [
-          { type: "Neq", path: "type", value: "password" },
-          { type: "Match", path: "name", pattern: "key|password|access|secret" },
-        ],
+        AnyOf: {
+          path: "items",
+          pred: {
+            And: {
+              preds: [
+                { Neq: { path: "type", value: "password" } },
+                { Match: { path: "name", pattern: "key|password|access|secret" } },
+              ],
+            },
+          },
+        },
       },
     },
   },

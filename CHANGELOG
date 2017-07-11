@@ -7,3 +7,10 @@
 0.3.2 / 2017-06-17
     * Fix bug TraverseSearcher and fix an issue where Monitor predicate not registered
 
+0.4.0 / 2017-06-17
+    * Update rule definition schema, rewrite rules to match
+    * Update rule messaging descriptions and examples
+
+0.5.0 / 2017-07-11
+    * Update rule definition schema and compilation to use a typed object, rewrite rules to match
+

@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as semver from "semver";
-import { Predicate, RuleMatchedAt } from "./lint";
+import { Predicate, RuleMatchedAt, Test } from "./lint";
 import {
   FoundValue, TraverseSearcher, ValueSearcher,
   ValueTraverser,
@@ -10,7 +10,7 @@ import * as util from "util";
 
 export class And<T> implements Predicate<T> {
   public static fromJson<T>(obj: any, registry: Registry): And<T> {
-    return new And<T>(_.map(obj.preds, (pred: any) =>  registry.compile(pred)));
+    return new And<T>(_.map(obj.preds, (pred: any) => registry.compile(pred)));
   }
 
   constructor(private readonly preds: Array<Predicate<T>>) {
@@ -38,8 +38,9 @@ export class Match implements Predicate<any> {
     return new Match(self.path, new RegExp(self.pattern));
   }
 
-  constructor(private readonly path: string,
-              private readonly check: RegExp) {
+  constructor(
+    private readonly path: string,
+    private readonly check: RegExp) {
   }
 
   public test(object: any): RuleMatchedAt {
@@ -56,8 +57,9 @@ export class NotMatch implements Predicate<any> {
     return new NotMatch(self.path, new RegExp(self.pattern));
   }
 
-  constructor(private readonly path: string,
-              private readonly check: RegExp) {
+  constructor(
+    private readonly path: string,
+    private readonly check: RegExp) {
   }
 
   public test(object: any): RuleMatchedAt {
@@ -69,13 +71,14 @@ export class NotMatch implements Predicate<any> {
 }
 
 export class Semver implements Predicate<any> {
-  public static fromJson(obj: any ): Semver {
+  public static fromJson(obj: any): Semver {
     return new Semver(obj.path, obj.required);
   }
 
-  constructor(private readonly path: string,
-              private readonly required: boolean,
-  ) {}
+  constructor(
+    private readonly path: string,
+    private readonly required: boolean,
+  ) { }
 
   public test(root: any): RuleMatchedAt {
     const value = _.get(root, this.path);
@@ -97,8 +100,9 @@ export class AnyOf<T_Root, T_El> implements Predicate<T_Root> {
     return new AnyOf<R, E>(obj.path, registry.compile(obj.pred));
   }
 
-  constructor(private readonly collectionPath: string,
-              private readonly pred: Predicate<T_El>) {
+  constructor(
+    private readonly collectionPath: string,
+    private readonly pred: Predicate<T_El>) {
   }
 
   public test(root: any): RuleMatchedAt {
@@ -140,8 +144,9 @@ export class Eq<T> implements Predicate<T> {
     return new Eq(obj.path, obj.value);
   }
 
-  constructor(private readonly path: string,
-              private readonly value: any) {
+  constructor(
+    private readonly path: string,
+    private readonly value: any) {
   }
 
   public test(object: T): RuleMatchedAt {
@@ -160,8 +165,9 @@ export class GT<T> implements Predicate<T> {
     return new GT(obj.path, obj.value);
   }
 
-  constructor(private readonly path: string,
-              private readonly value: number) {
+  constructor(
+    private readonly path: string,
+    private readonly value: number) {
   }
 
   public test(object: T): RuleMatchedAt {
@@ -177,8 +183,9 @@ export class Neq implements Predicate<any> {
     return new Neq(obj.path, obj.value);
   }
 
-  constructor(private readonly path: string,
-              private readonly value: any) {
+  constructor(
+    private readonly path: string,
+    private readonly value: any) {
   }
 
   public test(object: any): RuleMatchedAt {
@@ -234,7 +241,7 @@ export class Falsey implements Predicate<any> {
 
 export class Or<T> implements Predicate<T> {
   public static fromJson<T>(obj: any, registry: Registry): Or<T> {
-    return new Or<T>(_.map(obj.preds, (pred: any) =>  registry.compile(pred)));
+    return new Or<T>(_.map(obj.preds, (pred: any) => registry.compile(pred)));
   }
   constructor(private readonly preds: Array<Predicate<T>>) {
   }
@@ -438,22 +445,31 @@ const defaultPredicates: PredicateRegistry = {
 };
 
 export class MutableRegistry implements Registry {
-  constructor(private readonly types: PredicateRegistry) {}
+  constructor(private readonly types: PredicateRegistry) { }
 
-  public compile(obj: any): Predicate<any> {
-    if (!_.has(this.types, obj.type)) {
-      throw new Error(`Registry does not know about type ${obj.type}, received ${util.inspect(obj)}, known types are: ${_.keys(this.types)}`);
+  public compile(obj: Test): Predicate<any> {
+    for (const key of Object.keys(obj)) {
+
+      if (obj.hasOwnProperty(key)) {
+        if (!_.has(this.types, key)) {
+          throw new Error(`Registry does not know about type ${key}, received ${util.inspect(obj)}, known types are: ${_.keys(this.types)}`);
+        }
+
+        try {
+          return this.types[key].fromJson(obj[key], this);
+        } catch (err) {
+          throw new Error(`Could not construct type ${key} from object ${util.inspect(obj)}, error was ${util.inspect(err)}`);
+        }
+      }
+
     }
 
-    try {
-      return this.types[obj.type].fromJson(obj, this);
-    } catch (err) {
-      throw new Error(`Could not construct type ${obj.type} from object ${util.inspect(obj)}, error was ${util.inspect(err)}`);
-    }
+    throw new Error(`Registry could not construct predicate from ${obj}, no known keys`);
+
   }
 
-  public register(obj: any) {
-    this.types[obj.name] = obj;
+  public register(obj: JsonReadable<Predicate<any>>) {
+    this.types[obj.name!] = obj;
   }
 }
 

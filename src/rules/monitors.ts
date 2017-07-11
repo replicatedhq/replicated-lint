@@ -4,10 +4,7 @@ export const cpuMonitorContainerExists: YAMLRule = {
   name: "prop-monitors-cpuacct-container-exists",
   type: "error",
   message: "Entries in `monitors.cpuacct` must have matching component+container",
-  test: {
-    type: "MonitorContainerMissing",
-    monitorPath: "monitors.cpuacct",
-  },
+  test: { MonitorContainerMissing: { monitorPath: "monitors.cpuacct" } },
   examples: {
     wrong: [
       {
@@ -57,10 +54,7 @@ export const memMonitorContainerExists: YAMLRule = {
   name: "prop-monitors-memory-container-exists",
   type: "error",
   message: "Entries in `monitors.memory` must have matching component+container",
-  test: {
-    type: "MonitorContainerMissing",
-    monitorPath: "monitors.memory",
-  },
+  test: { MonitorContainerMissing: { monitorPath: "monitors.memory" } },
   examples: {
     wrong: [
       {

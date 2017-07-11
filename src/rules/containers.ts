@@ -5,18 +5,21 @@ export const notClusteredIfNamedContainer: YAMLRule = {
   type: "warn",
   message: "With clustering turned on, setting `container.name` will prevent multiple instances of the container from being scheduled on a single node",
   test: {
-    type: "AnyOf",
-    path: "components",
-    pred: {
-      type: "AnyOf",
-      path: "containers",
+    AnyOf: {
+      path: "components",
       pred: {
-        type: "And",
-        preds: [
-          { type: "GT", path: "cluster_instance_count", value: 1 },
-          { type: "Exists", path: "name" },
-          { type: "Truthy", path: "cluster" },
-        ],
+        AnyOf: {
+          path: "containers",
+          pred: {
+            And: {
+              preds: [
+                { GT: { path: "cluster_instance_count", value: 1 } },
+                { Exists: { path: "name" } },
+                { Truthy: { path: "cluster" } },
+              ],
+            },
+          },
+        },
       },
     },
   },

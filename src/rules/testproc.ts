@@ -8,26 +8,25 @@ export const configitemTestprocRunOnSave: YAMLRule = {
     "https://www.replicated.com/docs/packaging-an-application/test-procs/",
   ],
   test: {
-    type: "AnyOf",
-    path: "config",
-    pred: {
-      type: "Or",
-      preds: [
-        {
-          type: "AnyOf",
-          path: "items",
-          pred: {
-            type: "FalseyIfPresent",
-            path: "test_proc",
-            field: "run_on_save",
-          },
+    AnyOf: {
+      path: "config",
+      pred: {
+        Or: {
+          preds: [
+            {
+              FalseyIfPresent: { path: "test_proc", field: "run_on_save" },
+            },
+            {
+              AnyOf: {
+                path: "items",
+                pred: {
+                  FalseyIfPresent: { path: "test_proc", field: "run_on_save" },
+                },
+              },
+            },
+          ],
         },
-        {
-          type: "FalseyIfPresent",
-          path: "test_proc",
-          field: "run_on_save",
-        },
-      ],
+      },
     },
   },
   examples: {
@@ -115,38 +114,47 @@ export const testProcValidCommand: YAMLRule = {
     "https://www.replicated.com/docs/packaging-an-application/test-procs/",
   ],
   test: {
-    type: "AnyOf",
-    path: "config",
-    pred: {
-      type: "Or",
-      preds: [
-        {
-          type: "AnyOf",
-          path: "items",
-          pred: {
-            type: "And",
-            preds: [
-              { type: "Truthy", path: "test_proc"},
-              {
-                type: "NotMatch",
-                path: "test_proc.command",
-                pattern: "^(regex_match|json_validate|ldap_auth|file_exists|smtp_auth|certificate_verify|aws_auth|github_app_auth|resolve_host)$",
-              },
-            ],
-          },
-        },
-        {
-          type: "And",
+    AnyOf: {
+      path: "config",
+      pred: {
+        Or: {
           preds: [
-            { type: "Truthy", path: "test_proc"},
             {
-              type: "NotMatch",
-              path: "test_proc.command",
-              pattern: "^(regex_match|json_validate|ldap_auth|file_exists|smtp_auth|certificate_verify|aws_auth|github_app_auth|resolve_host)$",
+              And: {
+                preds: [
+                  {
+                    Truthy: { path: "test_proc" },
+                  },
+                  {
+                    NotMatch: {
+                      path: "test_proc.command",
+                      pattern: "^(regex_match|json_validate|ldap_auth|file_exists|smtp_auth|certificate_verify|aws_auth|github_app_auth|resolve_host)$",
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              AnyOf: {
+                path: "items",
+                pred: {
+                  And: {
+                    preds: [
+                      { Truthy: { path: "test_proc" } },
+                      {
+                        NotMatch: {
+                          path: "test_proc.command",
+                          pattern: "^(regex_match|json_validate|ldap_auth|file_exists|smtp_auth|certificate_verify|aws_auth|github_app_auth|resolve_host)$",
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
             },
           ],
         },
-      ],
+      },
     },
   },
   examples: {

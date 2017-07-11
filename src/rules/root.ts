@@ -4,7 +4,7 @@ export const apiVersion: YAMLRule = {
   name: "prop-replicated-api-version-present",
   type: "error",
   message: "`replicated_api_version` must be present and be a valid Semver specification",
-  test: { type: "Semver", path: "replicated_api_version", required: "true" },
+  test: { Semver: { path: "replicated_api_version", required: true } },
   examples: {
     wrong: [
       {

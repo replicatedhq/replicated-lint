@@ -28,8 +28,8 @@ export interface RuleTrigger {
 }
 
 export interface Example {
-  yaml: string;
   description: string;
+  yaml: string;
 }
 
 export interface Examples {
@@ -37,8 +37,71 @@ export interface Examples {
   wrong: Example[];
 }
 
+export interface Test {
+  AnyOf?: {
+    path: string;
+    pred: Test;
+  };
+  AllOf?: {
+    path: string;
+    pred: Test;
+  };
+  And?: {
+    preds: Test[];
+  };
+  Or?: {
+    preds: Test[];
+  };
+  Truthy?: {
+    path: string;
+  };
+  Eq?: {
+    path: string;
+    value: any;
+  };
+  KeyDoesntMatch?: {
+    pattern: string;
+  };
+  Semver?: {
+    path: string;
+    required: boolean;
+  };
+  Exists?: {
+    path: string;
+  };
+  Match?: {
+    path: string;
+    pattern: string;
+  };
+  NotMatch?: {
+    path: string;
+    pattern: string;
+  };
+  Neq?: {
+    path: string;
+    value: any;
+  };
+  ConfigOptionExists?: {};
+  ConfigOptionIsCircular?: {};
+  FalseyIfPresent?: {
+    path: string;
+    field: string;
+  };
+  GT?: {
+    path: string;
+    value: number;
+  };
+  MonitorContainerMissing?: {
+    monitorPath: string;
+  };
+
+  // allow arbitrary rules at compile time for now, need a better way to do this.
+  // at least engine.Registry will complain at runtime if they're not supported.
+  [key: string]: any;
+}
+
 export interface YAMLRule {
-  test: any;
+  test: Test;
   type: RuleType;
   name: string;
   message: string;

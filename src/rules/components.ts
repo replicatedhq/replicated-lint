@@ -5,16 +5,18 @@ export const componentClusterCount: YAMLRule = {
   type: "info",
   message: "If cluster_host_count.min and cluster_host_count.max are both set to 1, then it be impossible to run multiple instances of this container anywhere in the cluster.",
   test: {
-    type: "AnyOf",
-    path: "components",
-    pred: {
-      type: "And",
-      preds: [
-        { type: "Truthy", path: "cluster" },
-        { type: "Exists", path: "cluster_host_count" },
-        { type: "Eq", path: "cluster_host_count.min", value: 1 },
-        { type: "Eq", path: "cluster_host_count.max", value: 1 },
-      ],
+    AnyOf: {
+      path: "components",
+      pred: {
+        And: {
+          preds: [
+            { Truthy: { path: "cluster" } },
+            { Exists: { path: "cluster_host_count" } },
+            { Eq: { path: "cluster_host_count.min", value: 1 } },
+            { Eq: { path: "cluster_host_count.max", value: 1 } },
+          ],
+        },
+      },
     },
   },
   examples: {

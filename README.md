@@ -97,11 +97,12 @@ foo:
   bar: baz`;
 
 const testSpec: any = {
-  type: "Or",
-  preds: [
-    {type: "Eq", path: "foo.bar", value: "baz"},
-    {type: "Eq", path: "foo.bar", value: "boz"},
-  ],
+  Or: {
+    preds: [
+      {Eq: { path: "foo.bar", value: "baz"}},
+      {Eq: { path: "foo.bar", value: "boz"}},
+    ],
+  }
 }
 
 const rules: linter.YAMLRule[] = [
@@ -148,21 +149,20 @@ spam: eggs`;
 
 // rule MyRule checks if root object has property "spam" equal to "eggs"
 class MyRule implements linter.Predicate<any> {
-  public static fromJson(obj: any, registry: linter.engine.Registry) {
-    return {
-      test(obj: any) {
-        const matched = obj.spam !== "eggs"; // fail when spam != eggs
-        const paths = ["spam"];
-        return { matched, paths };
-      }
-    };
+  test(obj: any) {
+    const matched = obj.spam !== "eggs"; // fail when spam != eggs
+    const paths = ["spam"];
+    return { matched, paths };
   }
-  
+
+  public static fromJson(obj: any, registry: linter.engine.Registry) {
+    return new MyRule();
+  }
 }
 
 linter.engine.register(MyRule);
 
-const testSpec: any = { type: "MyRule" };
+const testSpec: linter.Test = { MyRule: {}};
 
 const rules: linter.YAMLRule[] = [
   {

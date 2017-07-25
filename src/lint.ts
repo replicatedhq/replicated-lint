@@ -136,7 +136,7 @@ const DOC_SEPARATOR_LENGTH = 3;
  * uses a hack to split on yaml docs. Avoid using if posible
  */
 export function lintMultidoc(inYaml: string, rules?: YAMLRule[], registry?: Registry): LintedDoc[] {
-  let docs = inYaml.split(`---`).slice(1);
+  const docs = inYaml.split(`---`).slice(1);
 
   let offset = inYaml.indexOf(`---`) + 3;
 
@@ -178,7 +178,7 @@ export function lint(inYaml: string, rules?: YAMLRule[], maybeRegistry?: Registr
     return [noDocError(inYaml)];
   }
 
-  const yamlAST: YAMLNode = <any> ast.safeLoad(inYaml, null);
+  const yamlAST: YAMLNode = ast.safeLoad(inYaml, null) as any;
 
   if (_.isEmpty(rules)) {
     return [];

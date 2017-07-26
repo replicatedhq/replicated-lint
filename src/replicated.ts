@@ -613,4 +613,504 @@ export interface Container {
    *
    */
   privileged: boolean;
+
+  /**
+   *
+   */
+  network_mode?: string;
+
+  /**
+   *
+   */
+  cpu_shares?: string;
+
+  /**
+   *
+   */
+  memory_limit?: string;
+
+  /**
+   *
+   */
+  memory_swap_limit?: string;
+
+  /**
+   *
+   */
+  ulimits?: string[];
+
+  /**
+   *
+   */
+  allocate_tty?: string;
+
+  /**
+   *
+   */
+  security_cap_add?: string[];
+
+  /**
+   *
+   */
+  security_options?: string[];
+
+  /**
+   *
+   */
+  hostname?: string;
+
+  /**
+   *
+   */
+  cmd?: string;
+
+  /**
+   *
+   */
+  entrypoint?: string[];
+
+  /**
+   *
+   */
+  ephemeral?: boolean;
+
+  /**
+   *
+   */
+  suppress_restart?: string[];
+
+  /**
+   *
+   */
+  cluster?: BoolString;
+
+  /**
+   *
+   */
+  restart?: ContainerRestartPolicy;
+
+  /**
+   *
+   */
+  cluster_instance_count?: ContainerClusterInstanceCount;
+
+  /**
+   *
+   */
+  publish_events?: ContainerEvent[];
+
+  /**
+   *
+   */
+  config_files?: ContainerConfigFile[];
+
+  /**
+   *
+   */
+  customer_files?: ContainerCustomerFile[];
+
+  /**
+   *
+   */
+  env_vars?: ContainerEnvVar[];
+
+  /**
+   *
+   */
+  ports?: ContainerPort[];
+
+  /**
+   *
+   */
+  logs?: LogOptions;
+
+  /**
+   *
+   */
+  volumes?: ContainerVolume[];
+
+  /**
+   *
+   */
+  volumes_from: string[];
+
+  /**
+   *
+   */
+  extra_hosts?: ContainerExtraHost[];
+
+  /**
+   *
+   */
+  support_files?: ContainerSupportFile[];
+
+  /**
+   *
+   */
+  support_commands?: ContainerSupportCommand[];
+
+  /**
+   *
+   */
+  content_trust?: ContentTrust;
+
+  /**
+   *
+   */
+  when?: string;
+
+  /**
+   *
+   */
+  dynamic?: string;
+
+  /**
+   *
+   */
+  pid_mode?: string;
+}
+
+export interface ContainerRestartPolicy {
+  /**
+   *
+   */
+  policy?: string;
+
+  /**
+   * @minimum 0
+   * @TJS-type integer
+   */
+  max?: number;
+}
+
+export interface ContainerClusterInstanceCount {
+  /**
+   *
+   */
+  initial?: UintString;
+
+  /**
+   *
+   */
+  max?: UintString;
+
+  /**
+   *
+   */
+  threshold_healthy?: UintString;
+
+  /**
+   *
+   */
+  threshold_degraded?: UintString;
+}
+
+export interface ULimit {
+  /**
+   *
+   */
+  name: string;
+
+  /**
+   *
+   */
+  soft?: string;
+
+  /**
+   *
+   */
+  hard?: string;
+}
+
+// container_event
+/*
+type ContainerEvent struct {
+	Name    string   `yaml:"name" json:"name"`
+	Trigger string   `yaml:"trigger" json:"trigger"`
+	Data    string   `yaml:"data" json:"data"`
+	Args    []string `yaml:"args" json:"args"`
+	// Timeout in seconds (0 is default 10 minutes, -1 is no timeout)
+	Timeout       int                           `yaml:"timeout,omitempty" json:"timeout,omitempty"`
+	Subscriptions []*ContainerEventSubscription `yaml:"subscriptions" json:"subscriptions" validate:"dive,exists"`
+}
+*/
+export interface ContainerEvent {
+  /**
+   *
+   */
+  name?: string;
+
+  /**
+   *
+   */
+  trigger?: string;
+
+  /**
+   *
+   */
+  data?: string;
+
+  /**
+   *
+   */
+  args?: string[];
+
+  /**
+   * @minimum 0
+   * @TJS-type integer
+   */
+  timeout?: number;
+
+  /**
+   *
+   */
+  subscriptions?: ContainerEventSubscription[];
+}
+
+// container_configfile
+/*
+type ContainerConfigFile struct {
+	Filename  string `yaml:"filename" json:"filename" validate:"required"`
+	Contents  string `yaml:"contents" json:"contents"`
+	Source    string `yaml:"source" json:"source" validate:"integrationexists"`
+	Owner     string `yaml:"owner" json:"owner"`
+	Repo      string `yaml:"repo" json:"repo"`
+	Path      string `yaml:"path" json:"path"`
+	Ref       string `yaml:"ref" json:"ref"`
+	FileMode  string `yaml:"file_mode" json:"file_mode"`
+	FileOwner string `yaml:"file_owner" json:"file_owner"`
+}
+*/
+export interface ContainerConfigFile {
+  /**
+   *
+   */
+  filename: string;
+
+  /**
+   *
+   */
+  contents?: string;
+
+  /**
+   *
+   */
+  source?: string;
+
+  /**
+   *
+   */
+  owner?: string;
+
+  /**
+   *
+   */
+  repo?: string;
+
+  /**
+   *
+   */
+  path?: string;
+
+  /**
+   *
+   */
+  ref?: string;
+
+  /**
+   *
+   */
+  file_mode?: string;
+
+  /**
+   *
+   */
+  file_owner?: string;
+}
+
+// container_customerfile
+/*
+type ContainerCustomerFile struct {
+	Id        string `yaml:"name" json:"name"`
+	Filename  string `yaml:"filename" json:"filename"`
+	When      string `yaml:"when" json:"when"`
+	FileMode  string `yaml:"file_mode" json:"file_mode"`
+	FileOwner string `yaml:"file_owner" json:"file_owner"`
+}
+*/
+export interface ContainerCustomerFile {
+  /**
+   *
+   */
+  name?: string;
+
+  /**
+   *
+   */
+  filename?: string;
+
+  /**
+   *
+   */
+  when?: string;
+
+  /**
+   *
+   */
+  file_mode?: string;
+
+  /**
+   *
+   */
+  file_owner?: string;
+}
+
+// container_envvar
+/*
+type ContainerEnvVar struct {
+	Name                  string `yaml:"name" json:"name"`
+	StaticVal             string `yaml:"static_val" json:"static_val"`
+	IsExcludedFromSupport string `yaml:"is_excluded_from_support" json:"is_excluded_from_support"`
+	When                  string `yaml:"when" json:"when"`
+}
+*/
+export interface ContainerEnvVar {
+  /**
+   *
+   */
+  name?: string;
+
+  /**
+   *
+   */
+  static_val?: string;
+
+  /**
+   *
+   */
+  is_excluded_from_support?: string;
+
+  /**
+   *
+   */
+  when?: string;
+}
+
+// container_port
+/*
+type ContainerPort struct {
+	PrivatePort string `yaml:"private_port" json:"private_port" validate:"required"`
+	PublicPort  string `yaml:"public_port,omitempty" json:"public_port,omitempty" validate:"required_minapiversion=2.8.0"`
+	Interface   string `yaml:"interface,omitempty" json:"interface,omitempty"`
+	PortType    string `yaml:"port_type,omitempty" json:"port_type,omitempty"`
+	When        string `yaml:"when,omitempty" json:"when,omitempty"`
+}
+*/
+export interface ContainerPort {
+  /**
+   *
+   */
+  private_port: string;
+
+  /**
+   *
+   */
+  public_port?: string;
+
+  /**
+   *
+   */
+  interface?: string;
+
+  /**
+   *
+   */
+  port_type?: string;
+
+  /**
+   *
+   */
+  when?: string;
+}
+
+// container_extrahost
+/*
+type ContainerExtraHost struct {
+	Hostname string `yaml:"hostname" json:"hostname" validate:"required"`
+	Address  string `yaml:"address" json:"address" validate:"required"`
+	When     string `yaml:"when" json:"when"`
+}
+*/
+export interface ContainerExtraHost {
+  /**
+   *
+   */
+  hostname: string;
+
+  /**
+   *
+   */
+  address: string;
+
+  /**
+   *
+   */
+  when?: string;
+}
+
+// container_supportfile
+/*
+type ContainerSupportFile struct {
+	Filename string `yaml:"filename" json:"filename" validate:"required"`
+}
+*/
+export interface ContainerSupportFile {
+  /**
+   *
+   */
+  filename: string;
+}
+
+// container_supportcommand
+/*
+type ContainerSupportCommand struct {
+	Filename string   `yaml:"filename" json:"filename" validate:"required"`
+	Command  []string `yaml:"command" json:"command"`
+}
+*/
+export interface ContainerSupportCommand {
+  /**
+   *
+   */
+  filename: string;
+
+  /**
+   *
+   */
+  command?: string[];
+}
+
+// container_event_subscription
+/*
+type ContainerEventSubscription struct {
+	ComponentName string `yaml:"component" json:"component" validate:"componentexists"`
+	ContainerName string `yaml:"container" json:"container" validate:"containerexists=ComponentName"`
+	Action        string `yaml:"action" json:"action"`
+}
+*/
+export interface ContainerEventSubscription {
+  /**
+   *
+   */
+  component?: string;
+
+  /**
+   *
+   */
+  container?: string;
+
+  /**
+   *
+   */
+  action?: string;
 }

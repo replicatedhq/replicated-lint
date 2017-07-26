@@ -180,8 +180,8 @@ app:
       image: redis:3.1.3
       env:
         REDIS_HOST: something else
-      
-      
+
+
 configItems:
   folks:
     - name: whatever
@@ -216,8 +216,8 @@ app:
         REDIS_HOST: something else
   config:
     method: drr
-      
-      
+
+
 configItems:
   folks:
     - name: whatever

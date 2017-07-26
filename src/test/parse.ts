@@ -42,20 +42,20 @@ describe("mesg-yaml-valid", () => {
       expect(lint(`
 ---
 foo: }`)).to.deep.equal([{
-        type: "error",
-        rule: "mesg-yaml-valid",
-        positions: [{
-          start: {
-            column: 5,
-            line: 2,
-            position: 10,
-          },
-        }],
-        received: `
+          type: "error",
+          rule: "mesg-yaml-valid",
+          positions: [{
+            start: {
+              column: 5,
+              line: 2,
+              position: 10,
+            },
+          }],
+          received: `
 ---
 foo: }`,
-        message: `end of the stream or a document separator is expected at line 3, column 6:\n    foo: }\n         ^`,
-      }]);
+          message: `end of the stream or a document separator is expected at line 3, column 6:\n    foo: }\n         ^`,
+        }]);
     });
   });
 
@@ -67,12 +67,12 @@ describe("lintMultidoc", () => {
 foo: {}
 ---
 bar: {}`)).to.deep.equal([{
-      index: 0,
-      findings: [],
-    }, {
-      index: 1,
-      findings: [],
-    }]);
+        index: 0,
+        findings: [],
+      }, {
+        index: 1,
+        findings: [],
+      }]);
   });
   it("should give global indices for multidoc failures", () => {
     const inYaml = `

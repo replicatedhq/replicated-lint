@@ -20,7 +20,7 @@ export interface ValueSearcher {
 export class TraverseSearcher implements ValueSearcher {
   constructor(
     private readonly traverser: ValueTraverser,
-  ) {}
+  ) { }
 
   public searchMatch(obj: any, pred: ValuePredicate): FoundValue[] {
     const found: FoundValue[] = [];

@@ -1,0 +1,235 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "Component": {
+            "properties": {
+                "cluster": {
+                    "type": "string"
+                },
+                "cluster_host_count": {
+                    "$ref": "#/definitions/ComponentClusterHostCount"
+                },
+                "conflicts": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "containers": {
+                    "items": {
+                        "$ref": "#/definitions/Container"
+                    },
+                    "type": "array"
+                },
+                "host_requirements": {
+                    "$ref": "#/definitions/HostRequirements"
+                },
+                "host_volumes": {
+                    "items": {
+                        "$ref": "#/definitions/HostVolume"
+                    },
+                    "type": "array"
+                },
+                "logs": {
+                    "$ref": "#/definitions/LogOptions"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "tags": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "type": "object"
+        },
+        "ComponentClusterHostCount": {
+            "properties": {
+                "max": {
+                    "type": "string"
+                },
+                "min": {
+                    "type": "string"
+                },
+                "strategy": {
+                    "description": "Strategy\n  - \"autoscale\" api version >= 2.7.0\n  - \"random\" api version >= 2.5.0",
+                    "type": "string"
+                },
+                "threshold_degraded": {
+                    "type": "string"
+                },
+                "threshold_healthy": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ConfigChildItem": {
+            "properties": {
+                "default": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "recommended": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "type": "object"
+        },
+        "ConfigOption": {
+            "properties": {
+                "items": {
+                    "items": {
+                        "$ref": "#/definitions/ConfigChildItem"
+                    },
+                    "type": "array"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "type"
+            ],
+            "type": "object"
+        },
+        "ConfigSection": {
+            "properties": {
+                "items": {
+                    "items": {
+                        "$ref": "#/definitions/ConfigOption"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "items"
+            ],
+            "type": "object"
+        },
+        "Container": {
+            "properties": {
+                "display_name": {
+                    "type": "string"
+                },
+                "image_name": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "privileged": {
+                    "type": "boolean"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "image_name",
+                "name",
+                "privileged",
+                "source",
+                "version"
+            ],
+            "type": "object"
+        },
+        "HostRequirements": {
+            "properties": {
+                "cpu_cores": {
+                    "type": "string"
+                },
+                "cpu_mhz": {
+                    "type": "string"
+                },
+                "disk_space": {
+                    "type": "string"
+                },
+                "docker_version": {
+                    "type": "string"
+                },
+                "memory": {
+                    "type": "string"
+                },
+                "replicated_version": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "HostVolume": {
+            "properties": {
+                "host_path": {
+                    "type": "string"
+                },
+                "is_ephemeral": {
+                    "type": "string"
+                },
+                "is_excluded_from_backup": {
+                    "type": "string"
+                },
+                "min_disk_space": {
+                    "type": "string"
+                },
+                "owner": {
+                    "type": "string"
+                },
+                "permission": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "host_path"
+            ],
+            "type": "object"
+        },
+        "LogOptions": {
+            "properties": {
+                "max_files": {
+                    "type": "string"
+                },
+                "max_size": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "properties": {
+        "components": {
+            "items": {
+                "$ref": "#/definitions/Component"
+            },
+            "type": "array"
+        },
+        "config": {
+            "items": {
+                "$ref": "#/definitions/ConfigSection"
+            },
+            "type": "array"
+        }
+    },
+    "required": [
+        "components",
+        "config"
+    ],
+    "type": "object"
+}
+

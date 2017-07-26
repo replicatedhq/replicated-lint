@@ -24,15 +24,18 @@
         "dist/"
     ],
     "scripts": {
-        "prepublish": "rm -rf ./dist && tslint --project ./tsconfig.json && tsc -p .",
-        "test": "rm -rf ./dist && tslint --project ./tsconfig.json && tsc -p . && mocha -r ts-node/register ./src/test/*.ts",
-        "cover": "rm -rf ./dist && tslint --project ./tsconfig.json && tsc -p . && istanbul cover _mocha -- ./dist/test/*.js",
-        "cover-xml": "rm -rf ./dist && tslint --project ./tsconfig.json && tsc -p . && istanbul cover _mocha -- -R mocha-junit-reporter ./dist/test/*.js",
-        "mintest": "tslint --project ./tsconfig.json && mocha --recursive -R 'min'  -r ts-node/register src/test/*.ts",
+        "fmt": "tsfmt -r",
+        "prepublish": "rm -rf ./dist && yarn run tslint && tsc -p .",
+        "test": "rm -rf ./dist && yarn run tslint && tsc -p . && mocha -r ts-node/register ./src/test/*.ts",
+        "cover": "rm -rf ./dist && yarn run tslint && tsc -p . && istanbul cover _mocha -- ./dist/test/*.js",
+        "cover-xml": "rm -rf ./dist && yarn run tslint && tsc -p . && istanbul cover _mocha -- -R mocha-junit-reporter ./dist/test/*.js",
+        "mintest": "yarn run tslint && mocha --recursive -R 'min'  -r ts-node/register src/test/*.ts",
         "tdd": "./tdd",
+        "tslint": "tslint --project ./tsconfig.json --exclude 'src/test/**/*'",
         "docs": "yarn run prepublish && /usr/bin/env node ./dist/bin/docs.js > ./docs/gen.md",
         "lint": "yarn run prepublish && /usr/bin/env node ./dist/bin/stdin.js",
         "report-coverage": "codeclimate-test-reporter < ./coverage/lcov.info",
+        "gen-schemas": "rm -rf ./dist && ./node_modules/.bin/typescript-json-schema ./tsconfig.json ReplicatedApp --ignoreErrors --out ./src/schemas/replicated.json --required true",
         "publish-if-version-changed": "publish"
     },
     "bin": {
@@ -52,7 +55,8 @@
         "ts-node": "^3.0.6",
         "tslint": "^4.3.1",
         "typemoq": "^1.4.1",
-        "typescript": "^2.2.2"
+        "typescript": "^2.2.2",
+        "typescript-json-schema":"^0.16.0"
     },
     "dependencies": {
         "@types/js-yaml": "^3.5.31",

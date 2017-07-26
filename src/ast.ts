@@ -28,9 +28,9 @@ export function nodePosition(node: YAMLNode, path, lineColumnFinder: any, offset
   }
 
   const end = lineColumnFinder.fromIndex(node.endPosition + offset) || {
-      line: 0,
-      col: 0,
-    };
+    line: 0,
+    col: 0,
+  };
   return {
     path,
     start: {
@@ -132,7 +132,7 @@ function findNodeRec(current: YAMLNode[], pathParts: string[]): YAMLNode[] {
   };
 
   const findInSeq = (node: YAMLNode) => {
-    const seq = <YAMLSequence> node;
+    const seq = node as YAMLSequence;
     if (matchSeq(first)) {
       if (_.isEmpty(rest)) {
         return seq.items;

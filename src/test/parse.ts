@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { lint, lintMultidoc } from "../lint";
+import { lint, hackLintMultidoc } from "../lint";
 import { apiVersion } from "../rules/root";
 
 describe("mesg-yaml-valid", () => {
@@ -63,7 +63,7 @@ foo: }`,
 
 describe("lintMultidoc", () => {
   it("should handle multidoc yaml", () => {
-    expect(lintMultidoc(`---
+    expect(hackLintMultidoc(`---
 foo: {}
 ---
 bar: {}`)).to.deep.equal([{
@@ -92,7 +92,7 @@ fdfsjl: ]
 ---
 bar: {}
 `;
-    expect(lintMultidoc(inYaml)).to.deep.equal([{
+    expect(hackLintMultidoc(inYaml)).to.deep.equal([{
       index: 0,
       findings: [],
     }, {
@@ -100,14 +100,14 @@ bar: {}
       findings: [{
         type: "warn",
         rule: "mesg-yaml-not-empty",
-        received: "\n\n# lol\n\n\n",
+        received: "\n# lol\n\n\n",
         message: "No document provided",
       }],
     }, {
       index: 2,
       findings: [
         {
-          message: "end of the stream or a document separator is expected at line 2, column 9:\n    fdfsjl: ]\n            ^",
+          "message": "end of the stream or a document separator is expected at line 1, column 9:\n    fdfsjl: ]\n            ^",
           positions: [
             {
               start: {
@@ -117,7 +117,7 @@ bar: {}
               },
             },
           ],
-          received: "\nfdfsjl: ]\n",
+          received: "fdfsjl: ]\n",
           rule: "mesg-yaml-valid",
           type: "error",
         },
@@ -142,7 +142,7 @@ replicated_api_version: 2.8.0
 name: Retraced
 `;
 
-    expect(lint(inYaml, [apiVersion],
+    expect(lint(inYaml, { rules: [apiVersion] },
     )).to.deep.equal([
       {
         "message": "duplicated mapping key at line 7, column 1:\n    replicated_api_version: 2.8.0\n    ^",

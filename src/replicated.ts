@@ -1,8 +1,10 @@
 // These are very WIP
 
 export interface ReplicatedApp {
-  config: ConfigSection[];
-  components: Component[];
+  replicated_api_version: string;
+  config?: ConfigSection[];
+  components?: Component[];
+  monitors?: Monitors;
 }
 
 export interface ConfigSection {
@@ -23,6 +25,11 @@ export interface ConfigChildItem {
   name: string;
   recommended?: boolean;
   "default"?: string;
+}
+
+export interface Monitors {
+  cpuacct?: string[];
+  memory?: string[];
 }
 
 // adminCommand

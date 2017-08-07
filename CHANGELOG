@@ -14,3 +14,9 @@
 0.5.0 / 2017-07-11
     * Update rule definition schema and compilation to use a typed object, rewrite rules to match
 
+0.6.0 / 2017-08-11
+    * Incorporate json schema for validation
+    * (breaking) `linter.lint()` now takes a `LinterOpts` object instead of positional params
+        * `linter.lint(yaml, linter.rules.all)` should change to `linter.lint(yaml, {rules: linter.rules.all})`
+    * Add `linter.lintDefault()` which will lint with the recommended schema and rules
+    * Tweaks to `replicated-lint` bin command in package.json

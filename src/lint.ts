@@ -1,7 +1,10 @@
 import * as yaml from "js-yaml";
 import * as _ from "lodash";
 import * as ast from "yaml-ast-parser";
+import * as tv4 from "tv4";
+import * as rules from "./rules";
 import * as lineColumn from "line-column";
+import { parsed as schema } from "./schemas";
 import { YAMLNode } from "yaml-ast-parser";
 import { astPosition } from "./ast";
 import { defaultRegistry, Registry } from "./engine";
@@ -130,123 +133,222 @@ export interface Position {
   column?: number;
 }
 
-const DOC_SEPARATOR_LENGTH = 3;
+export interface MultidocLintOpts {
+  rules?: YAMLRule[];
+  schema?: any;
+  registry?: Registry;
+}
+
+export interface LintOpts extends MultidocLintOpts {
+  lineColumnFinder?: any;
+  offset?: number;
+}
+
+const DOC_SEPARATOR_LENGTH = 4;
 
 /**
  * uses a hack to split on yaml docs. Avoid using if posible
  */
-export function lintMultidoc(inYaml: string, rules?: YAMLRule[], registry?: Registry): LintedDoc[] {
-  const docs = inYaml.split(`---`).slice(1);
+export function hackLintMultidoc(inYaml: string, maybeOpts?: MultidocLintOpts): LintedDoc[] {
+  // It's just one doc, do the normal thing, but keep signature same
+  if (inYaml.indexOf(`---\n`) === -1) {
+    return [{
+      index: 0,
+      findings: lint(inYaml, maybeOpts),
+    }];
+  }
 
-  let offset = inYaml.indexOf(`---`) + 3;
-
+  // It's many docs, split it on --- and lint each one,
+  // tracking offset for accurate global line/column computation
+  const opts = maybeOpts || {};
+  const docs = inYaml.split(`---\n`).slice(1);
+  let offset = inYaml.indexOf(`---\n`) + DOC_SEPARATOR_LENGTH;
   const lineColumnFinder = lineColumn(inYaml);
 
   return _.map(docs, (doc, index) => {
-    const vetted = lint(doc, rules, registry, lineColumnFinder, offset);
+    const linted = new Linter(doc, {
+      rules: opts.rules,
+      registry: opts.registry,
+      lineColumnFinder,
+      offset,
+    }).lint();
+
     offset += doc.length + DOC_SEPARATOR_LENGTH;
     return ({
       index,
-      findings: vetted,
+      findings: linted,
     });
   });
+}
+
+export class Linter {
+
+  public static withDefaults(inYaml: string): Linter {
+    return new Linter(inYaml, { rules: rules.all, schema });
+  }
+
+  private readonly inYaml: string;
+  private readonly rules?: YAMLRule[];
+  private readonly schema?: any;
+
+  private readonly registry: Registry;
+  private readonly lineColumnFinder: any;
+  private readonly offset: number;
+
+  constructor(inYaml: string, maybeOpts?: LintOpts) {
+    const opts: LintOpts = maybeOpts || {};
+    this.inYaml = inYaml;
+    this.offset = opts.offset || 0;
+    this.registry = opts.registry || defaultRegistry;
+    this.lineColumnFinder = opts.lineColumnFinder || lineColumn(inYaml);
+    this.rules = opts.rules;
+    this.schema = opts.schema;
+  }
+
+  public lint(): RuleTrigger[] {
+
+    if (!this.inYaml) {
+      return [this.noDocError(this.inYaml)];
+    }
+    let root;
+    try {
+      root = yaml.safeLoad(this.inYaml);
+    } catch (err) {
+      return [this.loadYamlError(err)];
+    }
+
+    if (!root) {
+      return [this.noDocError(this.inYaml)];
+    }
+
+    const yamlAST: YAMLNode = ast.safeLoad(this.inYaml, null) as any;
+    if (this.schema) {
+      const res = tv4.validateMultiple(root, this.schema, false, true);
+      if (!res.valid) {
+        return this.schemaErrors(yamlAST, res.errors, this.lineColumnFinder, this.offset);
+      }
+    }
+
+    return this.evaluateRules(root, yamlAST);
+  }
+
+  private loadYamlError(err: any): RuleTrigger {
+    const positions = [] as Range[];
+
+    if (err.mark && err.mark.position) {
+      positions.push(
+        {
+          start: {
+            column: this.lineColumnFinder.fromIndex(err.mark.position + this.offset).col - 1,
+            line: this.lineColumnFinder.fromIndex(err.mark.position + this.offset).line - 1,
+            position: err.mark.position + this.offset,
+          },
+        },
+      );
+    }
+
+    return {
+      type: "error",
+      rule: "mesg-yaml-valid",
+      received: this.inYaml,
+      message: err.message,
+      positions,
+    };
+  }
+
+  private noDocError(inYaml: string): RuleTrigger {
+    return {
+      type: "warn",
+      rule: "mesg-yaml-not-empty",
+      received: inYaml,
+      message: "No document provided",
+    };
+
+  }
+
+  private evaluateRules(root: any, yamlAST: YAMLNode): RuleTrigger[] {
+    if (_.isEmpty(this.rules)) {
+      return [];
+    }
+
+    const ruleTriggers: RuleTrigger[] = [];
+
+    _.forEach(this.rules!, (rule: YAMLRule) => {
+
+      let result: RuleMatchedAt = { matched: false };
+      const compiled = this.registry.compile(rule.test);
+      try {
+        result = compiled.test(root);
+      } catch (err) {
+        console.log(`error testing rule ${rule.type}:${rule.name}`, err);
+        // ignore errors for now
+      }
+
+      if (result.matched) {
+        let positions = _.flatMap(result.paths!,
+          path => astPosition(yamlAST, path, this.lineColumnFinder, this.offset),
+        );
+
+        if (_.isEmpty(positions)) {
+          const shorterPaths = _.map(result.paths!, p => p.split(".").slice(0, -1).join("."));
+          positions = _.flatMap(shorterPaths,
+            path => astPosition(yamlAST, path, this.lineColumnFinder, this.offset),
+          );
+        }
+
+        ruleTriggers.push({
+          type: rule.type,
+          rule: rule.name,
+          received: _.map(result.paths!, p => _.get(root, p))[0],
+          message: rule.message,
+          positions,
+          links: rule.links,
+        });
+      }
+    });
+
+    return ruleTriggers;
+  }
+
+  private schemaErrors(yamlAST: YAMLNode, errors: tv4.ValidationError[], lineColumnFinder: any, offset: number): RuleTrigger[] {
+    return _.map(errors, (err: tv4.ValidationError) => {
+      let positions: Range[] = [];
+
+      if (err.dataPath) {
+        positions = astPosition(yamlAST, err.dataPath.slice(1).replace(/\//g, "."), lineColumnFinder, offset);
+      }
+
+      return {
+        rule: "prop-schema-valid",
+        type: "error" as RuleType,
+        positions,
+        received: "",
+        message: err.message,
+      };
+    });
+
+  }
+
 }
 
 /**
  * Lint a single yaml document against a set of `YAMLRule`s
  *
  * @param inYaml           yaml to lint
- * @param rules            set of rules to apply
+ * @param maybeOpts        LintOpts
  * @returns RuleTrigger[]  will be empty if linting passes
  */
-export function lint(inYaml: string, rules?: YAMLRule[], maybeRegistry?: Registry, maybeLineColumnFinder?: any, positionOffset?: number): RuleTrigger[] {
-  const offset: number = positionOffset || 0;
-  const registry: Registry = maybeRegistry || defaultRegistry;
-  const lineColumnFinder: any = maybeLineColumnFinder || lineColumn(inYaml);
-
-  if (!inYaml) {
-    return [noDocError(inYaml)];
-  }
-  let root;
-  try {
-    root = yaml.safeLoad(inYaml);
-  } catch (err) {
-    return [loadYamlError(err, inYaml, lineColumnFinder, offset)];
-  }
-
-  if (!root) {
-    return [noDocError(inYaml)];
-  }
-
-  const yamlAST: YAMLNode = ast.safeLoad(inYaml, null) as any;
-
-  if (_.isEmpty(rules)) {
-    return [];
-  }
-
-  const ruleTriggers: RuleTrigger[] = [];
-
-  _.forEach(rules!, (rule: YAMLRule) => {
-
-    let result: RuleMatchedAt = { matched: false };
-    const compiled = registry.compile(rule.test);
-    try {
-      result = compiled.test(root);
-    } catch (err) {
-      console.log(`error testing rule ${rule.type}:${rule.name}`, err);
-      // ignore errors for now
-    }
-
-    if (result.matched) {
-      let positions = _.flatMap(result.paths!,
-        path => astPosition(yamlAST, path, lineColumnFinder, offset),
-      );
-
-      if (_.isEmpty(positions)) {
-        const shorterPaths = _.map(result.paths!, p => p.split(".").slice(0, -1).join("."));
-        positions = _.flatMap(shorterPaths,
-          path => astPosition(yamlAST, path, lineColumnFinder, offset),
-        );
-      }
-
-      ruleTriggers.push({
-        type: rule.type,
-        rule: rule.name,
-        received: _.map(result.paths!, p => _.get(root, p))[0],
-        message: rule.message,
-        positions,
-        links: rule.links,
-      });
-    }
-  });
-
-  return ruleTriggers;
+export function lint(inYaml: string, maybeOpts?: LintOpts): RuleTrigger[] {
+  return new Linter(inYaml, maybeOpts).lint();
 }
 
-function loadYamlError(err: any, inYaml: string, lineColumnFinder: any, offset: any): RuleTrigger {
-  return {
-    type: "error",
-    rule: "mesg-yaml-valid",
-    received: inYaml,
-    positions: [
-      {
-        start: {
-          column: lineColumnFinder.fromIndex(err.mark.position + offset).col - 1,
-          line: lineColumnFinder.fromIndex(err.mark.position + offset).line - 1,
-          position: err.mark.position + offset,
-        },
-      },
-    ],
-    message: err.message,
-  };
-}
-
-function noDocError(inYaml: string): RuleTrigger {
-  return {
-    type: "warn",
-    rule: "mesg-yaml-not-empty",
-    received: inYaml,
-    message: "No document provided",
-  };
-
+/**
+ * Lint a single yaml document against the default set of `YAMLRule`s
+ * and document schema
+ *
+ * @param inYaml           yaml to lint
+ * @returns RuleTrigger[]  will be empty if linting passes
+ */
+export function defaultLint(inYaml: string): RuleTrigger[] {
+  return Linter.withDefaults(inYaml).lint();
 }

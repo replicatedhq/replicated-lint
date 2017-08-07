@@ -8,13 +8,15 @@ describe("lint with inline rules", () => {
 ---
 foo:
   bar: baz
-      `, [{
-        test: { Eq: { path: "foo.bar", value: "baz" } },
-        type: "error",
-        name: "foo-dot-bar-not-baz",
-        message: "foo.bar can't be baz!",
-        links: ["some-link-to-docs"],
-      }])).to.deep.equal([{
+      `, {
+        rules: [{
+          test: { Eq: { path: "foo.bar", value: "baz" } },
+          type: "error",
+          name: "foo-dot-bar-not-baz",
+          message: "foo.bar can't be baz!",
+          links: ["some-link-to-docs"],
+        }],
+      })).to.deep.equal([{
         type: "error",
         positions: [{
           path: "foo.bar",
@@ -40,12 +42,14 @@ foo:
 ---
 foo:
   bar: quux
-      `, [{
-          test: { Eq: { path: "foo.bar", value: "baz" } },
-          type: "error",
-          name: "foo-dot-bar-not-baz",
-          message: "foo.bar can't be baz!",
-        }])).to.be.empty;
+      `, {
+          rules: [{
+            test: { Eq: { path: "foo.bar", value: "baz" } },
+            type: "error",
+            name: "foo-dot-bar-not-baz",
+            message: "foo.bar can't be baz!",
+          }],
+        })).to.be.empty;
     });
   });
 });

@@ -41,7 +41,7 @@ describe("linter.rules.all", () => {
       for (const example of rule.examples!.right) {
         describe(example.description, () => {
           it("should pass linting", () => {
-            expect(lint(example.yaml, [rule])).to.deep.equal([]);
+            expect(lint(example.yaml, {rules: [rule]})).to.deep.equal([]);
           });
         });
       }
@@ -49,7 +49,7 @@ describe("linter.rules.all", () => {
       for (const example of rule.examples!.wrong) {
         describe(`${example.description}`, () => {
           it("should fail linting", () => {
-            expect(lint(example.yaml, [rule])).to.have.deep.property("[0].rule", rule.name);
+            expect(lint(example.yaml, {rules: [rule]})).to.have.deep.property("[0].rule", rule.name);
           });
         });
       }

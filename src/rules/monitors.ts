@@ -100,7 +100,60 @@ monitors:
   },
 };
 
+export const customMonitorsHaveAtLeastOneTarget: YAMLRule = {
+  name: "prop-monitors-custom-has-target",
+  type: "error",
+  message: "Entries in `monitors.custom` must have at least one target",
+  test: {
+    AnyOf: {
+      path: "monitors.custom",
+      pred: { IsEmpty: { path: "targets" } },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "custom monitor has no targets",
+        yaml: `
+---
+monitors:
+  custom:
+    - name: whatever
+      targets: []
+    `,
+      },
+      {
+        description: "custom monitor has null targets",
+        yaml: `
+---
+monitors:
+  custom:
+    - name: whatever
+    `,
+      },
+    ],
+    right: [{
+      description: "All custom monitors have at least one target",
+      yaml: `
+---
+components:
+  - name: Logstash
+    containers:
+      - image_name: quay.io/getelk/logstash
+monitors:
+  custom:
+    - name: whatever
+      targets: 
+        - stats.gauges.myapp100.ping.*
+        - movingAverage(stats.gauges.myapp100.ping.*,60)
+        - movingAverage(stats.gauges.myapp100.ping.*,600)
+      `,
+    }],
+  },
+};
+
 export const all: YAMLRule[] = [
   cpuMonitorContainerExists,
   memMonitorContainerExists,
+  customMonitorsHaveAtLeastOneTarget,
 ];

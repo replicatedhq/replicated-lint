@@ -136,7 +136,7 @@ export const configOptionPasswordType: YAMLRule = {
             And: {
               preds: [
                 { Neq: { path: "type", value: "password" } },
-                { Match: { path: "name", pattern: "key|password|access|secret" } },
+                { Match: { path: "name", pattern: "key|password|access|secret|token" } },
               ],
             },
           },
@@ -176,8 +176,69 @@ config:
   },
 };
 
+export const configOptionTypeValid: YAMLRule = {
+    name: "prop-configitem-type-valid",
+    type: "error",
+    message: "A Config Item must have a valid type",
+    test: {
+        AnyOf: {
+            path: "config",
+            pred: {
+                AnyOf: {
+                    path: "items",
+                    pred: {
+                        NotMatch: {
+                            path: "type",
+                            pattern: "^text|label|password|file|bool|select_one|select_many|textarea|select|heading$",
+                        },
+                    },
+                },
+            },
+        },
+    },
+    examples: {
+        wrong: [{
+            description: "Config Option type `image_upload` is not valid",
+            yaml: `
+---
+config:
+- name: images
+  title: Images
+  items:
+  - name: cat_picture
+    title: Cat Picture
+    type: image_upload
+    default: ""
+      `,
+        }],
+        right: [{
+            description: "All config options have valid types",
+            yaml: `
+---
+config:
+- name: database
+  title: Database
+  items:
+  - name: database_use_ssl
+    title: Use SSL
+    type: bool
+    default: ""
+  - name: database_host
+    title: Host
+    type: text
+    default: ""
+  - name: database_ssl_cert
+    title: SSL Certificate
+    type: textarea
+    default: ""
+      `,
+        }],
+    },
+};
+
 export const all: YAMLRule[] = [
   configOptionExists,
   configOptionPasswordType,
   configOptionNotCircular,
+  configOptionTypeValid,
 ];

@@ -89,6 +89,9 @@ export interface Test {
     path: string;
     field: string;
   };
+  Falsey?: {
+    path: string;
+  };
   GT?: {
     path: string;
     value: number;
@@ -96,6 +99,7 @@ export interface Test {
   MonitorContainerMissing?: {
     monitorPath: string;
   };
+  WhenExpressionConfigInvalid?: {};
 
   // allow arbitrary rules at compile time for now, need a better way to do this.
   // at least engine.Registry will complain at runtime if they're not supported.

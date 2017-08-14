@@ -2,7 +2,9 @@ import * as _ from "lodash";
 import * as semver from "semver";
 import { Predicate, RuleMatchedAt, Test } from "./lint";
 import {
-  FoundValue, TraverseSearcher, ValueSearcher,
+  FoundValue,
+  TraverseSearcher,
+  ValueSearcher,
   ValueTraverser,
 } from "./traverse";
 import { ConfigOption, ConfigSection } from "./replicated";
@@ -39,8 +41,9 @@ export class Match implements Predicate<any> {
   }
 
   constructor(
-    private readonly path: string,
-    private readonly check: RegExp) {
+      private readonly path: string,
+      private readonly check: RegExp,
+  ) {
   }
 
   public test(object: any): RuleMatchedAt {
@@ -58,8 +61,9 @@ export class NotMatch implements Predicate<any> {
   }
 
   constructor(
-    private readonly path: string,
-    private readonly check: RegExp) {
+      private readonly path: string,
+      private readonly check: RegExp,
+  ) {
   }
 
   public test(object: any): RuleMatchedAt {
@@ -70,15 +74,77 @@ export class NotMatch implements Predicate<any> {
   }
 }
 
+export class WhenExpressionConfigInvalid implements Predicate<any> {
+  public static fromJson(): WhenExpressionConfigInvalid {
+    return new WhenExpressionConfigInvalid(ConfigOptionExists.withDefaults());
+  }
+
+  constructor(
+      private readonly configOptionExists: ConfigOptionExists,
+  ) {
+  }
+
+  public test(root: any): RuleMatchedAt {
+    if (!_.has(root, "config")) {
+      return { matched: false };
+    }
+
+    const configOptionsReferenced = [] as FoundValue[];
+
+    _.forEach(root.config, (group, groupIndex) => {
+      if (!_.has(group, "items")) {
+        return;
+      }
+
+      _.forEach(group.items, (item, itemIndex) => {
+        const maybeConfigOption = this.maybeGetReferencedConfigOption(item);
+        if (maybeConfigOption) {
+          configOptionsReferenced.push({
+            value: maybeConfigOption!,
+            path: `config.${groupIndex}.items.${itemIndex}.when`,
+          });
+        }
+      });
+    });
+    return this.configOptionExists.compareUsageWithDefinedOptions(root, configOptionsReferenced);
+  }
+
+  private maybeGetReferencedConfigOption(item: any): string|undefined {
+    if (!item) {
+      return;
+    }
+
+    const when = item.when;
+
+    if (!when) {
+      return;
+    }
+
+    if (when === "true" || when === "false" || when === true || when === false) {
+      return;
+    }
+
+    if (/^{{repl/g.test(when)) {
+      return;
+    }
+
+    const isNeq = when.indexOf("!=") !== -1;
+    const splitchar = isNeq ? "!=" : "=";
+    return _.split(when, splitchar)[0];
+  }
+
+}
+
 export class Semver implements Predicate<any> {
   public static fromJson(obj: any): Semver {
     return new Semver(obj.path, obj.required);
   }
 
   constructor(
-    private readonly path: string,
-    private readonly required: boolean,
-  ) { }
+      private readonly path: string,
+      private readonly required: boolean,
+  ) {
+  }
 
   public test(root: any): RuleMatchedAt {
     const value = _.get(root, this.path);
@@ -101,8 +167,9 @@ export class AnyOf<T_Root, T_El> implements Predicate<T_Root> {
   }
 
   constructor(
-    private readonly collectionPath: string,
-    private readonly pred: Predicate<T_El>) {
+      private readonly collectionPath: string,
+      private readonly pred: Predicate<T_El>,
+  ) {
   }
 
   public test(root: any): RuleMatchedAt {
@@ -145,8 +212,9 @@ export class Eq<T> implements Predicate<T> {
   }
 
   constructor(
-    private readonly path: string,
-    private readonly value: any) {
+      private readonly path: string,
+      private readonly value: any,
+  ) {
   }
 
   public test(object: T): RuleMatchedAt {
@@ -166,8 +234,9 @@ export class GT<T> implements Predicate<T> {
   }
 
   constructor(
-    private readonly path: string,
-    private readonly value: number) {
+      private readonly path: string,
+      private readonly value: number,
+  ) {
   }
 
   public test(object: T): RuleMatchedAt {
@@ -184,8 +253,9 @@ export class Neq implements Predicate<any> {
   }
 
   constructor(
-    private readonly path: string,
-    private readonly value: any) {
+      private readonly path: string,
+      private readonly value: any,
+  ) {
   }
 
   public test(object: any): RuleMatchedAt {
@@ -243,6 +313,7 @@ export class Or<T> implements Predicate<T> {
   public static fromJson<T>(obj: any, registry: Registry): Or<T> {
     return new Or<T>(_.map(obj.preds, (pred: any) => registry.compile(pred)));
   }
+
   constructor(private readonly preds: Array<Predicate<T>>) {
   }
 
@@ -284,6 +355,10 @@ export class KeyDoesntMatch implements Predicate<any> {
 export class ConfigOptionExists implements Predicate<any> {
 
   public static fromJson(): ConfigOptionExists {
+    return ConfigOptionExists.withDefaults();
+  }
+
+  public static withDefaults(): ConfigOptionExists {
     return new ConfigOptionExists(new TraverseSearcher(new ValueTraverser()));
   }
 
@@ -291,16 +366,22 @@ export class ConfigOptionExists implements Predicate<any> {
   }
 
   public test(root: any): RuleMatchedAt {
-    const configItemNames = _.flatMap(root.config as ConfigSection[],
-      section => this.configItemNames(section),
-    );
 
     const configOptionFinder = (v: any) => /{{repl ConfigOption/.test(v);
     const configOptionUsages: FoundValue[] = this.valueSearcher.searchMatch(root, configOptionFinder);
 
+    return this.compareUsageWithDefinedOptions(root, configOptionUsages);
+
+  }
+
+  public compareUsageWithDefinedOptions(root: any, usages: FoundValue[]): RuleMatchedAt {
+    const configItemNames = _.flatMap(
+        root.config as ConfigSection[],
+        section => this.configItemNames(section),
+    );
     // usages that contain NONE OF configItemNames
     // every usage should match exactly one configItem
-    const filtered: FoundValue[] = _.filter(configOptionUsages, this.findInvalid(configItemNames));
+    const filtered: FoundValue[] = _.filter(usages, this.findInvalid(configItemNames));
 
     return { matched: !!filtered.length, paths: _.map(filtered, f => f.path) };
   }
@@ -340,8 +421,8 @@ export class ConfigOptionIsCircular implements Predicate<ConfigOption> {
     const patternOptionEquals: string = `ConfigOptionEquals "${configOption.name}"`;
 
     const configOptionUsages: FoundValue[] = _.concat(
-      this.valueSearcher.searchContains(configOption, patternOption),
-      this.valueSearcher.searchContains(configOption, patternOptionEquals),
+        this.valueSearcher.searchContains(configOption, patternOption),
+        this.valueSearcher.searchContains(configOption, patternOptionEquals),
     );
 
     return {
@@ -360,6 +441,7 @@ class MonitorContainerMissing implements Predicate<any> {
   public static fromJson(self: any): MonitorContainerMissing {
     return new MonitorContainerMissing(self.monitorPath);
   }
+
   constructor(private readonly monitorPath: string) {
   }
 
@@ -426,26 +508,29 @@ export interface Registry {
 }
 
 const defaultPredicates: PredicateRegistry = {
-  AnyOf,
-  Truthy,
-  Exists,
   And,
-  Eq,
-  KeyDoesntMatch,
-  Semver,
-  Match,
-  NotMatch,
-  Neq,
+  AnyOf,
   ConfigOptionExists,
   ConfigOptionIsCircular,
+  Eq,
+  Exists,
+  Falsey,
   FalseyIfPresent,
   GT,
-  Or,
+  KeyDoesntMatch,
+  Match,
   MonitorContainerMissing,
+  Neq,
+  NotMatch,
+  Or,
+  Semver,
+  Truthy,
+  WhenExpressionConfigInvalid,
 };
 
 export class MutableRegistry implements Registry {
-  constructor(private readonly types: PredicateRegistry) { }
+  constructor(private readonly types: PredicateRegistry) {
+  }
 
   public compile(obj: Test): Predicate<any> {
     for (const key of Object.keys(obj)) {

@@ -424,7 +424,6 @@ config:
     required: true
   - name: ldap_advanced_search
     title: Show Advanced Search Options
-    description: Enable this option if you need to write a custom LDAP search query.
     type: bool
     value: 0
   - name: ldap_restricted_user_group

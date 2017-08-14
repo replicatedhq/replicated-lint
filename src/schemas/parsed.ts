@@ -1,45 +1,66 @@
-{
+export default {
     "$schema": "http://json-schema.org/schema#",
     "type": "object",
     "properties": {
         "admin_commands": {
             "type": "array",
             "items": {
-                "type": "object",
-                "properties": {
-                    "AdminCommandV1": {
+                "anyOf": [
+                    {
                         "type": "object",
                         "properties": {
                             "component": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "image": {
                                 "type": "object",
                                 "properties": {
                                     "image_name": {
-                                        "type": "string"
+                                        "type": "string",
                                     },
                                     "version": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
+                                        "type": "string",
+                                    },
+                                },
+                            },
+                        },
                     },
-                    "AdminCommandV2": {
+                    {
                         "type": "object",
                         "properties": {
                             "alias": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "command": {
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
-                                }
+                                    "type": "string",
+                                },
                             },
                             "run_type": {
-                                "type": "string"
+                                "type": "string",
+                            },
+                            "component": {
+                                "type": "string",
+                            },
+                            "container": {
+                                "type": "string",
+                            },
+                            "selector": {
+                                "type": "object",
+                                "properties": {
+                                    ".*": {
+                                        "type": "string",
+                                    },
+                                },
+                            },
+                            "selectors": {
+                                "type": "object",
+                                "properties": {
+                                    ".*": {
+                                        "type": "string",
+                                    },
+                                },
                             },
                             "source": {
                                 "type": "object",
@@ -48,66 +69,66 @@
                                         "type": "object",
                                         "properties": {
                                             "container": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "selector": {
                                                 "type": "object",
                                                 "properties": {
                                                     ".*": {
-                                                        "type": "string"
-                                                    }
-                                                }
+                                                        "type": "string",
+                                                    },
+                                                },
                                             },
                                             "selectors": {
                                                 "type": "object",
                                                 "properties": {
                                                     ".*": {
-                                                        "type": "string"
-                                                    }
-                                                }
-                                            }
-                                        }
+                                                        "type": "string",
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
                                     "replicated": {
                                         "type": "object",
                                         "properties": {
                                             "component": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "container": {
-                                                "type": "string"
-                                            }
-                                        }
+                                                "type": "string",
+                                            },
+                                        },
                                     },
                                     "swarm": {
                                         "type": "object",
                                         "properties": {
                                             "container": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                }
+                                                "type": "string",
+                                            },
+                                        },
+                                    },
+                                },
                             },
                             "timeout": {
-                                "type": "integer"
+                                "type": "integer",
                             },
                             "when": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
+                                "type": ["string", "boolean"],
+                            },
+                        },
+                    },
+                ],
+            },
         },
         "backup": {
             "type": "object",
             "properties": {
                 "enabled": {
-                    "type": "string"
+                    "type": ["string", "boolean"],
                 },
                 "hidden": {
-                    "type": "string"
+                    "type": "string",
                 },
                 "kubernetes": {
                     "type": "object",
@@ -115,21 +136,21 @@
                         "pvc_names": {
                             "type": "array",
                             "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
+                                "type": "string",
+                            },
+                        },
+                    },
                 },
                 "pause_all": {
-                    "type": "boolean"
+                    "type": "boolean",
                 },
                 "pause_containers": {
-                    "type": "string"
+                    "type": "string",
                 },
                 "script": {
-                    "type": "string"
-                }
-            }
+                    "type": "string",
+                },
+            },
         },
         "cmds": {
             "type": "array",
@@ -139,17 +160,17 @@
                     "args": {
                         "type": "array",
                         "items": {
-                            "type": "string"
-                        }
+                            "type": "string",
+                        },
                     },
                     "cmd": {
-                        "type": "string"
+                        "type": "string",
                     },
                     "name": {
-                        "type": "string"
-                    }
-                }
-            }
+                        "type": "string",
+                    },
+                },
+            },
         },
         "components": {
             "type": "array",
@@ -157,33 +178,33 @@
                 "type": "object",
                 "properties": {
                     "cluster": {
-                        "type": "string"
+                        "type": ["string", "boolean"],
                     },
                     "cluster_host_count": {
                         "type": "object",
                         "properties": {
                             "max": {
-                                "type": "string"
+                                "type": ["string", "number"],
                             },
                             "min": {
-                                "type": "string"
+                                "type": ["string", "number"],
                             },
                             "strategy": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "threshold_degraded": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "threshold_healthy": {
-                                "type": "string"
-                            }
-                        }
+                                "type": "string",
+                            },
+                        },
                     },
                     "conflicts": {
                         "type": "array",
                         "items": {
-                            "type": "string"
-                        }
+                            "type": "string",
+                        },
                     },
                     "containers": {
                         "type": "array",
@@ -191,30 +212,30 @@
                             "type": "object",
                             "properties": {
                                 "allocate_tty": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "cluster": {
-                                    "type": "string"
+                                    "type": ["string", "boolean"],
                                 },
                                 "cluster_instance_count": {
                                     "type": "object",
                                     "properties": {
                                         "initial": {
-                                            "type": "string"
+                                            "type": ["string", "number"],
                                         },
                                         "max": {
-                                            "type": "string"
+                                            "type": ["string", "number"],
                                         },
                                         "threshold_degraded": {
-                                            "type": "string"
+                                            "type": "string",
                                         },
                                         "threshold_healthy": {
-                                            "type": "string"
-                                        }
-                                    }
+                                            "type": "string",
+                                        },
+                                    },
                                 },
                                 "cmd": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "config_files": {
                                     "type": "array",
@@ -222,45 +243,45 @@
                                         "type": "object",
                                         "properties": {
                                             "contents": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "file_mode": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "file_owner": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "filename": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "owner": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "path": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "ref": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "repo": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "source": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+                                                "type": "string",
+                                            },
+                                        },
+                                    },
                                 },
                                 "content_trust": {
                                     "type": "object",
                                     "properties": {
                                         "public_key_fingerprint": {
-                                            "type": "string"
-                                        }
-                                    }
+                                            "type": "string",
+                                        },
+                                    },
                                 },
                                 "cpu_shares": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "customer_files": {
                                     "type": "array",
@@ -268,34 +289,34 @@
                                         "type": "object",
                                         "properties": {
                                             "file_mode": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "file_owner": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "filename": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "name": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "when": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+                                                "type": ["string", "boolean"],
+                                            },
+                                        },
+                                    },
                                 },
                                 "display_name": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "dynamic": {
-                                    "type": "string"
+                                    "type": ["string", "boolean"],
                                 },
                                 "entrypoint": {
                                     "type": "array",
                                     "items": {
-                                        "type": "string"
-                                    }
+                                        "type": "string",
+                                    },
                                 },
                                 "env_vars": {
                                     "type": "array",
@@ -303,25 +324,25 @@
                                         "type": "object",
                                         "properties": {
                                             "is_excluded_from_support": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "name": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "static_val": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "when": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+                                                "type": ["string", "boolean"],
+                                            },
+                                        },
+                                    },
                                 },
                                 "ephemeral": {
-                                    "type": "boolean"
+                                    "type": "boolean",
                                 },
                                 "hostname": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "hosts": {
                                     "type": "array",
@@ -329,45 +350,45 @@
                                         "type": "object",
                                         "properties": {
                                             "address": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "hostname": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "when": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+                                                "type": ["string", "boolean"],
+                                            },
+                                        },
+                                    },
                                 },
                                 "image_name": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "logs": {
                                     "type": "object",
                                     "properties": {
                                         "max_files": {
-                                            "type": "string"
+                                            "type": "string",
                                         },
                                         "max_size": {
-                                            "type": "string"
-                                        }
-                                    }
+                                            "type": "string",
+                                        },
+                                    },
                                 },
                                 "memory_limit": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "memory_swap_limit": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "name": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "network_mode": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "pid_mode": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "ports": {
                                     "type": "array",
@@ -375,25 +396,25 @@
                                         "type": "object",
                                         "properties": {
                                             "interface": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "port_type": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "private_port": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "public_port": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "when": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+                                                "type": ["string", "boolean"],
+                                            },
+                                        },
+                                    },
                                 },
                                 "privileged": {
-                                    "type": "boolean"
+                                    "type": "boolean",
                                 },
                                 "publish_events": {
                                     "type": "array",
@@ -403,14 +424,14 @@
                                             "args": {
                                                 "type": "array",
                                                 "items": {
-                                                    "type": "string"
-                                                }
+                                                    "type": "string",
+                                                },
                                             },
                                             "data": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "name": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "subscriptions": {
                                                 "type": "array",
@@ -418,51 +439,51 @@
                                                     "type": "object",
                                                     "properties": {
                                                         "action": {
-                                                            "type": "string"
+                                                            "type": "string",
                                                         },
                                                         "component": {
-                                                            "type": "string"
+                                                            "type": "string",
                                                         },
                                                         "container": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
+                                                            "type": "string",
+                                                        },
+                                                    },
+                                                },
                                             },
                                             "timeout": {
-                                                "type": "integer"
+                                                "type": "integer",
                                             },
                                             "trigger": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+                                                "type": "string",
+                                            },
+                                        },
+                                    },
                                 },
                                 "restart": {
                                     "type": "object",
                                     "properties": {
                                         "max": {
-                                            "type": "integer"
+                                            "type": "integer",
                                         },
                                         "policy": {
-                                            "type": "string"
-                                        }
-                                    }
+                                            "type": "string",
+                                        },
+                                    },
                                 },
                                 "security_cap_add": {
                                     "type": "array",
                                     "items": {
-                                        "type": "string"
-                                    }
+                                        "type": "string",
+                                    },
                                 },
                                 "security_options": {
                                     "type": "array",
                                     "items": {
-                                        "type": "string"
-                                    }
+                                        "type": "string",
+                                    },
                                 },
                                 "source": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "support_commands": {
                                     "type": "array",
@@ -472,14 +493,14 @@
                                             "command": {
                                                 "type": "array",
                                                 "items": {
-                                                    "type": "string"
-                                                }
+                                                    "type": "string",
+                                                },
                                             },
                                             "filename": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+                                                "type": "string",
+                                            },
+                                        },
+                                    },
                                 },
                                 "support_files": {
                                     "type": "array",
@@ -487,16 +508,16 @@
                                         "type": "object",
                                         "properties": {
                                             "filename": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+                                                "type": "string",
+                                            },
+                                        },
+                                    },
                                 },
                                 "suppress_restart": {
                                     "type": "array",
                                     "items": {
-                                        "type": "string"
-                                    }
+                                        "type": "string",
+                                    },
                                 },
                                 "ulimits": {
                                     "type": "array",
@@ -504,19 +525,19 @@
                                         "type": "object",
                                         "properties": {
                                             "hard": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "name": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "soft": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+                                                "type": "string",
+                                            },
+                                        },
+                                    },
                                 },
                                 "version": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "volumes": {
                                     "type": "array",
@@ -524,66 +545,66 @@
                                         "type": "object",
                                         "properties": {
                                             "container_path": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "host_path": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "is_ephemeral": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "is_excluded_from_backup": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "options": {
                                                 "type": "array",
                                                 "items": {
-                                                    "type": "string"
-                                                }
+                                                    "type": "string",
+                                                },
                                             },
                                             "owner": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "permission": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+                                                "type": "string",
+                                            },
+                                        },
+                                    },
                                 },
                                 "volumes_from": {
                                     "type": "array",
                                     "items": {
-                                        "type": "string"
-                                    }
+                                        "type": "string",
+                                    },
                                 },
                                 "when": {
-                                    "type": "string"
-                                }
-                            }
-                        }
+                                    "type": ["string", "boolean"],
+                                },
+                            },
+                        },
                     },
                     "host_requirements": {
                         "type": "object",
                         "properties": {
                             "cpu_cores": {
-                                "type": "integer"
+                                "type": "integer",
                             },
                             "cpu_mhz": {
-                                "type": "integer"
+                                "type": "integer",
                             },
                             "disk_space": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "docker_version": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "memory": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "replicated_version": {
-                                "type": "string"
-                            }
-                        }
+                                "type": "string",
+                            },
+                        },
                     },
                     "host_volumes": {
                         "type": "array",
@@ -591,48 +612,48 @@
                             "type": "object",
                             "properties": {
                                 "host_path": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "is_ephemeral": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "is_excluded_from_backup": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "min_disk_space": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "owner": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "permission": {
-                                    "type": "string"
-                                }
-                            }
-                        }
+                                    "type": "string",
+                                },
+                            },
+                        },
                     },
                     "logs": {
                         "type": "object",
                         "properties": {
                             "max_files": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "max_size": {
-                                "type": "string"
-                            }
-                        }
+                                "type": "string",
+                            },
+                        },
                     },
                     "name": {
-                        "type": "string"
+                        "type": "string",
                     },
                     "tags": {
                         "type": "array",
                         "items": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
+                            "type": "string",
+                        },
+                    },
+                },
+            },
         },
         "config": {
             "type": "array",
@@ -640,13 +661,13 @@
                 "type": "object",
                 "properties": {
                     "description": {
-                        "type": "string"
+                        "type": "string",
                     },
                     "filters": {
                         "type": "array",
                         "items": {
-                            "type": "string"
-                        }
+                            "type": "string",
+                        },
                     },
                     "items": {
                         "type": "array",
@@ -654,47 +675,47 @@
                             "type": "object",
                             "properties": {
                                 "affix": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "data_cmd": {
                                     "type": "object",
                                     "properties": {
                                         "name": {
-                                            "type": "string"
+                                            "type": "string",
                                         },
                                         "value_at": {
-                                            "type": "integer"
-                                        }
-                                    }
+                                            "type": "integer",
+                                        },
+                                    },
                                 },
                                 "default": {
-                                    "type": "string"
+                                    "type": ["string", "number"],
                                 },
                                 "default_cmd": {
                                     "type": "object",
                                     "properties": {
                                         "name": {
-                                            "type": "string"
+                                            "type": "string",
                                         },
                                         "value_at": {
-                                            "type": "integer"
-                                        }
-                                    }
+                                            "type": "integer",
+                                        },
+                                    },
                                 },
                                 "filters": {
                                     "type": "array",
                                     "items": {
-                                        "type": "string"
-                                    }
+                                        "type": "string",
+                                    },
                                 },
                                 "help_text": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "hidden": {
-                                    "type": "boolean"
+                                    "type": "boolean",
                                 },
                                 "is_excluded_from_support": {
-                                    "type": "boolean"
+                                    "type": "boolean",
                                 },
                                 "items": {
                                     "type": "array",
@@ -702,47 +723,47 @@
                                         "type": "object",
                                         "properties": {
                                             "default": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "name": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "recommended": {
-                                                "type": "boolean"
+                                                "type": "boolean",
                                             },
                                             "title": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "value": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
+                                                "type": ["string", "number"],
+                                            },
+                                        },
+                                    },
                                 },
                                 "multi_value": {
                                     "type": "array",
                                     "items": {
-                                        "type": "string"
-                                    }
+                                        "type": "string",
+                                    },
                                 },
                                 "multiple": {
-                                    "type": "boolean"
+                                    "type": "boolean",
                                 },
                                 "name": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "props": {
                                     "type": "object",
-                                    "additionalProperties": true
+                                    "additionalProperties": true,
                                 },
                                 "readonly": {
-                                    "type": "boolean"
+                                    "type": "boolean",
                                 },
                                 "recommended": {
-                                    "type": "boolean"
+                                    "type": "boolean",
                                 },
                                 "required": {
-                                    "type": "boolean"
+                                    "type": "boolean",
                                 },
                                 "test_proc": {
                                     "type": "object",
@@ -750,57 +771,57 @@
                                         "arg_fields": {
                                             "type": "array",
                                             "items": {
-                                                "type": "string"
-                                            }
+                                                "type": "string",
+                                            },
                                         },
                                         "args": {
                                             "type": "array",
                                             "items": {
-                                                "type": "string"
-                                            }
+                                                "type": "string",
+                                            },
                                         },
                                         "command": {
-                                            "type": "string"
+                                            "type": "string",
                                         },
                                         "display_name": {
-                                            "type": "string"
+                                            "type": "string",
                                         },
                                         "run_on_save": {
-                                            "type": "string"
+                                            "type": ["string", "boolean"],
                                         },
                                         "timeout": {
-                                            "type": "integer"
-                                        }
-                                    }
+                                            "type": "integer",
+                                        },
+                                    },
                                 },
                                 "title": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "type": {
-                                    "type": "string"
+                                    "type": "string",
                                 },
                                 "value": {
-                                    "type": "string"
+                                    "type": ["string", "number"],
                                 },
                                 "value_cmd": {
                                     "type": "object",
                                     "properties": {
                                         "name": {
-                                            "type": "string"
+                                            "type": "string",
                                         },
                                         "value_at": {
-                                            "type": "integer"
-                                        }
-                                    }
+                                            "type": "integer",
+                                        },
+                                    },
                                 },
                                 "when": {
-                                    "type": "string"
-                                }
-                            }
-                        }
+                                    "type": ["string", "boolean"],
+                                },
+                            },
+                        },
                     },
                     "name": {
-                        "type": "string"
+                        "type": "string",
                     },
                     "test_proc": {
                         "type": "object",
@@ -808,40 +829,40 @@
                             "arg_fields": {
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
-                                }
+                                    "type": "string",
+                                },
                             },
                             "args": {
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
-                                }
+                                    "type": "string",
+                                },
                             },
                             "command": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "display_name": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "run_on_save": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "timeout": {
-                                "type": "integer"
-                            }
-                        }
+                                "type": "integer",
+                            },
+                        },
                     },
                     "title": {
-                        "type": "string"
+                        "type": "string",
                     },
                     "when": {
-                        "type": "string"
-                    }
-                }
-            }
+                        "type": ["string", "boolean"],
+                    },
+                },
+            },
         },
         "console_support_markdown": {
-            "type": "string"
+            "type": "string",
         },
         "custom_metrics": {
             "type": "array",
@@ -849,22 +870,22 @@
                 "type": "object",
                 "properties": {
                     "aggregation_method": {
-                        "type": "string"
+                        "type": "string",
                     },
                     "reported": {
-                        "type": "string"
+                        "type": "string",
                     },
                     "retention": {
-                        "type": "string"
+                        "type": "string",
                     },
                     "target": {
-                        "type": "string"
+                        "type": "string",
                     },
                     "xfiles_factor": {
-                        "type": "number"
-                    }
-                }
-            }
+                        "type": "number",
+                    },
+                },
+            },
         },
         "custom_requirements": {
             "type": "array",
@@ -874,47 +895,51 @@
                     "command": {
                         "type": "object",
                         "properties": {
-                            "data": {},
+                            "data": {
+                                type: ["any", "object"],
+                                properties: {},
+                                additionalProperties: true,
+                            },
                             "id": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "timeout": {
-                                "type": "integer"
-                            }
-                        }
+                                "type": "integer",
+                            },
+                        },
                     },
                     "details": {
-                        "type": "object",
+                        "type": ["object", "string"],
                         "properties": {
                             "args": {
                                 "type": "object",
-                                "additionalProperties": true
+                                "additionalProperties": true,
                             },
                             "default_message": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "id": {
-                                "type": "string"
-                            }
-                        }
+                                "type": "string",
+                            },
+                        },
                     },
                     "id": {
-                        "type": "string"
+                        "type": "string",
                     },
                     "message": {
-                        "type": "object",
+                        "type": ["object", "string"],
                         "properties": {
                             "args": {
                                 "type": "object",
-                                "additionalProperties": true
+                                "additionalProperties": true,
                             },
                             "default_message": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "id": {
-                                "type": "string"
-                            }
-                        }
+                                "type": "string",
+                            },
+                        },
                     },
                     "results": {
                         "type": "array",
@@ -925,82 +950,82 @@
                                     "type": "object",
                                     "properties": {
                                         "bool_expr": {
-                                            "type": "string"
+                                            "type": "string",
                                         },
                                         "error": {
-                                            "type": "boolean"
+                                            "type": "boolean",
                                         },
                                         "status_code": {
-                                            "type": "integer"
-                                        }
-                                    }
+                                            "type": "integer",
+                                        },
+                                    },
                                 },
                                 "message": {
-                                    "type": "object",
+                                    "type": ["object", "string"],
                                     "properties": {
                                         "args": {
                                             "type": "object",
-                                            "additionalProperties": true
+                                            "additionalProperties": true,
                                         },
                                         "default_message": {
-                                            "type": "string"
+                                            "type": "string",
                                         },
                                         "id": {
-                                            "type": "string"
-                                        }
-                                    }
+                                            "type": "string",
+                                        },
+                                    },
                                 },
                                 "status": {
-                                    "type": "string"
-                                }
-                            }
-                        }
+                                    "type": "string",
+                                },
+                            },
+                        },
                     },
                     "when": {
-                        "type": "string"
-                    }
-                }
-            }
+                        "type": ["string", "boolean"],
+                    },
+                },
+            },
         },
         "graphite": {
             "type": "object",
             "properties": {
                 "port": {
-                    "type": "integer"
-                }
-            }
+                    "type": "integer",
+                },
+            },
         },
         "host_requirements": {
             "type": "object",
             "properties": {
                 "cpu_cores": {
-                    "type": "integer"
+                    "type": "integer",
                 },
                 "cpu_mhz": {
-                    "type": "integer"
+                    "type": "integer",
                 },
                 "disk_space": {
-                    "type": "string"
+                    "type": "string",
                 },
                 "docker_version": {
-                    "type": "string"
+                    "type": "string",
                 },
                 "memory": {
-                    "type": "string"
+                    "type": "string",
                 },
                 "replicated_version": {
-                    "type": "string"
-                }
-            }
+                    "type": "string",
+                },
+            },
         },
         "identity": {
             "type": "object",
             "properties": {
                 "enabled": {
-                    "type": "string"
+                    "type": "string",
                 },
                 "provisioner": {
-                    "type": "string"
+                    "type": "string",
                 },
                 "sources": {
                     "type": "array",
@@ -1008,15 +1033,15 @@
                         "type": "object",
                         "properties": {
                             "enabled": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "source": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
+                                "type": "string",
+                            },
+                        },
+                    },
+                },
+            },
         },
         "images": {
             "type": "array",
@@ -1027,27 +1052,27 @@
                         "type": "object",
                         "properties": {
                             "public_key_fingerprint": {
-                                "type": "string"
-                            }
-                        }
+                                "type": "string",
+                            },
+                        },
                     },
                     "name": {
-                        "type": "string"
+                        "type": "string",
                     },
                     "source": {
-                        "type": "string"
+                        "type": "string",
                     },
                     "tag": {
-                        "type": "string"
-                    }
-                }
-            }
+                        "type": "string",
+                    },
+                },
+            },
         },
         "kubernetes": {
             "type": "object",
             "properties": {
                 "Config": {
-                    "type": "string"
+                    "type": "string",
                 },
                 "persistent_volume_claims": {
                     "type": "array",
@@ -1057,17 +1082,17 @@
                             "access_modes": {
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
-                                }
+                                    "type": "string",
+                                },
                             },
                             "name": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "storage": {
-                                "type": "string"
-                            }
-                        }
-                    }
+                                "type": "string",
+                            },
+                        },
+                    },
                 },
                 "requirements": {
                     "type": "object",
@@ -1075,30 +1100,30 @@
                         "api_versions": {
                             "type": "array",
                             "items": {
-                                "type": "string"
-                            }
+                                "type": "string",
+                            },
                         },
                         "cluster_size": {
-                            "type": "string"
+                            "type": "string",
                         },
                         "server_version": {
-                            "type": "string"
+                            "type": "string",
                         },
                         "total_cores": {
-                            "type": "string"
+                            "type": "string",
                         },
                         "total_memory": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
+                            "type": "string",
+                        },
+                    },
+                },
+            },
         },
         "localization": {
             "type": "object",
             "properties": {
                 "enabled": {
-                    "type": "boolean"
+                    "type": "boolean",
                 },
                 "locales": {
                     "type": "array",
@@ -1106,131 +1131,131 @@
                         "type": "object",
                         "properties": {
                             "tag": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "translations": {
                                 "type": "object",
                                 "properties": {
                                     ".*": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
+                                        "type": "string",
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
                 "locales_enabled": {
                     "type": "array",
                     "items": {
-                        "type": "string"
-                    }
-                }
-            }
+                        "type": "string",
+                    },
+                },
+            },
         },
         "monitors": {
             "type": "object",
             "properties": {
-                "Cpuacct": {
+                "cpuacct": {
                     "type": "array",
                     "items": {
-                        "type": "string"
-                    }
+                        "type": "string",
+                    },
                 },
-                "Custom": {
+                "custom": {
                     "type": "array",
                     "items": {
                         "type": "object",
                         "properties": {
                             "dashboard": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "display": {
                                 "type": "object",
                                 "properties": {
                                     "css_class_name": {
-                                        "type": "string"
+                                        "type": "string",
                                     },
                                     "fill_color": {
-                                        "type": "string"
+                                        "type": "string",
                                     },
                                     "label_count": {
-                                        "type": "integer"
+                                        "type": "integer",
                                     },
                                     "label_max": {
-                                        "type": "number"
+                                        "type": "number",
                                     },
                                     "label_min": {
-                                        "type": "number"
+                                        "type": "number",
                                     },
                                     "label_range_override": {
-                                        "type": "boolean"
+                                        "type": "boolean",
                                     },
                                     "label_scale": {
-                                        "type": "string"
+                                        "type": "string",
                                     },
                                     "label_unit": {
-                                        "type": "string"
+                                        "type": "string",
                                     },
                                     "stroke_color": {
-                                        "type": "string"
-                                    }
-                                }
+                                        "type": "string",
+                                    },
+                                },
                             },
                             "from": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "name": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "target": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "targets": {
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
-                                }
+                                    "type": "string",
+                                },
                             },
                             "until": {
-                                "type": "string"
-                            }
-                        }
-                    }
+                                "type": "string",
+                            },
+                        },
+                    },
                 },
-                "Memory": {
+                "memory": {
                     "type": "array",
                     "items": {
-                        "type": "string"
-                    }
-                }
-            }
+                        "type": "string",
+                    },
+                },
+            },
         },
         "name": {
-            "type": "string"
+            "type": "string",
         },
         "properties": {
             "type": "object",
             "properties": {
                 "app_url": {},
                 "bypass_local_registry": {
-                    "type": "boolean"
+                    "type": "boolean",
                 },
                 "console_title": {
-                    "type": "string"
+                    "type": "string",
                 },
                 "logo_url": {
-                    "type": "string"
+                    "type": "string",
                 },
                 "shell_alias": {
-                    "type": "string"
-                }
-            }
+                    "type": "string",
+                },
+            },
         },
         "release_notes": {
-            "type": "string"
+            "type": "string",
         },
         "replicated_api_version": {
-            "type": "string"
+            "type": "string",
         },
         "state": {
             "type": "object",
@@ -1241,26 +1266,26 @@
                         "args": {
                             "type": "array",
                             "items": {
-                                "type": "string"
-                            }
+                                "type": "string",
+                            },
                         },
                         "command": {
-                            "type": "string"
+                            "type": "string",
                         },
                         "timeout": {
-                            "type": "integer"
-                        }
-                    }
-                }
-            }
+                            "type": "integer",
+                        },
+                    },
+                },
+            },
         },
         "statsd": {
             "type": "object",
             "properties": {
                 "port": {
-                    "type": "integer"
-                }
-            }
+                    "type": "integer",
+                },
+            },
         },
         "support": {
             "type": "object",
@@ -1273,11 +1298,11 @@
                             "command": {
                                 "type": "array",
                                 "items": {
-                                    "type": "string"
-                                }
+                                    "type": "string",
+                                },
                             },
                             "filename": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "source": {
                                 "type": "object",
@@ -1286,49 +1311,49 @@
                                         "type": "object",
                                         "properties": {
                                             "container": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "selector": {
                                                 "type": "object",
                                                 "properties": {
                                                     ".*": {
-                                                        "type": "string"
-                                                    }
-                                                }
+                                                        "type": "string",
+                                                    },
+                                                },
                                             },
                                             "selectors": {
                                                 "type": "object",
                                                 "properties": {
                                                     ".*": {
-                                                        "type": "string"
-                                                    }
-                                                }
-                                            }
-                                        }
+                                                        "type": "string",
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
                                     "replicated": {
                                         "type": "object",
                                         "properties": {
                                             "component": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "container": {
-                                                "type": "string"
-                                            }
-                                        }
+                                                "type": "string",
+                                            },
+                                        },
                                     },
                                     "swarm": {
                                         "type": "object",
                                         "properties": {
                                             "container": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                                                "type": "string",
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
                 "files": {
                     "type": "array",
@@ -1336,7 +1361,7 @@
                         "type": "object",
                         "properties": {
                             "filename": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "source": {
                                 "type": "object",
@@ -1345,60 +1370,60 @@
                                         "type": "object",
                                         "properties": {
                                             "container": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "selector": {
                                                 "type": "object",
                                                 "properties": {
                                                     ".*": {
-                                                        "type": "string"
-                                                    }
-                                                }
+                                                        "type": "string",
+                                                    },
+                                                },
                                             },
                                             "selectors": {
                                                 "type": "object",
                                                 "properties": {
                                                     ".*": {
-                                                        "type": "string"
-                                                    }
-                                                }
-                                            }
-                                        }
+                                                        "type": "string",
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
                                     "replicated": {
                                         "type": "object",
                                         "properties": {
                                             "component": {
-                                                "type": "string"
+                                                "type": "string",
                                             },
                                             "container": {
-                                                "type": "string"
-                                            }
-                                        }
+                                                "type": "string",
+                                            },
+                                        },
                                     },
                                     "swarm": {
                                         "type": "object",
                                         "properties": {
                                             "container": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                                                "type": "string",
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
                 "timeout": {
-                    "type": "string"
-                }
-            }
+                    "type": "string",
+                },
+            },
         },
         "swarm": {
             "type": "object",
             "properties": {
                 "minimum_node_count": {
-                    "type": "string"
+                    "type": "string",
                 },
                 "nodes": {
                     "type": "array",
@@ -1409,41 +1434,41 @@
                                 "type": "object",
                                 "properties": {
                                     "cpu_cores": {
-                                        "type": "integer"
+                                        "type": "integer",
                                     },
                                     "cpu_mhz": {
-                                        "type": "integer"
+                                        "type": "integer",
                                     },
                                     "disk_space": {
-                                        "type": "string"
+                                        "type": "string",
                                     },
                                     "docker_version": {
-                                        "type": "string"
+                                        "type": "string",
                                     },
                                     "memory": {
-                                        "type": "string"
+                                        "type": "string",
                                     },
                                     "replicated_version": {
-                                        "type": "string"
-                                    }
-                                }
+                                        "type": "string",
+                                    },
+                                },
                             },
                             "labels": {
                                 "type": "object",
                                 "properties": {
                                     ".*": {
-                                        "type": "string"
-                                    }
-                                }
+                                        "type": "string",
+                                    },
+                                },
                             },
                             "minimum_count": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "role": {
-                                "type": "string"
-                            }
-                        }
-                    }
+                                "type": "string",
+                            },
+                        },
+                    },
                 },
                 "secrets": {
                     "type": "array",
@@ -1454,23 +1479,23 @@
                                 "type": "object",
                                 "properties": {
                                     ".*": {
-                                        "type": "string"
-                                    }
-                                }
+                                        "type": "string",
+                                    },
+                                },
                             },
                             "name": {
-                                "type": "string"
+                                "type": "string",
                             },
                             "value": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
+                                "type": "string",
+                            },
+                        },
+                    },
+                },
+            },
         },
         "version": {
-            "type": "string"
-        }
-    }
-}
+            "type": "string",
+        },
+    },
+};

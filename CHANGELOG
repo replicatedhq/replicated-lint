@@ -22,5 +22,9 @@
     * Tweaks to `replicated-lint` bin command in package.json
 
 0.6.1 / 2017-08-14
-    * Port config item "type" validation https://github.com/replicatedhq/libyaml/blob/master/validate.go#L376
-    * Port config item "when" validation https://github.com/replicatedhq/libyaml/blob/master/validate.go#L402
+    * Port config item `type` validation https://github.com/replicatedhq/libyaml/blob/master/validate.go#L376
+    * Port config item `when` validation https://github.com/replicatedhq/libyaml/blob/master/validate.go#L402
+    * Remove `received` field from linter results.
+
+0.6.2 / 2017-08-14
+    * Port custom monitor `target` validation https://github.com/replicatedhq/libyaml/blob/master/validate.go#L487

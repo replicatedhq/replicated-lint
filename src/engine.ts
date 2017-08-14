@@ -309,6 +309,23 @@ export class Falsey implements Predicate<any> {
   }
 }
 
+export class IsEmpty implements Predicate<any> {
+  public static fromJson(obj: any): IsEmpty {
+    return new IsEmpty(obj.path);
+  }
+
+  constructor(private readonly path: string) {
+  }
+
+  public test(object: any): RuleMatchedAt {
+
+    return {
+      matched: _.isEmpty(_.get(object, this.path)),
+      paths: [this.path],
+    };
+  }
+}
+
 export class Or<T> implements Predicate<T> {
   public static fromJson<T>(obj: any, registry: Registry): Or<T> {
     return new Or<T>(_.map(obj.preds, (pred: any) => registry.compile(pred)));
@@ -516,6 +533,7 @@ const defaultPredicates: PredicateRegistry = {
   Exists,
   Falsey,
   FalseyIfPresent,
+  IsEmpty,
   GT,
   KeyDoesntMatch,
   Match,

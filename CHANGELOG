@@ -35,3 +35,7 @@
 0.6.4 / 2017-08-14
     * Validate `kubernetes.requirements.server_version` is a valid semver range
     * Validate `host_requirements.replicated_version` is a valid semver range
+
+0.6.5 / 2017-08-14
+    * Validate `admin_commands.component` and `admin_commands.container` match a valid component/container
+    * Fix a bug in `monitors.cpuacct` and `monitors.memory` validation where the linter would fail with no components, even if both `cpuacct` and `memacct` are empty

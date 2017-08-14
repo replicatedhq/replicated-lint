@@ -45,12 +45,6 @@ cat docs/yamls/check-testproc-runonsave.yml | replicated-lint
 ```
 { type: 'info',
   rule: 'prop-configitem-testproc-run-on-save',
-  received: 
-   { display_name: 'Is this a Phone Number?',
-     command: 'regex_match',
-     args: 
-      [ '([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$',
-        'That doesn\'t seem to be a phone number!' ] },
   message: 'If a config item\'s test_proc.run_on_save is not set to \'true\', test_proc\'s will not be checked automatically. Consider setting your test_proc\'s run_on_save to automatically validate inputs',
   positions: 
    [ { path: 'config.1.items.2.test_proc',
@@ -166,8 +160,6 @@ console.log(ruleViolations);  /*
             column: 10,
           },
         }],
-        received: "baz",
-        rule: "foo-bar-neq-baz",
         message: "foo.bar can't be baz!",
 }]
 */

@@ -31,7 +31,6 @@ foo:
             column: 10,
           },
         }],
-        received: "baz",
         rule: "foo-dot-bar-not-baz",
         message: "foo.bar can't be baz!",
         links: ["some-link-to-docs"],

@@ -1,10 +1,10 @@
-import { YAMLRule } from "../lint";
+import {YAMLRule} from "../lint";
 
 export const configOptionExists: YAMLRule = {
   name: "tmpl-configoption-exists",
   type: "warn",
   message: "Options referenced with `{{repl ConfigOption }}` must be present in the `config` section",
-  test: { ConfigOptionExists: {} },
+  test: {ConfigOptionExists: {}},
   examples: {
     wrong: [{
       description: "Config Option `not_existent` is not defined in `config` section",
@@ -81,7 +81,7 @@ export const configOptionNotCircular: YAMLRule = {
       pred: {
         AnyOf: {
           path: "items",
-          pred: { ConfigOptionIsCircular: {} },
+          pred: {ConfigOptionIsCircular: {}},
         },
       },
     },
@@ -135,8 +135,13 @@ export const configOptionPasswordType: YAMLRule = {
           pred: {
             And: {
               preds: [
-                { Neq: { path: "type", value: "password" } },
-                { Match: { path: "name", pattern: "key|password|access|secret|token" } },
+                {Neq: {path: "type", value: "password"}},
+                {
+                  Match: {
+                    path: "name",
+                    pattern: "key|password|access|secret|token",
+                  },
+                },
               ],
             },
           },
@@ -177,29 +182,29 @@ config:
 };
 
 export const configOptionTypeValid: YAMLRule = {
-    name: "prop-configitem-type-valid",
-    type: "error",
-    message: "A Config Item must have a valid type",
-    test: {
+  name: "prop-configitem-type-valid",
+  type: "error",
+  message: "A Config Item must have a valid type",
+  test: {
+    AnyOf: {
+      path: "config",
+      pred: {
         AnyOf: {
-            path: "config",
-            pred: {
-                AnyOf: {
-                    path: "items",
-                    pred: {
-                        NotMatch: {
-                            path: "type",
-                            pattern: "^text|label|password|file|bool|select_one|select_many|textarea|select|heading$",
-                        },
-                    },
-                },
+          path: "items",
+          pred: {
+            NotMatch: {
+              path: "type",
+              pattern: "^text|label|password|file|bool|select_one|select_many|textarea|select|heading$",
             },
+          },
         },
+      },
     },
-    examples: {
-        wrong: [{
-            description: "Config Option type `image_upload` is not valid",
-            yaml: `
+  },
+  examples: {
+    wrong: [{
+      description: "Config Option type `image_upload` is not valid",
+      yaml: `
 ---
 config:
 - name: images
@@ -210,10 +215,10 @@ config:
     type: image_upload
     default: ""
       `,
-        }],
-        right: [{
-            description: "All config options have valid types",
-            yaml: `
+    }],
+    right: [{
+      description: "All config options have valid types",
+      yaml: `
 ---
 config:
 - name: database
@@ -232,8 +237,123 @@ config:
     type: textarea
     default: ""
       `,
-        }],
+    }],
+  },
+};
+
+export const configOptionWhenValid: YAMLRule = {
+  name: "prop-configitem-when-valid",
+  type: "error",
+  message: "A Config Item's when clause must be either empty, a template, a boolean literal, or reference a valid config option with `=` or `!=`",
+  test: {WhenExpressionConfigInvalid: {}},
+  examples: {
+    wrong: [
+      {
+        description: "Config Option `when` field references non-existent option `ssl_is_good`",
+        yaml: `
+---
+config:
+- name: database
+  title: Database
+  items:
+  - name: database_use_ssl
+    title: Use SSL
+    type: bool
+    default: ""
+  - name: database_ssl_cert
+    title: SSL Certificate
+    type: textarea
+    default: ""
+    when: ssl_is_good=1
+      `,
+      },
+      {
+        description: "Config Option `when` field references non-existent option `ssl_is_bad`",
+        yaml: `
+---
+config:
+- name: database
+  title: Database
+  items:
+  - name: database_use_ssl
+    title: Use SSL
+    type: bool
+    default: ""
+  - name: database_ssl_cert
+    title: SSL Certificate
+    type: textarea
+    default: ""
+    when: ssl_is_bad!=1
+      `,
+      },
+    ],
+    right: [
+        {
+      description: "All config options have valid `when` clauses",
+      yaml: `
+---
+config:
+- name: database
+  title: Database
+  items:
+  - name: database_use_ssl
+    title: Use SSL
+    type: bool
+    default: ""
+    when: null
+    
+  - name: database_use_ssl_2
+    title: Use SSL
+    type: bool
+    default: ""
+    when: ""
+    
+  - name: database_use_udp
+    title: Use UDP 
+    type: boolean
+    default: ""
+    when: false
+    
+  - name: database_use_tcp
+    title: Use UDP 
+    type: boolean
+    default: ""
+    when: true
+    
+  - name: database_use_index
+    title: Use Index?  
+    type: boolean
+    default: ""
+    when: "false"
+    
+  - name: database_use_btree
+    title: Use Btree? 
+    type: boolean
+    default: ""
+    when: "true"
+    
+  - name: database_ssl_cert
+    title: SSL Certificate
+    type: textarea
+    default: ""
+    when: '{{repl ConfigOptionEquals "database_use_ssl" "1"}}'
+    
+  - name: database_ssl_key
+    title: SSL Key
+    type: textarea
+    default: ""
+    when: database_use_ssl=1
+    
+  - name: database_strong_password
+    title: Require strong password
+    type: bool
+    default: ""
+    when: database_use_ssl!=1
+    
+      `,
     },
+    ],
+  },
 };
 
 export const all: YAMLRule[] = [
@@ -241,4 +361,5 @@ export const all: YAMLRule[] = [
   configOptionPasswordType,
   configOptionNotCircular,
   configOptionTypeValid,
+  configOptionWhenValid,
 ];

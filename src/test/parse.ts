@@ -14,19 +14,16 @@ describe("mesg-yaml-valid", () => {
     [undefined, [{
       type: "warn",
       rule: "mesg-yaml-not-empty",
-      received: undefined,
       message: "No document provided",
     }]],
     [null, [{
       type: "warn",
       rule: "mesg-yaml-not-empty",
-      received: null,
       message: "No document provided",
     }]],
     ["", [{
       type: "warn",
       rule: "mesg-yaml-not-empty",
-      received: "",
       message: "No document provided",
     }]],
   ];
@@ -51,9 +48,6 @@ foo: }`)).to.deep.equal([{
               position: 10,
             },
           }],
-          received: `
----
-foo: }`,
           message: `end of the stream or a document separator is expected at line 3, column 6:\n    foo: }\n         ^`,
         }]);
     });
@@ -100,7 +94,6 @@ bar: {}
       findings: [{
         type: "warn",
         rule: "mesg-yaml-not-empty",
-        received: "\n# lol\n\n\n",
         message: "No document provided",
       }],
     }, {
@@ -117,7 +110,6 @@ bar: {}
               },
             },
           ],
-          received: "fdfsjl: ]\n",
           rule: "mesg-yaml-valid",
           type: "error",
         },
@@ -155,7 +147,6 @@ name: Retraced
             },
           },
         ],
-        "received": "\n# Retraced\n\n---\n# kind: replicated\nreplicated_api_version: 2.9.0\nreplicated_api_version: 2.8.0\nname: Retraced\n",
         "rule": "mesg-yaml-valid",
         "type": "error",
       },

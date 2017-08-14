@@ -28,3 +28,6 @@
 
 0.6.2 / 2017-08-14
     * Port custom monitor `target` validation https://github.com/replicatedhq/libyaml/blob/master/validate.go#L487
+
+0.6.3 / 2017-08-14
+    * Port host requirements docker version validation https://github.com/replicatedhq/libyaml/blob/master/validate.go#L659 

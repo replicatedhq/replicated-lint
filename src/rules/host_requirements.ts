@@ -96,6 +96,89 @@ host_requirements:
   },
 };
 
+export const replicatedVersionSemverRange: YAMLRule = {
+  name: "prop-hostreq-replicated-version-semver-valid",
+  type: "error",
+  message: "host_requirements.replicated_version must be a semver range specification",
+  test: {
+    SemverRange: {
+      path: "host_requirements.replicated_version",
+      required: false,
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "Invalid replicated version the.good.one, not semver",
+        yaml: `
+---
+host_requirements:
+  replicated_version: the.good.one
+      `,
+      },
+      {
+        description: "Invalid replicated version alpha-0.1.1",
+        yaml: `
+---
+host_requirements:
+  replicated_version: alpha-0.1.1
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "valid version '2.x'",
+        yaml: `
+---
+host_requirements:
+    replicated_version: 2.x
+      `,
+      },
+      {
+        description: "valid version '2.5.3",
+        yaml: `
+---
+host_requirements:
+    replicated_version: 2.5.3
+      `,
+      },
+      {
+        description: "valid version '<=2.5.3 >2.5.x'",
+        yaml: `
+---
+host_requirements:
+    replicated_version: '<=2.5.3 >2.5.x'
+      `,
+      },
+      {
+        description: "valid version '1.x'",
+        yaml: `
+---
+host_requirements:
+    replicated_version: '1.x'
+      `,
+      },
+      {
+        description: "valid version '=1.x'",
+        yaml: `
+---
+host_requirements:
+    replicated_version: '=1.x'
+      `,
+      },
+      {
+        description: "valid version '>=1.4 <1.7'",
+        yaml: `
+---
+host_requirements:
+    replicated_version: '>=1.4 <1.7'
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   dockerVersionValid,
+  replicatedVersionSemverRange,
 ];

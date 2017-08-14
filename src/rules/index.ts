@@ -5,6 +5,7 @@ import * as monitors from "./monitors";
 import * as root from "./root";
 import * as testproc from "./testproc";
 import * as hostreq from "./host_requirements";
+import * as kubernetes from "./kubernetes";
 import { YAMLRule } from "../lint";
 
 export const all: YAMLRule[] = [
@@ -15,6 +16,7 @@ export const all: YAMLRule[] = [
   ...root.all,
   ...testproc.all,
   ...hostreq.all,
+  ...kubernetes.all,
 ];
 
-export { root, monitors, configoption, testproc };
+export { root, monitors, configoption, testproc, hostreq, kubernetes };

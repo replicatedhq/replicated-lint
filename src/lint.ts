@@ -71,6 +71,10 @@ export interface Test {
     path: string;
     required: boolean;
   };
+  SemverRange?: {
+    path: string;
+    required: boolean;
+  };
   Exists?: {
     path: string;
   };

@@ -161,6 +161,32 @@ export class Semver implements Predicate<any> {
   }
 }
 
+export class SemverRange implements Predicate<any> {
+  public static fromJson(obj: any): SemverRange {
+    return new SemverRange(obj.path, obj.required);
+  }
+
+  constructor(
+      private readonly path: string,
+      private readonly required: boolean,
+  ) {
+  }
+
+  public test(root: any): RuleMatchedAt {
+    const value = _.get(root, this.path);
+
+    if (!value && this.required) {
+      return { matched: true, paths: [] };
+    }
+
+    if (value && !semver.validRange(value)) {
+      return { matched: true, paths: [this.path] };
+    }
+
+    return { matched: false };
+  }
+}
+
 export class AnyOf<T_Root, T_El> implements Predicate<T_Root> {
   public static fromJson<R, E>(obj: any, registry: Registry): AnyOf<R, E> {
     return new AnyOf<R, E>(obj.path, registry.compile(obj.pred));
@@ -542,6 +568,7 @@ const defaultPredicates: PredicateRegistry = {
   NotMatch,
   Or,
   Semver,
+  SemverRange,
   Truthy,
   WhenExpressionConfigInvalid,
 };

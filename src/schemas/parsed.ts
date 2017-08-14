@@ -845,7 +845,7 @@ export default {
                                 "type": "string",
                             },
                             "run_on_save": {
-                                "type": "string",
+                                "type": ["string", "boolean"],
                             },
                             "timeout": {
                                 "type": "integer",

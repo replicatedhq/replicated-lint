@@ -345,6 +345,7 @@ config:
   title: LDAP Server Settings
   when: auth_source=auth_type_ldap
   test_proc:
+    run_on_save: true
     display_name: Test Credentials
     command: ldap_auth
     arg_fields:

@@ -19,7 +19,7 @@ process.stdin.on("data", (chunk) => {
 });
 
 process.stdin.on("end", () => {
-  const results: linter.RuleTrigger[] = linter.lint(data, linter.rules.all);
+  const results: linter.RuleTrigger[] = linter.defaultLint(data);
   for (const result of results) {
     console.log(util.inspect(result, false, 100, true));
 

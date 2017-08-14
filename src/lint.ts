@@ -22,7 +22,6 @@ export interface LintedDoc {
 export interface RuleTrigger {
   type: RuleType;
   rule: string;
-  received: any;
   message: string;
 
   links?: string[];
@@ -208,7 +207,7 @@ export class Linter {
   public lint(): RuleTrigger[] {
 
     if (!this.inYaml) {
-      return [this.noDocError(this.inYaml)];
+      return [this.noDocError()];
     }
     let root;
     try {
@@ -218,7 +217,7 @@ export class Linter {
     }
 
     if (!root) {
-      return [this.noDocError(this.inYaml)];
+      return [this.noDocError()];
     }
 
     const yamlAST: YAMLNode = ast.safeLoad(this.inYaml, null) as any;
@@ -250,17 +249,15 @@ export class Linter {
     return {
       type: "error",
       rule: "mesg-yaml-valid",
-      received: this.inYaml,
       message: err.message,
       positions,
     };
   }
 
-  private noDocError(inYaml: string): RuleTrigger {
+  private noDocError(): RuleTrigger {
     return {
       type: "warn",
       rule: "mesg-yaml-not-empty",
-      received: inYaml,
       message: "No document provided",
     };
 
@@ -299,7 +296,6 @@ export class Linter {
         ruleTriggers.push({
           type: rule.type,
           rule: rule.name,
-          received: _.map(result.paths!, p => _.get(root, p))[0],
           message: rule.message,
           positions,
           links: rule.links,
@@ -322,7 +318,6 @@ export class Linter {
         rule: "prop-schema-valid",
         type: "error" as RuleType,
         positions,
-        received: "",
         message: err.message,
       };
     });

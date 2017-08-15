@@ -39,3 +39,7 @@
 0.6.5 / 2017-08-14
     * Validate `admin_commands.component` and `admin_commands.container` match a valid component/container
     * Fix a bug in `monitors.cpuacct` and `monitors.memory` validation where the linter would fail with no components, even if both `cpuacct` and `memacct` are empty
+
+0.6.6 / 2017-08-15
+    * Allow `support.timeout` to be either a `number` or `string`
+    * Add a path to schema error messaging

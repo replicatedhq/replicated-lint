@@ -33,13 +33,10 @@ console.log(ruleViolations); // []
 
 ### CLI
 
-If `replicated-lint` is installed globally, yaml documents can be linted via CLI as well.
-
-Validate the included example file `docs/yamls/check-testproc-runonsave.yml` by piping to `replicated-lint`:
-
+You can also lint by piping to `yarn lint` from the project root (standalone CLI coming soon)
 
 ``` 
-cat docs/yamls/check-testproc-runonsave.yml | replicated-lint
+cat docs/yamls/check-testproc-runonsave.yml | yarn lint
 ```
 
 ```

@@ -1415,7 +1415,7 @@ export default {
                     },
                 },
                 "timeout": {
-                    "type": "string",
+                    "type": ["string", "number"],
                 },
             },
         },

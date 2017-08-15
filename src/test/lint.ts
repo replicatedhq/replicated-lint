@@ -32,7 +32,7 @@ foo:
           },
         }],
         rule: "foo-dot-bar-not-baz",
-        message: "foo.bar can't be baz!",
+        message: "foo.bar can't be baz! [foo.bar]",
         links: ["some-link-to-docs"],
       }]);
 

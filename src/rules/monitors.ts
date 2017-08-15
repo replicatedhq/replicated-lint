@@ -46,7 +46,16 @@ monitors:
   cpuacct:
     - Logstash,quay.io/getelk/logstash
       `,
-    }],
+    },
+      {
+        description: "No monitors, no containers",
+        yaml: `
+---
+monitors:
+  cpuacct: []
+      `,
+      },
+    ],
   },
 };
 

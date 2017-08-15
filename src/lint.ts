@@ -304,12 +304,16 @@ export class Linter {
           );
         }
 
+        const message = _.isEmpty(positions) ?
+            rule.message :
+            `${rule.message} [${positions[0].path}]`;
+
         ruleTriggers.push({
           type: rule.type,
           rule: rule.name,
-          message: rule.message,
-          positions,
           links: rule.links,
+          message,
+          positions,
         });
       }
     });
@@ -325,11 +329,15 @@ export class Linter {
         positions = astPosition(yamlAST, err.dataPath.slice(1).replace(/\//g, "."), lineColumnFinder, offset);
       }
 
+      const message = _.isEmpty(positions) ?
+          err.message :
+          `${err.message} [${positions[0].path}]`;
+
       return {
         rule: "prop-schema-valid",
         type: "error" as RuleType,
         positions,
-        message: err.message,
+        message,
       };
     });
 

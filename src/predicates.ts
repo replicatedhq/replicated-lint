@@ -550,6 +550,14 @@ export class AdminCommandContainerMissing implements Predicate<any> {
       return { matched: false };
     }
 
+    if (this.isKubernetesApp(commands)) { // it's probably kubernetes, we're not gonna check
+      return { matched: false };
+    }
+
+    if (this.isSwarmApp(commands)) { // it's probably swarm, we're not gonna check
+      return { matched: false };
+    }
+
     if (_.isEmpty(_.get(root, "components"))) {
       return { matched: true, paths: ["admin_commands"] };
     }
@@ -579,7 +587,15 @@ export class AdminCommandContainerMissing implements Predicate<any> {
     return { matched: !_.isEmpty(paths), paths };
   }
 
-  private checkCommand(components: any[], component: string, container: string): string|undefined {
+  private isKubernetesApp(commands: any[]) {
+    return !_.isEmpty(_.filter(commands, c => c.selector || c.selectors || (c.source && c.source.kuberentes)));
+  }
+
+  private isSwarmApp(commands: any[]) {
+    return !_.isEmpty(_.filter(commands, c => c.service || (c.source && c.source.swarm)));
+  }
+
+  private checkCommand(components: any[], component: string, container: string): string | undefined {
 
     // fail if component missing
     const componentIndex: any = _.findIndex(components, { name: component });

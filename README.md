@@ -26,7 +26,7 @@ components:
       - image: getelk/search`;
 
 
-const ruleViolations = linter.lint(yaml, linter.rules.all);
+const ruleViolations = linter.defaultLint(yaml);
 console.log(ruleViolations); // []
 
 ```
@@ -140,7 +140,7 @@ const rules: linter.YAMLRule[] = [
   }
 ];
 
-const ruleViolations = linter.lint(yaml, rules);
+const ruleViolations = linter.lint(yaml, { rules });
 console.log(ruleViolations);  /*
 [{
         type: "error",
@@ -167,15 +167,12 @@ Register new rules with `linter.enginer.register`. Rules should implement `JSONR
 ```typescript
 import * as linter from "replicated-lint"; 
 
-const yaml = `
----
-spam: eggs`;
 
 // rule MyRule checks if root object has property "spam" equal to "eggs"
 class MyRule implements linter.Predicate<any> {
   test(obj: any) {
     const matched = obj.spam !== "eggs"; // fail when spam != eggs
-    const paths = ["spam"];
+    const paths = ["spam"];              // if matched == true, optionally include a path where a rule was violated
     return { matched, paths };
   }
 
@@ -197,7 +194,11 @@ const rules: linter.YAMLRule[] = [
   }
 ];
 
-const ruleViolations = linter.lint(yaml, rules); 
+const yaml = `
+---
+spam: eggs`;
+
+const ruleViolations = linter.lint(yaml, { rules }); 
 console.log(ruleViolations); // []
 ```
 

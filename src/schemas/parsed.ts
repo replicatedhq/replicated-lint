@@ -48,7 +48,7 @@ export default {
                             },
                             "selector": {
                                 "type": "object",
-                                "properties": {
+                                "patternProperties": {
                                     ".*": {
                                         "type": "string",
                                     },
@@ -56,7 +56,7 @@ export default {
                             },
                             "selectors": {
                                 "type": "object",
-                                "properties": {
+                                "patternProperties": {
                                     ".*": {
                                         "type": "string",
                                     },
@@ -73,7 +73,7 @@ export default {
                                             },
                                             "selector": {
                                                 "type": "object",
-                                                "properties": {
+                                                "patternProperties": {
                                                     ".*": {
                                                         "type": "string",
                                                     },
@@ -81,7 +81,7 @@ export default {
                                             },
                                             "selectors": {
                                                 "type": "object",
-                                                "properties": {
+                                                "patternProperties": {
                                                     ".*": {
                                                         "type": "string",
                                                     },
@@ -1135,7 +1135,7 @@ export default {
                             },
                             "translations": {
                                 "type": "object",
-                                "properties": {
+                                "patternProperties": {
                                     ".*": {
                                         "type": "string",
                                     },
@@ -1304,6 +1304,22 @@ export default {
                             "filename": {
                                 "type": "string",
                             },
+                            "selector": {
+                              "type": "object",
+                              "patternProperties": {
+                                ".*": {
+                                  "type": "string",
+                                },
+                              },
+                            },
+                            "selectors": {
+                              "type": "object",
+                              "patternProperties": {
+                                ".*": {
+                                  "type": "string",
+                                },
+                              },
+                            },
                             "source": {
                                 "type": "object",
                                 "properties": {
@@ -1315,7 +1331,7 @@ export default {
                                             },
                                             "selector": {
                                                 "type": "object",
-                                                "properties": {
+                                                "patternProperties": {
                                                     ".*": {
                                                         "type": "string",
                                                     },
@@ -1323,7 +1339,7 @@ export default {
                                             },
                                             "selectors": {
                                                 "type": "object",
-                                                "properties": {
+                                                "patternProperties": {
                                                     ".*": {
                                                         "type": "string",
                                                     },
@@ -1363,6 +1379,28 @@ export default {
                             "filename": {
                                 "type": "string",
                             },
+                            "component": {
+                              "type": "string",
+                            },
+                            "container": {
+                              "type": "string",
+                            },
+                            "selector": {
+                              "type": "object",
+                              "patternProperties": {
+                                ".*": {
+                                  "type": "string",
+                                },
+                              },
+                            },
+                            "selectors": {
+                              "type": "object",
+                              "patternProperties": {
+                                ".*": {
+                                  "type": "string",
+                                },
+                              },
+                            },
                             "source": {
                                 "type": "object",
                                 "properties": {
@@ -1374,7 +1412,7 @@ export default {
                                             },
                                             "selector": {
                                                 "type": "object",
-                                                "properties": {
+                                                "patternProperties": {
                                                     ".*": {
                                                         "type": "string",
                                                     },
@@ -1382,7 +1420,7 @@ export default {
                                             },
                                             "selectors": {
                                                 "type": "object",
-                                                "properties": {
+                                                "patternProperties": {
                                                     ".*": {
                                                         "type": "string",
                                                     },
@@ -1455,7 +1493,7 @@ export default {
                             },
                             "labels": {
                                 "type": "object",
-                                "properties": {
+                                "patternProperties": {
                                     ".*": {
                                         "type": "string",
                                     },
@@ -1477,7 +1515,7 @@ export default {
                         "properties": {
                             "labels": {
                                 "type": "object",
-                                "properties": {
+                                "patternProperties": {
                                     ".*": {
                                         "type": "string",
                                     },

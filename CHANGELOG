@@ -44,8 +44,10 @@
     * Allow `support.timeout` to be either a `number` or `string`
     * Add a path to schema error messaging
 
-0.6.7 / 2017-08-17
+0.6.7 / 2017-08-18
     * Messaging tweak for `test_proc` rule
     * Schema support for inline component/container in `admin_commands` and `support`
     * Skip validating container references in non-native scheduler sources in `admin_commands` and `support`
 
+0.6.8 / 2017-08-18
+    * Validate that `components.*.containers.*.publish_events.*.subscriptions` all reference valid component/containers

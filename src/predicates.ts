@@ -495,18 +495,10 @@ export class MonitorContainerMissing implements Predicate<any> {
   }
 
   private checkMonitor(components: any[], monitor: string, index: number): InvalidMontior | undefined {
-    const [name, image] = monitor.split(",");
-
-    // fail if component missing
-    const componentIndex: any = _.findIndex(components, { name });
-    if (componentIndex === -1) {
-      return { index, path: "components" };
-    }
-
-    // fail if container missing
-    const container = _.find(components[componentIndex].containers, { image_name: image });
-    if (!container) {
-      return { index, path: `components.${componentIndex}` };
+    const [component, container] = monitor.split(",");
+    const result = isContainerMissing(components, component, container);
+    if (result.matched && result.paths && result.paths[0]) {
+      return { index, path: result.paths[0] };
     }
   }
 }
@@ -550,11 +542,11 @@ export class AdminCommandContainerMissing implements Predicate<any> {
       return { matched: false };
     }
 
-    if (this.isKubernetesApp(commands)) { // it's probably kubernetes, we're not gonna check
+    if (isKubernetesApp(commands)) { // it's probably kubernetes, we're not gonna check
       return { matched: false };
     }
 
-    if (this.isSwarmApp(commands)) { // it's probably swarm, we're not gonna check
+    if (isSwarmApp(commands)) { // it's probably swarm, we're not gonna check
       return { matched: false };
     }
 
@@ -576,37 +568,96 @@ export class AdminCommandContainerMissing implements Predicate<any> {
         container = command.replicated.container;
       }
 
-      const maybePath = this.checkCommand(root.components, component, container);
+      const matched = isContainerMissing(root.components, component, container);
 
-      if (maybePath) {
+      if (matched.matched) {
         paths.push(`admin_commands.${index}`);
-        paths.push(maybePath);
+      }
+
+      if (matched.paths) {
+        _.forEach(matched.paths, p => paths.push(p));
       }
     });
 
     return { matched: !_.isEmpty(paths), paths };
   }
 
-  private isKubernetesApp(commands: any[]) {
-    return !_.isEmpty(_.filter(commands, c => c.selector || c.selectors || (c.source && c.source.kuberentes)));
+}
+
+function isKubernetesApp(schedulerSourced: any[]) {
+  return !_.isEmpty(_.filter(schedulerSourced, c => c.selector || c.selectors || (c.source && c.source.kuberentes)));
+}
+
+function isSwarmApp(schedulerSourced: any[]) {
+  return !_.isEmpty(_.filter(schedulerSourced, c => c.service || (c.source && c.source.swarm)));
+}
+
+function isContainerMissing(components: any[], component: string, container: string): RuleMatchedAt {
+  // fail if component missing
+  const componentIndex: any = _.findIndex(components, { name: component });
+  if (componentIndex === -1) {
+    return { matched: true, paths: [`components`] };
   }
 
-  private isSwarmApp(commands: any[]) {
-    return !_.isEmpty(_.filter(commands, c => c.service || (c.source && c.source.swarm)));
+  // fail if container missing
+  const c = _.find(components[componentIndex].containers, { image_name: container });
+  if (!c) {
+    return { matched: true, paths: [`components.${componentIndex}`] };
   }
 
-  private checkCommand(components: any[], component: string, container: string): string | undefined {
+  return { matched: false };
+}
 
-    // fail if component missing
-    const componentIndex: any = _.findIndex(components, { name: component });
-    if (componentIndex === -1) {
-      return "components";
+interface EventSubscription {
+  component: string;
+  container: string;
+  componentIndex: number;
+  containerIndex: number;
+  eventIndex: number;
+  subscriptionIndex: number;
+}
+
+export class EventSubscriptionContainerMissing implements Predicate<any> {
+  public static fromJson(): EventSubscriptionContainerMissing {
+    return new EventSubscriptionContainerMissing();
+  }
+
+  public test(root: any): RuleMatchedAt {
+
+    if (_.isEmpty(_.get(root, "components"))) {
+      return { matched: false };
     }
 
-    // fail if container missing
-    const c = _.find(components[componentIndex].containers, { image_name: container });
-    if (!c) {
-      return `components.${componentIndex}`;
+    const subscriptions: any[] = _.flatMap(root.components, (component, componentIndex: number) => {
+      return _.flatMap(component.containers || [], (container, containerIndex: number) => {
+        return _.flatMap(container.publish_events, (event, eventIndex: number) => {
+          return _.map(event.subscriptions, (s: any, subscriptionIndex: number) => {
+            return {
+              component: s.component as string,
+              container: s.container as string,
+              componentIndex,
+              containerIndex,
+              eventIndex,
+              subscriptionIndex,
+            } as EventSubscription;
+          });
+        });
+      });
+    });
+
+    const invalidSubscriptions = _.filter(subscriptions, s => {
+      return isContainerMissing(root.components, s.component, s.container).matched;
+    });
+
+    if (_.isEmpty(invalidSubscriptions)) {
+      return { matched: false };
     }
+
+    return {
+      matched: true,
+      paths: _.map(subscriptions, s => {
+        return `components.${s.componentIndex}.containers.${s.containerIndex}.publish_events.${s.eventIndex}.subscriptions.${s.subscriptionIndex}`;
+      }),
+    };
   }
 }

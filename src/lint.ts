@@ -107,6 +107,7 @@ export interface Test {
     monitorPath: string;
   };
   WhenExpressionConfigInvalid?: {};
+  EventSubscriptionContainerMissing?: {};
 
   // allow arbitrary rules at compile time for now, need a better way to do this.
   // at least engine.Registry will complain at runtime if they're not supported.

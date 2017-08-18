@@ -180,8 +180,102 @@ monitors:
   },
 };
 
+// thanks validator! gopkg.in/go-playground/validator.v8
+const hexcolorRegexString = "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$";
+const rgbRegexString = "^rgb\\(\\s*(?:(?:0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*,\\s*(?:0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*,\\s*(?:0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])|(?:0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])%\\s*,\\s*(?:0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])%\\s*,\\s*(?:0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])%)\\s*\\)$";
+const rgbaRegexString = "^rgba\\(\\s*(?:(?:0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*,\\s*(?:0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*,\\s*(?:0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])|(?:0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])%\\s*,\\s*(?:0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])%\\s*,\\s*(?:0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])%)\\s*,\\s*(?:(?:0.[1-9]*)|[01])\\s*\\)$";
+
+export const customMonitorColorValid: YAMLRule = {
+  name: "prop-monitors-custom-has-target",
+  type: "error",
+  message: "Entries in `monitors.custom` have valid color specifications",
+  test: {
+    AnyOf: {
+      path: "monitors.custom",
+      pred: {
+        Dot: {
+          path: "display", pred: {
+            Or: {
+              preds: [
+                {
+                  And: {
+                    preds: [
+                      { Truthy: { path: "fill_color"} },
+                      { NotMatch: { path: "fill_color", pattern: hexcolorRegexString } },
+                      { NotMatch: { path: "fill_color", pattern: rgbRegexString } },
+                      { NotMatch: { path: "fill_color", pattern: rgbaRegexString } },
+                    ],
+                  },
+                },
+                {
+                  And: {
+                    preds: [
+                      { Truthy: { path: "stroke_color"} },
+                      { NotMatch: { path: "stroke_color", pattern: hexcolorRegexString } },
+                      { NotMatch: { path: "stroke_color", pattern: rgbRegexString } },
+                      { NotMatch: { path: "stroke_color", pattern: rgbaRegexString } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "custom monitor has invalid stroke_color",
+        yaml: `
+---
+monitors:
+  custom:
+    - name: whatever
+      targets: [stats.mystat.*]
+      display:
+        stroke_color: blue
+    `,
+      },
+      {
+        description: "custom monitor has invalid fill_color",
+        yaml: `
+---
+monitors:
+  custom:
+    - name: whatever
+      targets: [stats.mystat.*]
+      display:
+        fill_color: blue
+    `,
+      },
+    ],
+    right: [{
+      description: "custom monitor has valid color specs",
+      yaml: `
+---
+components:
+  - name: Logstash
+    containers:
+      - image_name: quay.io/getelk/logstash
+monitors:
+  custom:
+    - name: whenever
+      target: stats.gauges.myapp100.ping.*
+    - name: whatever
+      targets: 
+        - stats.gauges.myapp100.ping.*
+        - movingAverage(stats.gauges.myapp100.ping.*,60)
+        - movingAverage(stats.gauges.myapp100.ping.*,600)
+      `,
+    }],
+  },
+};
+
 export const all: YAMLRule[] = [
   cpuMonitorContainerExists,
   memMonitorContainerExists,
   customMonitorsHaveAtLeastOneTarget,
+  customMonitorColorValid,
 ];

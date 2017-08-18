@@ -190,6 +190,33 @@ export class AnyOf<T_Root, T_El> implements Predicate<T_Root> {
   }
 }
 
+// Traverse the tree to `path`, then apply the predicate
+export class Dot implements Predicate<any> {
+  public static fromJson(obj: any, registry: Registry): Dot {
+    return new Dot(obj.path, registry.compile(obj.pred));
+  }
+
+  constructor(
+      private readonly path: string,
+      private readonly pred: Predicate<any>,
+  ) {
+  }
+
+  public test(root: any): RuleMatchedAt {
+    const val = _.get(root, this.path);
+
+    const result: RuleMatchedAt = this.pred.test(val);
+    if (!result.matched) {
+      return { matched: false };
+    }
+
+    return {
+      matched: true,
+      paths: _.map(result.paths || [], p => `${this.path}.${p}`),
+    };
+  }
+}
+
 export class Exists<T> implements Predicate<T> {
   public static fromJson<T>(obj: any): Exists<T> {
     return new Exists(obj.path);
@@ -658,6 +685,41 @@ export class EventSubscriptionContainerMissing implements Predicate<any> {
       paths: _.map(subscriptions, s => {
         return `components.${s.componentIndex}.containers.${s.containerIndex}.publish_events.${s.eventIndex}.subscriptions.${s.subscriptionIndex}`;
       }),
+    };
+  }
+}
+
+/**
+ * MoreThan matches when a collection has more than `limit` elements matching at least one instance in `values`
+ */
+export class MoreThan<T> implements Predicate<any> {
+  public static fromJson(self: any): MoreThan<any> {
+    return new MoreThan(self.limit, self.values);
+  }
+
+  constructor(
+      private readonly limit: number,
+      private readonly values: T[],
+  ) {
+  }
+
+  public test(root: T[]): RuleMatchedAt {
+    const matching: number[] = _.filter(
+        _.flatMap(this.values, (val) => {
+          return _.map(root, (supplied, index) => {
+            return supplied === val ? index : -1;
+          });
+        }),
+        i => i !== -1,
+    );
+
+    if (matching.length <= this.limit) {
+      return { matched: false };
+    }
+
+    return {
+      matched: true,
+      paths: _.map(matching, m => `${m}`),
     };
   }
 }

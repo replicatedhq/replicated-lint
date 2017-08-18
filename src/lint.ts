@@ -108,6 +108,14 @@ export interface Test {
   };
   WhenExpressionConfigInvalid?: {};
   EventSubscriptionContainerMissing?: {};
+  MoreThan?: {
+    limit: number;
+    values: string[];
+  };
+  Dot?: {
+    path: string;
+    pred: Test;
+  };
 
   // allow arbitrary rules at compile time for now, need a better way to do this.
   // at least engine.Registry will complain at runtime if they're not supported.

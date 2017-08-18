@@ -144,7 +144,162 @@ components:
   },
 };
 
+export const containerVolumeModes: YAMLRule = {
+  name: "prop-component-container-volume-modes-valid",
+  type: "error",
+  message: "Container volume must not specify conflicting options",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            AnyOf: {
+              path: "volumes",
+              pred: {
+                Dot: {
+                  path: "options",
+                  pred: {
+                    Or: {
+                      preds: [
+                        { MoreThan: { limit: 1, values: ["rw", "ro"] } },
+                        { MoreThan: { limit: 1, values: ["z", "Z"] } },
+                        { MoreThan: { limit: 1, values: ["shared", "slave", "private", "rshared", "rslave", "rprivate"] } },
+                        { MoreThan: { limit: 1, values: ["nocopy"] } },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "volume options contains conflicting options `rw` and `ro`",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: mongo
+    volumes:
+      - host_path: /tmp
+        container_path: /tmp
+        options:
+          - rw
+          - ro
+      `,
+      },
+      {
+        description: "volume options contains conflicting options `z` and `Z`",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: mongo
+    volumes:
+      - host_path: /tmp
+        container_path: /tmp
+        options:
+          - z
+          - Z
+      `,
+      },
+      {
+        description: "volume options contains conflicting options `rshared` and `private`",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: mongo
+    volumes:
+      - host_path: /tmp
+        container_path: /tmp
+        options:
+          - rshared
+          - private
+      `,
+      },
+      {
+        description: "volume options contains duplicated option `nocopy`",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: mongo
+    volumes:
+      - host_path: /tmp
+        container_path: /tmp
+        options:
+          - nocopy
+          - nocopy
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "no volumes are defined",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: redis
+      `,
+      },
+      {
+        description: "no volume options are defined",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: redis
+    volumes:
+      - host_path: /tmp
+        container_path: /tmp
+      `,
+      },
+      {
+        description: "No conflicting volume options are defined",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: redis
+    volumes:
+      - host_path: /tmp
+        container_path: /tmp
+        options:
+          - rw
+          - Z
+          - rshared
+          - nocopy
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   notClusteredIfNamedContainer,
   eventSubscriptionContainerExists,
+  containerVolumeModes,
 ];

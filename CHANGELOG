@@ -54,3 +54,6 @@
 
 0.6.9 / 2017-08-18
     * Validate that a component's cluster `strategy` is one of `autoscale` or `random`
+
+0.6.10 / 2017-08-18
+    * Ensure no conflicting volume options are specified

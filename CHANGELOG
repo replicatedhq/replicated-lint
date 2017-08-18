@@ -57,3 +57,8 @@
 
 0.6.10 / 2017-08-18
     * Ensure no conflicting volume options are specified
+
+0.6.11 / 2017-08-18
+    * Ensure host_path and container_path are absolute paths
+    * Validate custom monitor colors
+

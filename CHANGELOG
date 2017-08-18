@@ -51,3 +51,6 @@
 
 0.6.8 / 2017-08-18
     * Validate that `components.*.containers.*.publish_events.*.subscriptions` all reference valid component/containers
+
+0.6.9 / 2017-08-18
+    * Validate that a component's cluster `strategy` is one of `autoscale` or `random`

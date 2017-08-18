@@ -76,6 +76,83 @@ components:
   },
 };
 
+export const componentClusterStrategy: YAMLRule = {
+  name: "prop-component-cluster-strategy",
+  type: "error",
+  message: "A component's cluster `strategy` must be either `random` or `autoscale`",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        And: {
+          preds: [
+            { Truthy: { path: "cluster" } },
+            { Truthy: { path: "cluster_host_count" } },
+            { Truthy: { path: "cluster_host_count.strategy" } },
+            { Neq: { path: "cluster_host_count.strategy", value: "autoscale" } },
+            { Neq: { path: "cluster_host_count.strategy", value: "random" } },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [{
+      description: "strategy is set to `all-on-one-host`, which is not a supported clustering strategy",
+      yaml: `
+---
+components:
+- name: DB
+  cluster: true
+  tags:
+  - db
+  cluster_host_count:
+    strategy: all-on-one-host
+  containers:
+  - source: public
+    image_name: redis
+    version: latest
+      `,
+    }],
+    right: [
+      {
+        description: "strategy is set to `autoscale`, a supported option",
+        yaml: `
+---
+components:
+- name: DB
+  cluster: true
+  tags:
+  - db
+  cluster_host_count:
+    strategy: autoscale
+  containers:
+  - source: public
+    image_name: redis
+    version: latest
+      `,
+      },
+      {
+        description: "strategy is unset",
+        yaml: `
+---
+components:
+- name: DB
+  cluster: true
+  tags:
+  - db
+  cluster_host_count: {}
+  containers:
+  - source: public
+    image_name: redis
+    version: latest
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   componentClusterCount,
+  componentClusterStrategy,
 ];

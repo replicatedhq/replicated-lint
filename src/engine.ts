@@ -24,7 +24,7 @@ import {
   SemverRange,
   Truthy,
   WhenExpressionConfigInvalid,
-  Dot,
+  Dot, LTE, LT, GTE,
 } from "./predicates";
 import * as util from "util";
 
@@ -53,6 +53,9 @@ const defaultPredicates: PredicateRegistry = {
   FalseyIfPresent,
   IsEmpty,
   GT,
+  GTE,
+  LT,
+  LTE,
   KeyDoesntMatch,
   Match,
   MonitorContainerMissing,

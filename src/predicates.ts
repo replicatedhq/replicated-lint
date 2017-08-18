@@ -1,12 +1,7 @@
 import * as _ from "lodash";
 import * as semver from "semver";
 import { Predicate, RuleMatchedAt } from "./lint";
-import {
-  FoundValue,
-  TraverseSearcher,
-  ValueSearcher,
-  ValueTraverser,
-} from "./traverse";
+import { FoundValue, TraverseSearcher, ValueSearcher, ValueTraverser } from "./traverse";
 import { ConfigOption, ConfigSection } from "./replicated";
 import { Registry } from "./engine";
 
@@ -252,8 +247,8 @@ export class Eq<T> implements Predicate<T> {
   }
 }
 
-export class GT<T> implements Predicate<T> {
-  public static fromJson<T>(obj: any): GT<T> {
+export class GT implements Predicate<any> {
+  public static fromJson(obj: any): GT {
     if (!_.isNumber(obj.value)) {
       throw new Error(`GT.value must be a number, received ${obj.value}`);
     }
@@ -266,11 +261,62 @@ export class GT<T> implements Predicate<T> {
   ) {
   }
 
-  public test(object: T): RuleMatchedAt {
+  public test(object: any): RuleMatchedAt {
+    const val = _.get(object, this.path);
+    if (!_.isNumber(val)) {
+      return { matched: true, paths: [this.path] };
+    }
     return {
-      matched: _.get(object, this.path) > this.value,
+      matched: val > this.value,
       paths: [this.path],
     };
+  }
+}
+
+export class LT implements Predicate<any> {
+  public static fromJson(obj: any): LT {
+    if (!_.isNumber(obj.value)) {
+      throw new Error(`LT.value must be a number, received ${obj.value}`);
+    }
+    return new LT(obj.path, obj.value);
+  }
+
+  constructor(
+      private readonly path: string,
+      private readonly value: number,
+  ) {
+  }
+
+  public test(object: any): RuleMatchedAt {
+
+    const val = _.get(object, this.path);
+
+    if (!_.isNumber(val)) {
+      return { matched: true, paths: [this.path] };
+    }
+
+    return {
+      matched: val < this.value,
+      paths: [this.path],
+    };
+  }
+}
+
+export class GTE {
+  public static fromJson(obj: any): Predicate<any> {
+    return new Or([
+      new GT(obj.path, obj.value),
+      new Eq(obj.path, obj.value),
+    ]);
+  }
+}
+
+export class LTE {
+  public static fromJson(obj: any): Predicate<any> {
+    return new Or([
+      new LT(obj.path, obj.value),
+      new Eq(obj.path, obj.value),
+    ]);
   }
 }
 

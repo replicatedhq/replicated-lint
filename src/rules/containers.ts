@@ -165,8 +165,13 @@ export const containerVolumeModes: YAMLRule = {
                       preds: [
                         { MoreThan: { limit: 1, values: ["rw", "ro"] } },
                         { MoreThan: { limit: 1, values: ["z", "Z"] } },
-                        { MoreThan: { limit: 1, values: ["shared", "slave", "private", "rshared", "rslave", "rprivate"] } },
                         { MoreThan: { limit: 1, values: ["nocopy"] } },
+                        {
+                          MoreThan: {
+                            limit: 1,
+                            values: ["shared", "slave", "private", "rshared", "rslave", "rprivate"],
+                          },
+                        },
                       ],
                     },
                   },
@@ -298,8 +303,86 @@ components:
   },
 };
 
+export const volumeContainerPathAbsoulte: YAMLRule = {
+  name: "prop-component-container-volume-path-absolute",
+  type: "error",
+  message: "Container volume's `container_path` must be absolute",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            AnyOf: {
+              path: "volumes",
+              pred: {
+                And: {
+                  preds: [
+                    { NotMatch: { path: "container_path", pattern: "^/" } },
+                    { NotMatch: { path: "container_path", pattern: "^{{repl" } },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "container path is not absolue",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: mongo
+    volumes:
+      - host_path: /tmp
+        container_path: ubuntu/workspace
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "container path is absolute",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: mongo
+    volumes:
+      - host_path: /tmp
+        container_path: /home/ubuntu/workspace
+      `,
+      },
+      {
+        description: "container path is a templated field",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: redis
+    volumes:
+      - host_path: /tmp
+        container_path: '{{repl ConfigOption "mount_path"}}'
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   notClusteredIfNamedContainer,
   eventSubscriptionContainerExists,
   containerVolumeModes,
+  volumeContainerPathAbsoulte,
 ];

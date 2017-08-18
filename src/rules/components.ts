@@ -152,7 +152,77 @@ components:
   },
 };
 
+export const componentHostVolumePathAbsolute: YAMLRule = {
+  name: "prop-component-volume-path-absolute",
+  type: "error",
+  message: "Component volume's `host_path` must be absolute",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "host_volumes",
+          pred: {
+            And: {
+              preds: [
+                { NotMatch: { path: "host_path", pattern: "^/" } },
+                { NotMatch: { path: "host_path", pattern: "^{{repl" } },
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "host path is not absolue",
+        yaml: `
+---
+components:
+- name: DB
+  host_volumes:
+    - host_path: ubuntu/workspace
+  containers:
+  - source: public
+    image_name: mongo
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "host path is absolute",
+        yaml: `
+---
+components:
+- name: DB
+  host_volumes:
+    - host_path: /home/ubuntu/workspace
+  containers:
+  - source: public
+    image_name: mongo
+      `,
+      },
+      {
+        description: "host path is a templated field",
+        yaml: `
+---
+components:
+- name: DB
+  host_volumes:
+    - host_path: '{{repl ConfigOption "custom_volume_path" }}'
+  containers:
+  - source: public
+    image_name: mongo
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   componentClusterCount,
   componentClusterStrategy,
+  componentHostVolumePathAbsolute,
 ];

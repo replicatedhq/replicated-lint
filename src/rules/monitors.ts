@@ -116,7 +116,14 @@ export const customMonitorsHaveAtLeastOneTarget: YAMLRule = {
   test: {
     AnyOf: {
       path: "monitors.custom",
-      pred: { IsEmpty: { path: "targets" } },
+      pred: {
+        And: {
+          preds: [
+            { IsEmpty: { path: "targets" } },
+            { IsEmpty: { path: "target" } },
+          ],
+        },
+      },
     },
   },
   examples: {
@@ -129,6 +136,16 @@ monitors:
   custom:
     - name: whatever
       targets: []
+    `,
+      },
+      {
+        description: "single target is empty",
+        yaml: `
+---
+monitors:
+  custom:
+    - name: whatever
+      target: 
     `,
       },
       {
@@ -151,6 +168,8 @@ components:
       - image_name: quay.io/getelk/logstash
 monitors:
   custom:
+    - name: whenever
+      target: stats.gauges.myapp100.ping.*
     - name: whatever
       targets: 
         - stats.gauges.myapp100.ping.*

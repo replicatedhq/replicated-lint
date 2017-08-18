@@ -64,6 +64,29 @@ components:
     - image_name: redis
       `,
       },
+      {
+        description: "Admin command has service, so we're probably in swarm",
+        yaml: `
+---
+admin_commands:
+- alias: aliasecho
+  command: ["echo"]
+  run_type: exec
+  service: database
+      `,
+      },
+      {
+        description: "Admin command has selector, so we're probably in kubernetes",
+        yaml: `
+---
+admin_commands:
+- alias: aliasecho
+  command: ["echo"]
+  run_type: exec
+  selector:
+    - tier: database
+      `,
+      },
     ],
   },
 };

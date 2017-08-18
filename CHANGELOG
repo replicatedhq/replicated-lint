@@ -43,3 +43,9 @@
 0.6.6 / 2017-08-15
     * Allow `support.timeout` to be either a `number` or `string`
     * Add a path to schema error messaging
+
+0.6.7 / 2017-08-17
+    * Messaging tweak for `test_proc` rule
+    * Schema support for inline component/container in `admin_commands` and `support`
+    * Skip validating container references in non-native scheduler sources in `admin_commands` and `support`
+

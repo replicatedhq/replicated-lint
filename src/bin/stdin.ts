@@ -56,4 +56,13 @@ process.stdin.on("end", () => {
     }
 
   }
+  console.log();
+  console.log();
+
+  if (results && results.length) {
+    console.log(chalk.yellow(`Found ${results.length} issues.`));
+  } else {
+    console.log(chalk.green(`✓ All clear!`));
+  }
+
 });

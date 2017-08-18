@@ -6,7 +6,7 @@ import {
   AnyOf,
   ConfigOptionExists,
   ConfigOptionIsCircular,
-  Eq,
+  Eq, EventSubscriptionContainerMissing,
   Exists,
   Falsey,
   FalseyIfPresent,
@@ -60,6 +60,7 @@ const defaultPredicates: PredicateRegistry = {
   SemverRange,
   Truthy,
   WhenExpressionConfigInvalid,
+  EventSubscriptionContainerMissing,
 };
 
 export class MutableRegistry implements Registry {

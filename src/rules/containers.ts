@@ -68,6 +68,83 @@ components:
   },
 };
 
+export const eventSubscriptionContainerExists: YAMLRule = {
+  name: "prop-component-container-event-subscription-container-exists",
+  type: "error",
+  message: "Container event subscriptions must reference an existing component/conatiner",
+  test: { EventSubscriptionContainerMissing: {} },
+  examples: {
+    wrong: [
+      {
+        description: "container 'redis' has a publish_event that references missing container `Pipeline/logstash`",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: mongo
+  - source: public
+    image_name: redis
+    publish_events:
+      - name: event
+        subscriptions:
+        - component: Pipeline
+          container: logstash
+          action: start
+      `,
+      },
+      {
+        description: "container 'redis' has a publish_event that references missing container `Pipeline/logstash`",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: mongo
+  - source: public
+    image_name: logstash
+  - source: public
+    image_name: redis
+    publish_events:
+      - name: event
+        subscriptions:
+        - component: Pipeline
+          container: logstash
+          action: start
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "All containers referenced in publish_events have a matching component/container definition",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - source: public
+    image_name: mongo
+  - source: public
+    image_name: redis
+    publish_events:
+      - name: event
+        subscriptions:
+        - component: Pipeline
+          container: logstash
+          action: start
+- name: Pipeline
+  containers:
+  - source: public
+    image_name: logstash
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   notClusteredIfNamedContainer,
+  eventSubscriptionContainerExists,
 ];

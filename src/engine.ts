@@ -24,7 +24,7 @@ import {
   SemverRange,
   Truthy,
   WhenExpressionConfigInvalid,
-  Dot, LTE, LT, GTE,
+  Dot, LTE, LT, GTE, NotBoolString,
 } from "./predicates";
 import * as util from "util";
 
@@ -69,6 +69,7 @@ const defaultPredicates: PredicateRegistry = {
   WhenExpressionConfigInvalid,
   EventSubscriptionContainerMissing,
   MoreThan,
+  NotBoolString,
 };
 
 export class MutableRegistry implements Registry {

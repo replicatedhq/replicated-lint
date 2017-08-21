@@ -221,8 +221,96 @@ components:
   },
 };
 
+export const componentClusterBoolstring: YAMLRule = {
+  name: "prop-component-cluster-boolstring",
+  type: "error",
+  message: "`component.cluster` be a template or a boolean",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        And: {
+          preds: [
+            { Truthy: { path: "cluster" } },
+            { NotBoolString: { path: "cluster" } },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "component.cluster is not a boolean or template",
+        yaml: `
+---
+components:
+- name: DB
+  cluster: "yes please"
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "component.cluster absent",
+        yaml: `
+---
+components:
+- name: DB
+      `,
+      },
+      {
+        description: "component.cluster boolean",
+        yaml: `
+---
+components:
+- name: DB
+  cluster: true
+      `,
+      },
+      {
+        description: "component.cluster string boolean",
+        yaml: `
+---
+components:
+- name: DB
+  cluster: "false"
+      `,
+      },
+      {
+        description: "component.cluster == 0 ",
+        yaml: `
+---
+components:
+- name: DB
+  cluster: "0"
+      `,
+      },
+      {
+        description: "component.cluster == 1 ",
+        yaml: `
+---
+components:
+- name: DB
+  cluster: "1"
+      `,
+      },
+      {
+        description: "component.cluster template",
+        yaml: `
+---
+components:
+- name: DB
+  cluster: '{{repl ConfigOption "use_cluster"}}'
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   componentClusterCount,
   componentClusterStrategy,
   componentHostVolumePathAbsolute,
+  componentClusterBoolstring,
 ];

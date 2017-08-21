@@ -380,9 +380,72 @@ components:
   },
 };
 
+export const containerContentTrustValid: YAMLRule = {
+  name: "prop-component-container-contenttrust-fingerprint-valid",
+  type: "error",
+  message: "A container's content_trust.public_key_fingerprint must be a valid RFC4716 fingerprint, e.g. `cb:69:19:cd:76:1f:17:54:92:a4:fc:a9:6f:a5:57:72`",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            And: {
+              preds: [
+                { Truthy: { path: "content_trust.public_key_fingerprint" } },
+                {
+                  NotMatch: {
+                    path: "content_trust.public_key_fingerprint",
+                    pattern: "[1-9a-f]{2}(:[1-9a-f]{2}){15}",
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "invalid public_key_fingerprint",
+        yaml: `
+---
+components:
+  - name: DB
+    containers:
+    - source: public
+      name: redis
+      version: 3.2.1
+      content_trust:
+        public_key_fingerprint: flksdjflkds
+    `,
+      },
+    ],
+    right: [
+      {
+        description: "valid fingerprint",
+        yaml: `
+components:
+  - name: DB
+    containers:
+    - source: public
+      name: redis
+      version: 3.2.1
+      content_trust:
+        public_key_fingerprint: cb:69:19:cd:76:1f:17:54:92:a4:fc:a9:6f:a5:57:72
+    `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   notClusteredIfNamedContainer,
   eventSubscriptionContainerExists,
   containerVolumeModes,
   volumeContainerPathAbsoulte,
+  containerContentTrustValid,
 ];

@@ -6,25 +6,32 @@ import {
   AnyOf,
   ConfigOptionExists,
   ConfigOptionIsCircular,
+  ContainerNamesNotUnique,
+  ContainerVolumesFromMissing,
+  Dot,
   Eq,
   EventSubscriptionContainerMissing,
   Exists,
   Falsey,
   FalseyIfPresent,
   GT,
+  GTE,
+  InvalidURL,
   IsEmpty,
   KeyDoesntMatch,
+  LT,
+  LTE,
   Match,
   MonitorContainerMissing,
   MoreThan,
   Neq,
+  NotBoolString,
   NotMatch,
   Or,
   Semver,
   SemverRange,
   Truthy,
   WhenExpressionConfigInvalid,
-  Dot, LTE, LT, GTE, NotBoolString,
 } from "./predicates";
 import * as util from "util";
 
@@ -70,6 +77,9 @@ const defaultPredicates: PredicateRegistry = {
   EventSubscriptionContainerMissing,
   MoreThan,
   NotBoolString,
+  InvalidURL,
+  ContainerVolumesFromMissing,
+  ContainerNamesNotUnique,
 };
 
 export class MutableRegistry implements Registry {

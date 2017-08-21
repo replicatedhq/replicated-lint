@@ -86,7 +86,97 @@ images:
   },
 };
 
+export const propertiesShellAlias: YAMLRule = {
+  name: "prop-properties-shellalias-valid",
+  type: "error",
+  message: "`properties.shell_alias` must be a valid shell alias",
+  test: {
+    And: {
+      preds: [
+        { Truthy: { path: "properties.shell_alias" } },
+        { NotMatch: { path: "properties.shell_alias", pattern: "^[a-zA-Z0-9_\\-]*$" } },
+      ],
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "alias contains invalid character `&`",
+        yaml: `
+---
+properties:
+  shell_alias: exec&echo
+      `,
+      },
+      {
+        description: "admin command contains invalid character `*`",
+        yaml: `
+---
+properties:
+  shell_alias: exec**echo
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "valid alias",
+        yaml: `
+---
+properties:
+  shell_alias: do_a-replicated_thing---plz
+      `,
+      },
+    ],
+  },
+};
+
+export const propertiesLogoURLValid: YAMLRule = {
+  name: "prop-properties-logourl-valid",
+  type: "error",
+  message: "Logo URL must be a valid http or https URL",
+  test: {
+    And: {
+      preds: [
+        { Truthy: { path: "properties.logo_url" } },
+        { InvalidURL: { path: "properties.logo_url" } },
+      ],
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "protocol not in [http, https]",
+        yaml: `
+---
+properties:
+  logo_url: yo://mylogo.com/logo.png
+      `,
+      },
+      {
+        description: "invalid url",
+        yaml: `
+---
+properties:
+  logo_url: kfbr392
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "valid url",
+        yaml: `
+---
+properties:
+  logo_url: http://x.y+a.com:3000/b/c
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   apiVersion,
   imageContentTrustValid,
+  propertiesShellAlias,
+  propertiesLogoURLValid,
 ];

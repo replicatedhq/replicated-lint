@@ -1,8 +1,9 @@
 import * as _ from "lodash";
 import * as semver from "semver";
+import * as urlParse from "url-parse";
 import { Predicate, RuleMatchedAt } from "./lint";
 import { FoundValue, TraverseSearcher, ValueSearcher, ValueTraverser } from "./traverse";
-import { ConfigOption, ConfigSection } from "./replicated";
+import { Component, ConfigOption, ConfigSection, Container } from "./replicated";
 import { Registry } from "./engine";
 
 export class And<T> implements Predicate<T> {
@@ -797,4 +798,137 @@ export class NotBoolString implements Predicate<any> {
 
     return { matched: true, paths: [this.path] };
   }
+}
+
+/**
+ * Invalid URL matches when a url is not valid or does not use
+ * `http` or `https` for the scheme
+ */
+export class InvalidURL implements Predicate<any> {
+  public static fromJson(self: any): InvalidURL {
+    return new InvalidURL(self.path);
+  }
+
+  constructor(
+      private readonly path: string,
+  ) {
+  }
+
+  public test(root): RuleMatchedAt {
+    const val = _.get(root, this.path);
+    const parsed = urlParse(val);
+
+    const isHttp = parsed.protocol === "http:" || parsed.protocol === "https:";
+    const hasHostname = !!parsed.hostname;
+
+    if (isHttp && hasHostname) {
+      return { matched: false };
+
+    }
+
+    return { matched: true, paths: [this.path] };
+  }
+}
+
+function isContainerNameMissing(components: any[], containerName: string): RuleMatchedAt {
+
+  for (const component of components) {
+    // console.log(`checking for container ${containerName} in component ${util.inspect(component, false, 100, true)}`);
+    const c = _.find(component.containers, { name: containerName });
+    if (c) {
+      return { matched: false };
+    }
+  }
+
+  return { matched: true, paths: ["components"] };
+}
+
+function collapseMatches(matches: RuleMatchedAt[]): RuleMatchedAt {
+  return _.reduce(
+      matches,
+      (match, acc) => (
+          {
+            matched: match.matched || acc.matched,
+            paths: _.concat(match.paths || [], acc.paths || []),
+          }
+      ),
+      { matched: false, paths: [] as string[] },
+  );
+}
+
+export class ContainerVolumesFromMissing implements Predicate<any> {
+  public static fromJson(): ContainerVolumesFromMissing {
+    return new ContainerVolumesFromMissing();
+  }
+
+  public test(root: any): RuleMatchedAt {
+    if (_.isEmpty(root.components)) {
+      return { matched: false };
+
+    }
+    const matches: RuleMatchedAt[] = _.flatMap(root.components, (component, componentIndex) => {
+      if (_.isEmpty(component.containers)) {
+        return [{ matched: false }];
+      }
+      return _.flatMap(component.containers, (container, containerIndex) => {
+
+        return _.map(container.volumes_from, (name: string, nameIndex) => {
+          if (container.name === name || isContainerNameMissing(root.components, name).matched) {
+            return {
+              matched: true,
+              paths: [`components.${componentIndex}.containers.${containerIndex}.volumes_from.${nameIndex}`],
+            };
+          }
+
+          return { matched: false };
+        });
+      });
+    });
+
+    return collapseMatches(matches);
+
+  }
+
+}
+
+export class ContainerNamesNotUnique implements Predicate<any> {
+  public static fromJson(): ContainerNamesNotUnique {
+    return new ContainerNamesNotUnique();
+  }
+
+  public test(root: any): RuleMatchedAt {
+    if (_.isEmpty(root.components)) {
+      return { matched: false };
+    }
+
+    const seenNames = {} as any;
+    const matches = _.flatMap(root.components, (component: Component, componentIndex) => {
+      if (_.isEmpty(component.containers)) {
+        return [{ matched: false }];
+      }
+
+      return _.map(component.containers!, (container: Container, containerIndex) => {
+        if (_.isEmpty(container.name)) {
+
+          return { matched: false };
+        }
+
+        if (_.isUndefined(seenNames[container.name])) {
+          seenNames[container.name] = `components.${componentIndex}.containers.${containerIndex}.name`;
+          return { matched: false };
+        }
+
+        return {
+          matched: true,
+          paths: [
+            `components.${componentIndex}.containers.${containerIndex}.name`,
+            seenNames[container.name],
+          ],
+        };
+      });
+    });
+
+    return collapseMatches(matches);
+  }
+
 }

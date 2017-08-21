@@ -78,3 +78,10 @@
 0.6.16 / 2017-08-21
     * Ensure `components.*.containers.*.content_trust.public_key_fingerprint` is a valid RFC4716 fingerprint
     * Ensure `images.*.content_trust.public_key_fingerprint` is a valid RFC4716 fingerprint
+
+0.6.17 / 2017-08-21
+    * Ensure `admin_commands.*.alias` is a valid shell alias
+    * Ensure `properties.shell_alias` is a valid shell alias
+    * Ensure `properties.logo_url` is a http or https url
+    * Ensure a container's `volumes_from` section references existing containers
+    * Ensure `name` entries are unique across all containers

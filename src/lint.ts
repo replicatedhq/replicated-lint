@@ -63,6 +63,9 @@ export interface Test {
   NotBoolString?: {
     path: string;
   };
+  InvalidURL?: {
+    path: string;
+  };
   Eq?: {
     path: string;
     value: any;
@@ -109,8 +112,6 @@ export interface Test {
     path: string;
     value: number;
   };
-  ConfigOptionExists?: {};
-  ConfigOptionIsCircular?: {};
   FalseyIfPresent?: {
     path: string;
     field: string;
@@ -121,8 +122,14 @@ export interface Test {
   MonitorContainerMissing?: {
     monitorPath: string;
   };
-  WhenExpressionConfigInvalid?: {};
+
+  ContainerNamesNotUnique?: {};
+  ConfigOptionExists?: {};
+  ConfigOptionIsCircular?: {};
+  ContainerVolumesFromMissing?: {};
   EventSubscriptionContainerMissing?: {};
+  WhenExpressionConfigInvalid?: {};
+
   MoreThan?: {
     limit: number;
     values: string[];

@@ -90,6 +90,22 @@ export interface Test {
     path: string;
     value: any;
   };
+  LT?: {
+    path: string;
+    value: number;
+  };
+  GT?: {
+    path: string;
+    value: number;
+  };
+  GTE?: {
+    path: string;
+    value: number;
+  };
+  LTE?: {
+    path: string;
+    value: number;
+  };
   ConfigOptionExists?: {};
   ConfigOptionIsCircular?: {};
   FalseyIfPresent?: {
@@ -98,10 +114,6 @@ export interface Test {
   };
   Falsey?: {
     path: string;
-  };
-  GT?: {
-    path: string;
-    value: number;
   };
   MonitorContainerMissing?: {
     monitorPath: string;
@@ -163,14 +175,15 @@ export interface LintOpts extends MultidocLintOpts {
   offset?: number;
 }
 
-const DOC_SEPARATOR_LENGTH = 4;
+const DOC_SEPARATOR =  `---\n`;
+const DOC_SEPARATOR_LENGTH = DOC_SEPARATOR.length;
 
 /**
  * uses a hack to split on yaml docs. Avoid using if posible
  */
 export function hackLintMultidoc(inYaml: string, maybeOpts?: MultidocLintOpts): LintedDoc[] {
   // It's just one doc, do the normal thing, but keep signature same
-  if (inYaml.indexOf(`---\n`) === -1) {
+  if (inYaml.indexOf(DOC_SEPARATOR) === -1) {
     return [{
       index: 0,
       findings: lint(inYaml, maybeOpts),
@@ -180,8 +193,8 @@ export function hackLintMultidoc(inYaml: string, maybeOpts?: MultidocLintOpts): 
   // It's many docs, split it on --- and lint each one,
   // tracking offset for accurate global line/column computation
   const opts = maybeOpts || {};
-  const docs = inYaml.split(`---\n`).slice(1);
-  let offset = inYaml.indexOf(`---\n`) + DOC_SEPARATOR_LENGTH;
+  const docs = inYaml.split(DOC_SEPARATOR).slice(1);
+  let offset = inYaml.indexOf(DOC_SEPARATOR) + DOC_SEPARATOR_LENGTH;
   const lineColumnFinder = lineColumn(inYaml);
 
   return _.map(docs, (doc, index) => {

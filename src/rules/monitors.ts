@@ -200,7 +200,7 @@ export const customMonitorColorValid: YAMLRule = {
                 {
                   And: {
                     preds: [
-                      { Truthy: { path: "fill_color"} },
+                      { Truthy: { path: "fill_color" } },
                       { NotMatch: { path: "fill_color", pattern: hexcolorRegexString } },
                       { NotMatch: { path: "fill_color", pattern: rgbRegexString } },
                       { NotMatch: { path: "fill_color", pattern: rgbaRegexString } },
@@ -210,7 +210,7 @@ export const customMonitorColorValid: YAMLRule = {
                 {
                   And: {
                     preds: [
-                      { Truthy: { path: "stroke_color"} },
+                      { Truthy: { path: "stroke_color" } },
                       { NotMatch: { path: "stroke_color", pattern: hexcolorRegexString } },
                       { NotMatch: { path: "stroke_color", pattern: rgbRegexString } },
                       { NotMatch: { path: "stroke_color", pattern: rgbaRegexString } },
@@ -273,9 +273,153 @@ monitors:
   },
 };
 
+export const statsdPortValid: YAMLRule = {
+  name: "prop-statsd-port-valid",
+  type: "error",
+  message: "If specified, statsd.port must be a valid TCP port",
+  test: {
+    Dot: {
+      path: "statsd",
+      pred: {
+        And: {
+          preds: [
+            { Truthy: { path: "port" } },
+            {
+              Or: {
+                preds: [
+                  { GT: { path: "port", value: 65535 } },
+                  { LT: { path: "port", value: 0 } },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "statsd.port is not an integer",
+        yaml: `
+---
+statsd:
+  port: foo
+    `,
+      },
+      {
+        description: "statsd.port is negative",
+        yaml: `
+---
+statsd:
+  port: -100
+    `,
+      },
+      {
+        description: "statsd.port is above the maximum tcp port range",
+        yaml: `
+---
+statsd:
+  port: 100000
+    `,
+      },
+    ],
+    right: [
+      {
+        description: "statsd port valid",
+        yaml: `
+---
+statsd:
+  port: 43221
+      `,
+      },
+      {
+        description: "statsd port not specified",
+        yaml: `
+---
+statsd: {}
+      `,
+      },
+    ],
+  },
+};
+
+export const graphitePortValid: YAMLRule = {
+  name: "prop-graphite-port-valid",
+  type: "error",
+  message: "If specified, graphite.port must be a valid TCP port",
+  test: {
+    Dot: {
+      path: "graphite",
+      pred: {
+        And: {
+          preds: [
+            { Truthy: { path: "port" } },
+            {
+              Or: {
+                preds: [
+                  { GT: { path: "port", value: 65535 } },
+                  { LT: { path: "port", value: 0 } },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "graphite.port is not an integer",
+        yaml: `
+---
+graphite:
+  port: foo
+    `,
+      },
+      {
+        description: "graphite.port is negative",
+        yaml: `
+---
+graphite:
+  port: -100
+    `,
+      },
+      {
+        description: "graphite.port is above the maximum tcp port range",
+        yaml: `
+---
+graphite:
+  port: 100000
+    `,
+      },
+    ],
+    right: [
+      {
+        description: "graphite port valid",
+        yaml: `
+---
+graphite:
+  port: 43221
+      `,
+      },
+      {
+        description: "graphite port not specified",
+        yaml: `
+---
+graphite: {}
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   cpuMonitorContainerExists,
   memMonitorContainerExists,
   customMonitorsHaveAtLeastOneTarget,
   customMonitorColorValid,
+  statsdPortValid,
+  graphitePortValid,
 ];

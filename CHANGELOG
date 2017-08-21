@@ -65,3 +65,6 @@
 0.6.12 / 2017-08-21
     * Ensure `graphite.port` and `statsd.port` are valid tcp ports
     * Ensure `custom_metrics.*.retention` is a valid graphite retention specification
+
+0.6.13 / 2017-08-21
+    * Ensure `custom_metrics.*.aggregation` is a valid graphite aggregation specification

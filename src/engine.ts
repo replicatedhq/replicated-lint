@@ -93,7 +93,7 @@ export class MutableRegistry implements Registry {
 
     }
 
-    throw new Error(`Registry could not construct predicate from ${obj}, no known keys`);
+    throw new Error(`Registry could not construct predicate from ${util.inspect(obj)}, no known keys`);
 
   }
 

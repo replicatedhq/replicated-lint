@@ -790,7 +790,7 @@ export class NotBoolString implements Predicate<any> {
     }
 
     if (_.isString(val)) {
-      if (/^true|false|1|0|{{repl.*$/.test(val)) {
+      if (/^(true|false|1|0|{{repl.*)$/.test(val)) {
         return { matched: false };
       }
     }

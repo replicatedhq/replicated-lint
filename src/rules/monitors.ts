@@ -444,7 +444,7 @@ custom_metrics:
     aggregation_method: "average"
     xfiles_factor: 0.3
     `,
-      } ],
+      }],
     right: [
       {
         description: "no custom metrics",
@@ -540,7 +540,6 @@ custom_metrics:
   },
 };
 
-// case "average", "sum", "min", "max", "last":
 export const graphiteAggregationValid: YAMLRule = {
   name: "prop-custommetric-aggregation-valid",
   type: "error",
@@ -552,7 +551,7 @@ export const graphiteAggregationValid: YAMLRule = {
         And: {
           preds: [
             { Truthy: { path: "aggregation_method" } },
-            { NotMatch: { path: "aggregation_method", pattern: "^average|sum|min|max|last$" } },
+            { NotMatch: { path: "aggregation_method", pattern: "^(average|sum|min|max|last)$" } },
           ],
         },
       },
@@ -570,7 +569,7 @@ custom_metrics:
     aggregation_method: "middle-out"
     xfiles_factor: 0.3
     `,
-      } ],
+      }],
     right: [
       {
         description: "no custom metrics",
@@ -651,6 +650,119 @@ custom_metrics:
   },
 };
 
+export const customMonitorDisplayLabelScale: YAMLRule = {
+  name: "prop-monitors-custom-display-labelscale-valid",
+  type: "error",
+  message: "If specified, a custom monitor's `display.label_scale` must be one of `metric`, `none` or a parseable `float`",
+  test: {
+    AnyOf: {
+      path: "monitors.custom",
+      pred: {
+        And: {
+          preds: [
+            { Truthy: { path: "display.label_scale" } },
+            { NotMatch: { path: "display.label_scale", pattern: "^(metric|none|[-+]?[0-9]*\\.?[0-9]+)$" } },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "label_scale == kfbr392, not a valid float",
+        yaml: `
+---
+monitors:
+  custom:
+    - target: stats.gauges.kfbr392.*
+      display:
+        label_scale: kfbr392
+    `,
+      },
+      {
+        description: "label_scale == 1.1.02, not a valid float",
+        yaml: `
+---
+monitors:
+  custom:
+    - target: stats.gauges.kfbr392.*
+      display:
+        label_scale: 1.1.02
+    `,
+      },
+    ],
+    right: [
+      {
+        description: "label_scale == metric",
+        yaml: `
+---
+monitors:
+  custom:
+    - target: stats.gauges.kfbr392.*
+      display:
+        label_scale: metric
+    `,
+      },
+      {
+        description: "label_scale == none",
+        yaml: `
+---
+monitors:
+  custom:
+    - target: stats.gauges.kfbr392.*
+      display:
+        label_scale: none
+    `,
+      },
+      {
+        description: "label_scale == 1.84",
+        yaml: `
+---
+monitors:
+  custom:
+    - target: stats.gauges.kfbr392.*
+      display:
+        label_scale: 1.84
+    `,
+      },
+      {
+        description: "label_scale == .1",
+        yaml: `
+---
+monitors:
+  custom:
+    - target: stats.gauges.kfbr392.*
+      display:
+        label_scale: .1
+    `,
+      },
+      {
+        description: "label_scale == 12",
+        yaml: `
+---
+monitors:
+  custom:
+    - target: stats.gauges.kfbr392.*
+      display:
+        label_scale: 12
+    `,
+      },
+      {
+        description: "label_scale == -12.23131131",
+        yaml: `
+---
+monitors:
+  custom:
+    - target: stats.gauges.kfbr392.*
+      display:
+        label_scale: -12.23131131
+    `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   cpuMonitorContainerExists,
   memMonitorContainerExists,
@@ -660,4 +772,5 @@ export const all: YAMLRule[] = [
   graphitePortValid,
   graphiteRetentionValid,
   graphiteAggregationValid,
+  customMonitorDisplayLabelScale,
 ];

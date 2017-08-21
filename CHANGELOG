@@ -71,3 +71,6 @@
 
 0.6.14 / 2017-08-21
     * Ensure `components.*.cluster` is either a boolean or a `{{repl ... }}` template
+
+0.6.15 / 2017-08-21
+    * Ensure `monitors.custom.*.display.label_scale` is a valid label scale expression

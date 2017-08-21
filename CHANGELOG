@@ -62,3 +62,6 @@
     * Ensure host_path and container_path are absolute paths
     * Validate custom monitor colors
 
+0.6.12 / 2017-08-21
+    * Ensure `graphite.port` and `statsd.port` are valid tcp ports
+    * Ensure `custom_metrics.*.retention` is a valid graphite retention specification

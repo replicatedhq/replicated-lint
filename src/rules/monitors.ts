@@ -415,6 +415,131 @@ graphite: {}
   },
 };
 
+export const graphiteRetentionValid: YAMLRule = {
+  name: "prop-custommetric-retention-valid",
+  type: "error",
+  message: "If specified, a custom_metric's retention must be in a valid format, e.g.`15s:7d,1m:21d,15m:5y`",
+  test: {
+    AnyOf: {
+      path: "custom_metrics",
+      pred: {
+        And: {
+          preds: [
+            { Truthy: { path: "retention" } },
+            { NotMatch: { path: "retention", pattern: "^(\\d+[smhdy]:\\d+[smhdy],?\\s?){1,}$" } },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "retention invalid",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    retention: 15 second resolution for  10 days
+    aggregation_method: "average"
+    xfiles_factor: 0.3
+    `,
+      } ],
+    right: [
+      {
+        description: "no custom metrics",
+        yaml: `
+---
+custom_metrics: []
+      `,
+      },
+      {
+        description: "custom retention not specified",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    aggregation_method: "average"
+    xfiles_factor: 0.3
+
+      `,
+      },
+      {
+        description: "minimal valid retention",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    retention: 15s:7d
+    aggregation_method: "average"
+    xfiles_factor: 0.3
+
+      `,
+      },
+      {
+        description: "valid retention with spaces",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    retention: 15s:7d, 1m:22d, 15m:2h
+    aggregation_method: "average"
+    xfiles_factor: 0.3
+
+      `,
+      },
+      {
+        description: "valid retention 1",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    retention: 15s:7d,1m:21d,15m:5y
+    aggregation_method: "average"
+    xfiles_factor: 0.3
+
+      `,
+      },
+      {
+        description: "valid retention 2",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    retention: "1m:1h,1h:7d,1d:90d"
+    aggregation_method: "average"
+    xfiles_factor: 0.3
+
+      `,
+      },
+      {
+        description: "valid retention 3",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    retention: "1s:10m,1m:4h,1h:30d"
+    aggregation_method: "average"
+    xfiles_factor: 0.3
+
+      `,
+      },
+      {
+        description: "valid retention 4",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.myapp100.ping.*
+    retention: "10s:10m,1m:20m,1h:30d"
+    aggregation_method: "average"
+    xfiles_factor: 0.3
+
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   cpuMonitorContainerExists,
   memMonitorContainerExists,
@@ -422,4 +547,5 @@ export const all: YAMLRule[] = [
   customMonitorColorValid,
   statsdPortValid,
   graphitePortValid,
+  graphiteRetentionValid,
 ];

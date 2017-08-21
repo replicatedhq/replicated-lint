@@ -540,6 +540,117 @@ custom_metrics:
   },
 };
 
+// case "average", "sum", "min", "max", "last":
+export const graphiteAggregationValid: YAMLRule = {
+  name: "prop-custommetric-aggregation-valid",
+  type: "error",
+  message: "If specified, a custom_metric's aggregation must one of `average`, `sum`, `min`, `max`, `last`",
+  test: {
+    AnyOf: {
+      path: "custom_metrics",
+      pred: {
+        And: {
+          preds: [
+            { Truthy: { path: "aggregation_method" } },
+            { NotMatch: { path: "aggregation_method", pattern: "^average|sum|min|max|last$" } },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "aggregation invalid",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    retention: 15s:7d,1m:14d,15m:1y
+    aggregation_method: "middle-out"
+    xfiles_factor: 0.3
+    `,
+      } ],
+    right: [
+      {
+        description: "no custom metrics",
+        yaml: `
+---
+custom_metrics: []
+      `,
+      },
+      {
+        description: "custom aggregation not specified",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+
+      `,
+      },
+      {
+        description: "aggregation == sum",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    retention: 15s:7d
+    aggregation_method: "sum"
+    xfiles_factor: 0.3
+
+      `,
+      },
+      {
+        description: "aggregation == average",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    retention: 15s:7d, 1m:22d, 15m:2h
+    aggregation_method: "average"
+    xfiles_factor: 0.3
+
+      `,
+      },
+      {
+        description: "aggregation == max",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    retention: 15s:7d,1m:21d,15m:5y
+    aggregation_method: "max"
+    xfiles_factor: 0.3
+
+      `,
+      },
+      {
+        description: "aggregation == min",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    retention: "1m:1h,1h:7d,1d:90d"
+    aggregation_method: "min"
+    xfiles_factor: 0.3
+
+      `,
+      },
+      {
+        description: "aggregation == last",
+        yaml: `
+---
+custom_metrics:
+  - target: stats.gauges.ping.rtt.*
+    retention: "1s:10m,1m:4h,1h:30d"
+    aggregation_method: "last"
+    xfiles_factor: 0.3
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   cpuMonitorContainerExists,
   memMonitorContainerExists,
@@ -548,4 +659,5 @@ export const all: YAMLRule[] = [
   statsdPortValid,
   graphitePortValid,
   graphiteRetentionValid,
+  graphiteAggregationValid,
 ];

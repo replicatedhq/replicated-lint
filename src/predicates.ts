@@ -769,3 +769,32 @@ export class MoreThan<T> implements Predicate<any> {
     };
   }
 }
+
+/**
+ * NotBoolString matches if the target is not a parseable bool or a template
+ */
+export class NotBoolString implements Predicate<any> {
+  public static fromJson(self: any): NotBoolString {
+    return new NotBoolString(self.path);
+  }
+
+  constructor(
+      private readonly path: string,
+  ) {
+  }
+
+  public test(root): RuleMatchedAt {
+    const val = _.get(root, this.path);
+    if (_.isBoolean(val)) {
+      return { matched: false };
+    }
+
+    if (_.isString(val)) {
+      if (/^true|false|1|0|{{repl.*$/.test(val)) {
+        return { matched: false };
+      }
+    }
+
+    return { matched: true, paths: [this.path] };
+  }
+}

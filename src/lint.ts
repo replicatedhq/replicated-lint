@@ -60,6 +60,9 @@ export interface Test {
   Truthy?: {
     path: string;
   };
+  NotBoolString?: {
+    path: string;
+  };
   Eq?: {
     path: string;
     value: any;

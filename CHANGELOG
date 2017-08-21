@@ -74,3 +74,7 @@
 
 0.6.15 / 2017-08-21
     * Ensure `monitors.custom.*.display.label_scale` is a valid label scale expression
+
+0.6.16 / 2017-08-21
+    * Ensure `components.*.containers.*.content_trust.public_key_fingerprint` is a valid RFC4716 fingerprint
+    * Ensure `images.*.content_trust.public_key_fingerprint` is a valid RFC4716 fingerprint

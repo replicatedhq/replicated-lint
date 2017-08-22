@@ -1,0 +1,190 @@
+# QA Application - Bravo - Kubernetes Scheduler
+
+---
+# kind: replicated
+replicated_api_version: 2.5.0
+name: QA Application - Bravo
+version: "1.0.0"
+release_notes: QA application meant for kubernetes scheduler installations.
+
+###########################################################
+# Host Requirements and Properties
+###########################################################
+
+host_requirements:
+  replicated_version: ">=2.3.0 <=2.10.0"
+  docker_version: "17.03.1-ce"
+  cpu_cores: 1
+  cpu_mhz: 1000
+  memory: 2GB
+  disk_space: 10GB
+properties:
+  app_url: http://{{repl IngressAddress "test-ingress" 80 }}
+  logo_url: http://logonoid.com/images/batman-logo.png
+  console_title: QA Application - Bravo Console
+backup:
+  enabled: true
+  kubernetes:
+    pvc_names: [ "redis-pvc" ]
+
+
+###########################################################
+# Config Settings
+###########################################################
+
+config:
+- name: advanced
+  title: Advanced
+  items:
+  - name: redis_pv_storage_class
+    title: Redis PV Storage Class
+    type: text
+    default: default
+- name: auth
+  title: Authentication
+  items:
+  - name: config_username
+    title: Username
+    type: password
+  - name: config_password
+    title: Password
+    type: password
+
+###########################################################
+# Admin Commands
+###########################################################
+
+admin_commands:
+- alias: redis-cli
+  command: [redis-cli]
+  run_type: exec
+  selectors:
+    app: redis
+    tier: backend
+    role: master
+  container: master # optional, will choose first in pod
+- alias: aliaschmod
+  command: [chmod]
+  run_type: exec
+  selectors:
+    app: redis
+    tier: backend
+    role: slave
+
+###########################################################
+# Custom Requirements
+###########################################################
+custom_requirements:
+- id: echo-hello-world
+  command:
+    id: pod
+    timeout: 30
+    data:
+      kubernetes:
+        global: true
+        pod_name: echo-hello
+  message: Make sure echo is installed
+  results:
+    - status: success
+      message:
+        default_message: We can echo
+      condition:
+        status_code: 0
+    - status: error
+      message: We can't echo
+      condition:
+        status_code: 1
+- id: get-go-version
+  command:
+    id: pod
+    timeout: 30
+    data:
+      kubernetes:
+        global: true
+        pod_name: go-version
+  message: Check for Go Binary
+  results:
+    - status: success
+      message:
+        default_message: Go exists on the machine
+      condition:
+        status_code: 0
+    - status: error
+      message: Go does not exist on the machine
+      condition:
+        status_code: 1
+
+###########################################################
+# Monitors and Custom Metrics
+###########################################################
+
+custom_metrics:
+- target: stats.gauges.myapp100.disk.*.*.*
+  retention: "1s:10m,1m:4h,1h:30d"
+  aggregation_method: "average"
+  xfiles_factor: 0.3
+- target: stats.gauges.myapp100.ping.*
+  retention: "1s:10m,1m:4h,1h:30d"
+  aggregation_method: "average"
+  xfiles_factor: 0.3
+monitors:
+  custom:
+  - name: Disk Free (bytes) time 1 hour
+    targets:
+    - stats.gauges.myapp100.disk.*.free
+    from: "-1hours"
+    display:
+      label_unit: B
+      label_scale: metric
+      label_count: 2
+      fill_color: rgba(100, 0, 50, 0.5)
+      stroke_color: "#ff1060"
+#      css_class_name: app1-custom-metrics
+  - name: Disk Free (%) time - default
+    target: scale(divideSeries(stats.gauges.myapp100.disk.*.free,stats.gauges.myapp100.disk.*.total),100)
+    display:
+      label_unit: "%"
+      label_scale: none
+      label_count: 3
+      label_min: 0
+      label_max: 100
+      label_range_override: true
+#      fill_color: rgba(0, 100, 50, 0.5)
+#      stroke_color: "#10FF60"
+#      css_class_name: app1-custom-metrics
+  - name: Ping RTT time 30 minutes
+    targets:
+    - stats.gauges.myapp100.ping.*
+    - movingAverage(stats.gauges.myapp100.ping.*,60)
+    - movingAverage(stats.gauges.myapp100.ping.*,600)
+    from: "-30minutes"
+    display:
+      label_unit: ms
+      label_scale: none
+#      fill_color: rgba(100, 100, 50, 0.5)
+#      stroke_color: "#ffFF60"
+#      css_class_name: app1-custom-metrics
+
+###########################################################
+# Support :
+###########################################################
+
+support:
+  files:
+    - filename: /var/log/alternatives.log
+      source:
+        kubernetes:
+          selector:
+            app: redis
+            tier: backend
+            role: master
+  commands:
+    - filename: access_last_100.log
+      command: [tail, -n100, /var/log/alternatives.log]
+      source:
+        kubernetes:
+          selector:
+            app: redis
+            tier: backend
+            role: master
+

@@ -1,0 +1,165 @@
+# QA Application - Charlie - Swarm Scheduler
+---
+# kind: replicated
+
+replicated_api_version: 2.8.0
+name: "Compose Sample - AutoUpgrade"
+version: "1.0.3"
+release_notes: QA application meant for swarm scheduler installations.
+
+###########################################################
+# Host Requirements and Properties
+###########################################################
+
+host_requirements:
+  docker_version: "17.03.1-ce"
+  replicated_version: ">=2.9.0 <=2.11.0"
+  cpu_cores: 1
+  cpu_mhz: 1000
+  memory: 2GB
+  disk_space: 40GB
+
+properties:
+  app_url: http://{{repl ConfigOption "hostname" }}
+  console_title: QA Application - Charlie UNstable Console
+  logo_url: http://www.clipartbest.com/cliparts/aTq/ogz/aTqogze8c.jpg
+  shell_alias: charliecli
+
+###########################################################
+# Swarm specific configurations
+###########################################################
+
+swarm:
+  minimum_node_count: 1
+  nodes:
+  - role: manager
+    labels:
+      A:
+      B: C
+    minimum_count: 1
+    host_requirements:
+      cpu_cores: 1
+      cpu_mhz: 1000
+      memory: 1GB
+  - role: worker
+    labels:
+      D:
+      E: F
+    minimum_count: 1
+    host_requirements:
+      cpu_cores: 1
+      cpu_mhz: 1000
+      memory: 1GB
+  secrets:
+  - name: secret_box
+    value: '{{repl ConfigOption "secret_box" }}'
+    labels:
+      A:
+      B: C
+
+###########################################################
+# Monitors and Custom Metrics
+###########################################################
+
+custom_metrics:
+- target: stats.gauges.myapp100.disk.*.*.*
+  retention: "1s:10m,1m:4h,1h:30d"
+  aggregation_method: "average"
+  xfiles_factor: 0.3
+- target: stats.gauges.myapp100.ping.*
+  retention: "1s:10m,1m:4h,1h:30d"
+  aggregation_method: "average"
+  xfiles_factor: 0.3
+monitors:
+  custom:
+  - name: Disk Free (bytes) time 1 hour
+    targets:
+    - stats.gauges.myapp100.disk.*.free
+    from: "-1hours"
+    display:
+      label_unit: B
+      label_scale: metric
+      label_count: 2
+      fill_color: rgba(100, 0, 50, 0.5)
+      stroke_color: "#ff1060"
+  - name: Disk Free (%) time - default
+    target: scale(divideSeries(stats.gauges.myapp100.disk.*.free,stats.gauges.myapp100.disk.*.total),100)
+    display:
+      label_unit: "%"
+      label_scale: none
+      label_count: 3
+      label_min: 0
+      label_max: 100
+      label_range_override: true
+  - name: Ping RTT time 30 minutes
+    targets:
+    - stats.gauges.myapp100.ping.*
+    - movingAverage(stats.gauges.myapp100.ping.*,60)
+    - movingAverage(stats.gauges.myapp100.ping.*,600)
+    from: "-30minutes"
+    display:
+      label_unit: ms
+      label_scale: none
+
+###########################################################
+# Admin Commands
+###########################################################
+
+admin_commands:
+- alias: aliasenv
+  command: [env]
+  run_type: exec
+  service: voting-app
+- alias: redis-sadd
+  command: [redis-cli, sadd]
+  run_type: exec
+  service: redis
+
+###########################################################
+# Config Settings
+###########################################################
+
+config:
+- name: qaconfigs
+  title: QA Test Configurations
+  description: These are only meant to test configuration options.
+  items:
+  - name: secret_box
+    title: Secret
+    type: password
+    help_text: What is typed in here will be a Docker secret in all app containers.
+- name: hostname
+  title: Hostname
+  description: Ensure this domain name is routable on your network.
+  items:
+  - name: hostname
+    title: Hostname
+    value: '{{repl ConsoleSetting "tls.hostname"}}'
+    type: text
+    test_proc:
+      display_name: Check DNS
+      command: resolve_host
+
+###########################################################
+# Swarm specific section to allow airgap to build package
+###########################################################
+
+images:
+- source: public
+  name: redis
+  tag: 3.2-alpine
+- source: replicated
+  name: statser
+  tag: latest
+- source: public
+  name: postgres
+  tag: 9.4
+- source: replicated
+  name: example-voting-app-vote
+  tag: latest
+- source: public
+  name: gaiadocker/example-voting-app-result
+  tag: latest
+- source: public
+  name: gaiadocker/example-voting-app-worker
+  tag: latest

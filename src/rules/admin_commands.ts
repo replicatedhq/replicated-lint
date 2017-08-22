@@ -91,6 +91,68 @@ admin_commands:
   },
 };
 
+export const adminCommandShellAlias: YAMLRule = {
+  name: "prop-admincommand-shellalias-valid",
+  type: "error",
+  message: "An admin command's `alias` must be a valid shell alias",
+  test: {
+    AnyOf: {
+      path: "admin_commands",
+      pred: {
+        And: {
+          preds: [
+            { Truthy: { path: "alias" } },
+            { NotMatch: { path: "alias", pattern: "^[a-zA-Z0-9_\\-]*$" } },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "admin command's alias contains invalid character `&`",
+        yaml: `
+---
+admin_commands:
+- alias: exec&echo
+  command: ["echo"]
+  run_type: exec
+  component: DB
+  container: redis
+      `,
+      },
+      {
+        description: "admin command's alias contains invalid character `*`",
+        yaml: `
+---
+admin_commands:
+- alias: exec**echo
+  command: ["echo"]
+  run_type: exec
+  component: DB
+  container: redis
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "valid alias",
+        yaml: `
+---
+admin_commands:
+- alias: redis_echo-command--
+  command: ["echo"]
+  run_type: exec
+  component: DB
+  container: redis
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   adminCommandComponentExists,
+  adminCommandShellAlias,
 ];

@@ -557,10 +557,10 @@ export default {
                         "type": "string",
                       },
                       "is_ephemeral": {
-                        "type": "string",
+                        "type": ["string", "boolean"],
                       },
                       "is_excluded_from_backup": {
-                        "type": "string",
+                        "type": ["string", "boolean"],
                       },
                       "options": {
                         "type": "array",

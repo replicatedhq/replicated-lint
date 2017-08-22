@@ -171,6 +171,8 @@ components:
     volumes:
     - host_path: /data
       container_path: /data
+      is_ephemeral: true
+      is_excluded_from_backup: false
     support_files: []
     restart:
       policy: on-failure

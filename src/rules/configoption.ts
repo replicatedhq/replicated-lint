@@ -194,7 +194,7 @@ export const configOptionTypeValid: YAMLRule = {
           pred: {
             NotMatch: {
               path: "type",
-              pattern: "^text|label|password|file|bool|select_one|select_many|textarea|select|heading$",
+              pattern: "^(text|label|password|file|bool|select_one|select_many|textarea|select|heading)$",
             },
           },
         },

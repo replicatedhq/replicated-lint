@@ -85,3 +85,7 @@
     * Ensure `properties.logo_url` is a http or https url
     * Ensure a container's `volumes_from` section references existing containers
     * Ensure `name` entries are unique across all containers
+
+0.6.18 / 2017-08-21
+    * Schema fixes for swarm-specific options
+    * Fix regex for config item type field

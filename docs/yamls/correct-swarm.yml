@@ -137,6 +137,7 @@ config:
     value: '{{repl ConsoleSetting "tls.hostname"}}'
     type: text
     test_proc:
+      run_on_save: true
       display_name: Check DNS
       command: resolve_host
 

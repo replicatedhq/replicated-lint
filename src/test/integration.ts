@@ -1,10 +1,9 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { parsed as schema } from "../schemas";
 import * as fs from "fs";
 import * as path from "path";
 
-import { lint } from "../lint";
+import { defaultLint } from "../lint";
 
 interface GoodExample {
   name: string;
@@ -58,13 +57,13 @@ replicated_api_version: 2101
   },
 ];
 
-describe("schema validation", () => {
+describe("integration", () => {
 
   for (const example of good) {
 
     describe(example.name, () => {
       it("should pass linting", () => {
-        expect(lint(example.yaml, { schema })).to.deep.equal([]);
+        expect(defaultLint(example.yaml)).to.deep.equal([]);
       });
     });
   }
@@ -73,10 +72,10 @@ describe("schema validation", () => {
 
     describe(example.name, () => {
       it("should fail linting", () => {
-        expect(lint(example.yaml, { schema })).to.have.deep.property("[0].rule", "prop-schema-valid");
-        expect(lint(example.yaml, { schema })).to.have.deep.property("[0].type", "error");
+        expect(defaultLint(example.yaml)).to.have.deep.property("[0].rule", "prop-schema-valid");
+        expect(defaultLint(example.yaml)).to.have.deep.property("[0].type", "error");
         if (example.errPath) {
-          expect(lint(example.yaml, { schema })).to.have.deep.property("[0].positions.0.path", example.errPath);
+          expect(defaultLint(example.yaml)).to.have.deep.property("[0].positions.0.path", example.errPath);
         }
       });
     });

@@ -397,7 +397,7 @@ export const containerContentTrustValid: YAMLRule = {
                 {
                   NotMatch: {
                     path: "content_trust.public_key_fingerprint",
-                    pattern: "[1-9a-f]{2}(:[1-9a-f]{2}){15}",
+                    pattern: "[0-9a-f]{2}(:[0-9a-f]{2}){15}",
                   },
                 },
               ],
@@ -436,6 +436,11 @@ components:
       version: 3.2.1
       content_trust:
         public_key_fingerprint: cb:69:19:cd:76:1f:17:54:92:a4:fc:a9:6f:a5:57:72
+    - source: public
+      name: redis
+      version: 3.2.1
+      content_trust:
+        public_key_fingerprint: aa:9c:75:89:de:46:3a:92:08:c7:ba:9a:29:fb:12:cc
     `,
       },
     ],

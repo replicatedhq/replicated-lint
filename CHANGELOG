@@ -93,3 +93,6 @@
 0.6.19 / 2017-08-21
     * Fix schema definition to allow boolean literals for
       `components.*.containers.*.volumes.*.is_ephemeral` and `.is_excluded_from_backup`
+
+0.6.20 / 2017-08-29
+    * Fix a bug that would allow URLs with spaces in the hostname

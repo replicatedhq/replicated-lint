@@ -160,6 +160,14 @@ properties:
   logo_url: kfbr392
       `,
       },
+      {
+        description: "invalid url",
+        yaml: `
+---
+properties:
+  logo_url: http://i.goo gr.com/rnZ3Ftf.png
+      `,
+      },
     ],
     right: [
       {

@@ -96,3 +96,6 @@
 
 0.6.20 / 2017-08-29
     * Fix a bug that would allow URLs with spaces in the hostname
+
+0.6.21 / 2017-08-29
+    * Add new `test_proc` command `ldap_config_validate`

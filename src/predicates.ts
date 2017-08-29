@@ -820,10 +820,10 @@ export class InvalidURL implements Predicate<any> {
 
     const isHttp = parsed.protocol === "http:" || parsed.protocol === "https:";
     const hasHostname = !!parsed.hostname;
+    const hasSpace = parsed.hostname.indexOf(" ") !== -1;
 
-    if (isHttp && hasHostname) {
+    if (isHttp && hasHostname && !hasSpace) {
       return { matched: false };
-
     }
 
     return { matched: true, paths: [this.path] };

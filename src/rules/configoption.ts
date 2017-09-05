@@ -286,6 +286,21 @@ config:
     when: ssl_is_bad!=1
       `,
       },
+      {
+        description: "Config Section `when` field references non-existent option `auth`",
+        yaml: `
+---
+config:
+- name: database
+  title: Database
+  when: auth=config
+  items:
+  - name: database_use_ssl
+    title: Use SSL
+    type: bool
+    default: ""
+      `,
+      },
     ],
     right: [
         {
@@ -352,6 +367,32 @@ config:
     
       `,
     },
+      {
+        description: "Config option group's when clause references a valid multi-select option",
+        yaml: `
+---
+config:
+- name: ssl
+  title: SSL Configuration
+  description: SSL Options
+  items:
+  - name: ssl_cipher
+    default: ssl_cipher_ecdsa
+    type: select_one
+    items:
+    - name: ssl_cipher_ecdsa
+      title: ECDSA
+    - name: ssl_cipher_rsa
+      title: RSA
+- name: database
+  title: Database
+  when: ssl_cipher=ssl_cipher_ecdsa
+  items:
+  - name: database_use_ssl
+    title: Use SSL
+    type: bool
+      `,
+      },
     ],
   },
 };

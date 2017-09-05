@@ -88,15 +88,23 @@ export class WhenExpressionConfigInvalid implements Predicate<any> {
     const configOptionsReferenced = [] as FoundValue[];
 
     _.forEach(root.config, (group, groupIndex) => {
+      const configOptionReferencedByGroup = this.maybeGetReferencedConfigOption(group);
+      if (configOptionReferencedByGroup) {
+        configOptionsReferenced.push({
+          value: configOptionReferencedByGroup!,
+          path: `config.${groupIndex}.when`,
+        });
+      }
+
       if (!_.has(group, "items")) {
         return;
       }
 
       _.forEach(group.items, (item, itemIndex) => {
-        const maybeConfigOption = this.maybeGetReferencedConfigOption(item);
-        if (maybeConfigOption) {
+        const configOptionReferencedByOption = this.maybeGetReferencedConfigOption(item);
+        if (configOptionReferencedByOption) {
           configOptionsReferenced.push({
-            value: maybeConfigOption!,
+            value: configOptionReferencedByOption!,
             path: `config.${groupIndex}.items.${itemIndex}.when`,
           });
         }
@@ -105,12 +113,12 @@ export class WhenExpressionConfigInvalid implements Predicate<any> {
     return this.configOptionExists.compareUsageWithDefinedOptions(root, configOptionsReferenced);
   }
 
-  private maybeGetReferencedConfigOption(item: any): string | undefined {
-    if (!item) {
+  private maybeGetReferencedConfigOption(itemOrGroup: any): string | undefined {
+    if (!itemOrGroup) {
       return;
     }
 
-    const when = item.when;
+    const when = itemOrGroup.when;
 
     if (!when) {
       return;
@@ -479,8 +487,8 @@ export class ConfigOptionExists implements Predicate<any> {
 
   private configItemNames(section: ConfigSection) {
     return _.flatMap(section.items, item => {
-      const hasChildren = ["select_one", "select_many"].indexOf(item.type) === -1;
-      return hasChildren ? [item.name] : _.map(item.items!, i => i.name);
+      const hasChildren = ["select_one", "select_many"].indexOf(item.type) !== -1;
+      return hasChildren ? [item.name, ..._.map(item.items!, i => i.name)] : [item.name];
     });
   }
 

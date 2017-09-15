@@ -8,7 +8,7 @@ export const cpuMonitorContainerExists: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "cpuacct monitor references a component that does not exist",
+        description: "`cpuacct` monitor references a component that does not exist",
         yaml: `
 ---
 components:
@@ -21,7 +21,7 @@ monitors:
     `,
       },
       {
-        description: "cpuacct monitor references a container that does not exist",
+        description: "`cpuacct` monitor references a container that does not exist",
         yaml: `
 ---
 components:
@@ -35,7 +35,7 @@ monitors:
       },
     ],
     right: [{
-      description: "All cpuacct monitors reference existing containers",
+      description: "All `cpuacct` monitors reference existing containers",
       yaml: `
 ---
 components:
@@ -67,7 +67,7 @@ export const memMonitorContainerExists: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "memacct monitor references a component that does not exist",
+        description: "`memacct` monitor references a component that does not exist",
         yaml: `
 ---
 components:
@@ -80,7 +80,7 @@ monitors:
     `,
       },
       {
-        description: "memacct monitor references a container that does not exist",
+        description: "`memacct` monitor references a container that does not exist",
         yaml: `
 ---
 components:
@@ -94,7 +94,7 @@ monitors:
       },
     ],
     right: [{
-      description: "All memacct monitors reference existing containers",
+      description: "All `memacct` monitors reference existing containers",
       yaml: `
 ---
 components:
@@ -227,7 +227,7 @@ export const customMonitorColorValid: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "custom monitor has invalid stroke_color",
+        description: "custom monitor has invalid `stroke_color`",
         yaml: `
 ---
 monitors:
@@ -239,7 +239,7 @@ monitors:
     `,
       },
       {
-        description: "custom monitor has invalid fill_color",
+        description: "custom monitor has invalid `fill_color`",
         yaml: `
 ---
 monitors:
@@ -268,6 +268,9 @@ monitors:
         - stats.gauges.myapp100.ping.*
         - movingAverage(stats.gauges.myapp100.ping.*,60)
         - movingAverage(stats.gauges.myapp100.ping.*,600)
+      display:
+        fill_color: '#44BB66'
+        stroke_color: '#444444'
       `,
     }],
   },
@@ -276,7 +279,7 @@ monitors:
 export const statsdPortValid: YAMLRule = {
   name: "prop-statsd-port-valid",
   type: "error",
-  message: "If specified, statsd.port must be a valid TCP port",
+  message: "If specified, `statsd.port` must be a valid TCP port",
   test: {
     Dot: {
       path: "statsd",
@@ -300,7 +303,7 @@ export const statsdPortValid: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "statsd.port is not an integer",
+        description: "`statsd.port` is not an integer",
         yaml: `
 ---
 statsd:
@@ -308,7 +311,7 @@ statsd:
     `,
       },
       {
-        description: "statsd.port is negative",
+        description: "`statsd.port` is negative",
         yaml: `
 ---
 statsd:
@@ -316,7 +319,7 @@ statsd:
     `,
       },
       {
-        description: "statsd.port is above the maximum tcp port range",
+        description: "`statsd.port` is above the maximum tcp port range",
         yaml: `
 ---
 statsd:
@@ -347,7 +350,7 @@ statsd: {}
 export const graphitePortValid: YAMLRule = {
   name: "prop-graphite-port-valid",
   type: "error",
-  message: "If specified, graphite.port must be a valid TCP port",
+  message: "If specified, `graphite.port` must be a valid TCP port",
   test: {
     Dot: {
       path: "graphite",
@@ -371,7 +374,7 @@ export const graphitePortValid: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "graphite.port is not an integer",
+        description: "`graphite.port` is not an integer",
         yaml: `
 ---
 graphite:
@@ -379,7 +382,7 @@ graphite:
     `,
       },
       {
-        description: "graphite.port is negative",
+        description: "`graphite.port` is negative",
         yaml: `
 ---
 graphite:
@@ -387,7 +390,7 @@ graphite:
     `,
       },
       {
-        description: "graphite.port is above the maximum tcp port range",
+        description: "`graphite.port` is above the maximum tcp port range",
         yaml: `
 ---
 graphite:
@@ -418,7 +421,7 @@ graphite: {}
 export const graphiteRetentionValid: YAMLRule = {
   name: "prop-custommetric-retention-valid",
   type: "error",
-  message: "If specified, a custom_metric's retention must be in a valid format, e.g.`15s:7d,1m:21d,15m:5y`",
+  message: "If specified, a custom_metric's `retention` must be in a valid format, e.g.`15s:7d,1m:21d,15m:5y`",
   test: {
     AnyOf: {
       path: "custom_metrics",
@@ -543,7 +546,7 @@ custom_metrics:
 export const graphiteAggregationValid: YAMLRule = {
   name: "prop-custommetric-aggregation-valid",
   type: "error",
-  message: "If specified, a custom_metric's aggregation must one of `average`, `sum`, `min`, `max`, `last`",
+  message: "If specified, a `custom_metric`'s aggregation must one of `average`, `sum`, `min`, `max`, `last`",
   test: {
     AnyOf: {
       path: "custom_metrics",
@@ -588,7 +591,7 @@ custom_metrics:
       `,
       },
       {
-        description: "aggregation == sum",
+        description: "aggregation == `sum`",
         yaml: `
 ---
 custom_metrics:
@@ -600,7 +603,7 @@ custom_metrics:
       `,
       },
       {
-        description: "aggregation == average",
+        description: "aggregation == `average`",
         yaml: `
 ---
 custom_metrics:
@@ -612,7 +615,7 @@ custom_metrics:
       `,
       },
       {
-        description: "aggregation == max",
+        description: "aggregation == `max`",
         yaml: `
 ---
 custom_metrics:
@@ -624,7 +627,7 @@ custom_metrics:
       `,
       },
       {
-        description: "aggregation == min",
+        description: "aggregation == `min`",
         yaml: `
 ---
 custom_metrics:
@@ -636,7 +639,7 @@ custom_metrics:
       `,
       },
       {
-        description: "aggregation == last",
+        description: "aggregation == `last`",
         yaml: `
 ---
 custom_metrics:
@@ -670,7 +673,7 @@ export const customMonitorDisplayLabelScale: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "label_scale == kfbr392, not a valid float",
+        description: "`label_scale` == `kfbr392`, not a valid float",
         yaml: `
 ---
 monitors:
@@ -681,7 +684,7 @@ monitors:
     `,
       },
       {
-        description: "label_scale == 1.1.02, not a valid float",
+        description: "`label_scale` == `1.1.02`, not a valid float",
         yaml: `
 ---
 monitors:
@@ -694,7 +697,7 @@ monitors:
     ],
     right: [
       {
-        description: "label_scale == metric",
+        description: "`label_scale` == `metric`",
         yaml: `
 ---
 monitors:
@@ -705,7 +708,7 @@ monitors:
     `,
       },
       {
-        description: "label_scale == none",
+        description: "`label_scale` == `none`",
         yaml: `
 ---
 monitors:
@@ -716,7 +719,7 @@ monitors:
     `,
       },
       {
-        description: "label_scale == 1.84",
+        description: "`label_scale` == `1.84`",
         yaml: `
 ---
 monitors:
@@ -727,7 +730,7 @@ monitors:
     `,
       },
       {
-        description: "label_scale == .1",
+        description: "`label_scale` == `.1`",
         yaml: `
 ---
 monitors:
@@ -738,7 +741,7 @@ monitors:
     `,
       },
       {
-        description: "label_scale == 12",
+        description: "`label_scale` == `12`",
         yaml: `
 ---
 monitors:
@@ -749,7 +752,7 @@ monitors:
     `,
       },
       {
-        description: "label_scale == -12.23131131",
+        description: "`label_scale` == `-12.23131131`",
         yaml: `
 ---
 monitors:

@@ -301,7 +301,7 @@ export class Linter {
     return {
       type: "warn",
       rule: "mesg-yaml-not-empty",
-      message: "No document provided",
+      message: "Document must not be empty",
     };
 
   }

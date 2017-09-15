@@ -76,7 +76,7 @@ export const eventSubscriptionContainerExists: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "container 'redis' has a publish_event that references missing container `Pipeline/logstash`",
+        description: "container `redis` has a `publish_event` that references missing container `Pipeline/logstash`",
         yaml: `
 ---
 components:
@@ -95,7 +95,7 @@ components:
       `,
       },
       {
-        description: "container 'redis' has a publish_event that references missing container `Pipeline/logstash`",
+        description: "container `redis` has a `publish_event` that references missing container `Pipeline/logstash`",
         yaml: `
 ---
 components:
@@ -118,7 +118,7 @@ components:
     ],
     right: [
       {
-        description: "All containers referenced in publish_events have a matching component/container definition",
+        description: "All containers referenced in `publish_events` have a matching component/container definition",
         yaml: `
 ---
 components:
@@ -383,7 +383,7 @@ components:
 export const containerContentTrustValid: YAMLRule = {
   name: "prop-component-container-contenttrust-fingerprint-valid",
   type: "error",
-  message: "A container's content_trust.public_key_fingerprint must be a valid RFC4716 fingerprint, e.g. `cb:69:19:cd:76:1f:17:54:92:a4:fc:a9:6f:a5:57:72`",
+  message: "A container's content_trust.`public_key_fingerprint` must be a valid RFC4716 fingerprint, e.g. `cb:69:19:cd:76:1f:17:54:92:a4:fc:a9:6f:a5:57:72`",
   test: {
     AnyOf: {
       path: "components",
@@ -410,7 +410,7 @@ export const containerContentTrustValid: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "invalid public_key_fingerprint",
+        description: "invalid `public_key_fingerprint`",
         yaml: `
 ---
 components:
@@ -450,12 +450,12 @@ components:
 export const containerVolumesFromExists: YAMLRule = {
   name: "prop-component-container-volumesfrom-exists",
   type: "error",
-  message: "A container's volumes_from must reference an existing container's `name` field",
+  message: "A container's `volumes_from` must reference an existing container's `name` field",
   test: { ContainerVolumesFromMissing: {}},
   examples: {
     wrong: [
       {
-        description: "volumes_from references own container",
+        description: "`volumes_from` references own container",
         yaml: `
 ---
 components:
@@ -470,7 +470,7 @@ components:
     `,
       },
       {
-        description: "volumes_from references non-existing container",
+        description: "`volumes_from` references non-existing container",
         yaml: `
 ---
 components:
@@ -487,7 +487,7 @@ components:
     ],
     right: [
       {
-        description: "valid volumes_from reference",
+        description: "valid `volumes_from` reference",
         yaml: `
 components:
   - name: DB

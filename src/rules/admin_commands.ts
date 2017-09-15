@@ -3,7 +3,7 @@ import { YAMLRule } from "../lint";
 export const adminCommandComponentExists: YAMLRule = {
   name: "prop-admincommand-component-exists",
   type: "error",
-  message: "Admin commands must have matching component and container",
+  message: "Admin commands must reference an existing component and container",
   test: { AdminCommandContainerMissing: {} },
   examples: {
     wrong: [
@@ -65,7 +65,7 @@ components:
       `,
       },
       {
-        description: "Admin command has service, so we're probably in swarm",
+        description: "Admin command has `service`, so we're probably in swarm",
         yaml: `
 ---
 admin_commands:
@@ -76,7 +76,7 @@ admin_commands:
       `,
       },
       {
-        description: "Admin command has selector, so we're probably in kubernetes",
+        description: "Admin command has `selector`, so we're probably in kubernetes",
         yaml: `
 ---
 admin_commands:
@@ -111,7 +111,7 @@ export const adminCommandShellAlias: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "admin command's alias contains invalid character `&`",
+        description: "admin command's `alias` contains invalid character `&`",
         yaml: `
 ---
 admin_commands:
@@ -123,7 +123,7 @@ admin_commands:
       `,
       },
       {
-        description: "admin command's alias contains invalid character `*`",
+        description: "admin command's `alias` contains invalid character `*`",
         yaml: `
 ---
 admin_commands:
@@ -137,7 +137,7 @@ admin_commands:
     ],
     right: [
       {
-        description: "valid alias",
+        description: "valid `alias`",
         yaml: `
 ---
 admin_commands:

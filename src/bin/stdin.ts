@@ -20,7 +20,16 @@ process.stdin.on("data", (chunk) => {
 
 process.stdin.on("end", () => {
   const results: linter.RuleTrigger[] = linter.defaultLint(data);
+  let found = 0;
   for (const result of results) {
+    if (process.argv.indexOf("-q") !== -1) {
+      if (result.type !== "error") {
+        continue;
+      }
+    }
+
+    found += 1;
+
     console.log(util.inspect(result, false, 100, true));
 
     if (_.isEmpty(result.positions)) {
@@ -59,8 +68,8 @@ process.stdin.on("end", () => {
   console.log();
   console.log();
 
-  if (results && results.length) {
-    console.log(chalk.yellow(`Found ${results.length} issues.`));
+  if (found !== 0) {
+    console.log(chalk.yellow(`Found ${found} issues.`));
   } else {
     console.log(chalk.green(`✓ All clear!`));
   }

@@ -88,7 +88,7 @@ export const configOptionNotCircular: YAMLRule = {
   },
   examples: {
     wrong: [{
-      description: "Config Option `circular` references `{{repl ConfigOption \"circular\" }} in it's `when` field",
+      description: "Config Option `circular` references `{{repl ConfigOption \"circular\" }}` in it's `when` field",
       yaml: `
 ---
 config:
@@ -368,7 +368,7 @@ config:
       `,
     },
       {
-        description: "Config option group's when clause references a valid multi-select option",
+        description: "Config option group's `when` clause references a valid multi-select option",
         yaml: `
 ---
 config:

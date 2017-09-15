@@ -35,7 +35,7 @@ replicated_api_version: 2.9.0
 export const imageContentTrustValid: YAMLRule = {
   name: "prop-image-contenttrust-fingerprint-valid",
   type: "error",
-  message: "An image's content_trust.public_key_fingerprint must be a valid RFC4716 fingerprint, e.g. `cb:69:19:cd:76:1f:17:54:92:a4:fc:a9:6f:a5:57:72`",
+  message: "An image's `content_trust.public_key_fingerprint` must be a valid RFC4716 fingerprint, e.g. `cb:69:19:cd:76:1f:17:54:92:a4:fc:a9:6f:a5:57:72`",
   test: {
     AnyOf: {
       path: "images",
@@ -145,7 +145,7 @@ export const propertiesLogoURLValid: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "protocol not in [http, https]",
+        description: "protocol not in [`http`, `https`]",
         yaml: `
 ---
 properties:

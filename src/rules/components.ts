@@ -3,7 +3,7 @@ import { YAMLRule } from "../lint";
 export const componentClusterCount: YAMLRule = {
   name: "prop-component-cluster-count",
   type: "info",
-  message: "If cluster_host_count.min and cluster_host_count.max are both set to 1, then it be impossible to run multiple instances of this container anywhere in the cluster.",
+  message: "If `cluster_host_count.min` and `cluster_host_count.max` are both set to 1, then it will be impossible to run multiple instances of this container anywhere in the cluster.",
   test: {
     AnyOf: {
       path: "components",
@@ -21,7 +21,7 @@ export const componentClusterCount: YAMLRule = {
   },
   examples: {
     wrong: [{
-      description: "cluster_host_count.min and cluster_host_count.max are both set to 1",
+      description: "`cluster_host_count.min` and `cluster_host_count.max` are both set to 1",
       yaml: `
 ---
 components:
@@ -40,7 +40,7 @@ components:
     }],
     right: [
       {
-        description: "cluster_host_count.min and cluster_host_count.max is a range",
+        description: "`cluster_host_count.min` and `cluster_host_count.max` is a range",
         yaml: `
 ---
 components:
@@ -58,7 +58,7 @@ components:
       `,
       },
       {
-        description: "cluster_host_count.min and cluster_host_count.max are unset",
+        description: "`cluster_host_count.min` and `cluster_host_count.max` are unset",
         yaml: `
 ---
 components:
@@ -116,7 +116,7 @@ components:
     }],
     right: [
       {
-        description: "strategy is set to `autoscale`, a supported option",
+        description: "`strategy` is set to `autoscale`, a supported option",
         yaml: `
 ---
 components:
@@ -133,7 +133,7 @@ components:
       `,
       },
       {
-        description: "strategy is unset",
+        description: "`strategy` is unset",
         yaml: `
 ---
 components:
@@ -224,7 +224,7 @@ components:
 export const componentClusterBoolstring: YAMLRule = {
   name: "prop-component-cluster-boolstring",
   type: "error",
-  message: "`component.cluster` be a template or a boolean",
+  message: "`component.cluster` must be a template or a boolean",
   test: {
     AnyOf: {
       path: "components",
@@ -241,7 +241,7 @@ export const componentClusterBoolstring: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "component.cluster is not a boolean or template",
+        description: "`component.cluster` is not a boolean or template",
         yaml: `
 ---
 components:
@@ -252,7 +252,7 @@ components:
     ],
     right: [
       {
-        description: "component.cluster absent",
+        description: "`component.cluster` absent",
         yaml: `
 ---
 components:
@@ -260,7 +260,7 @@ components:
       `,
       },
       {
-        description: "component.cluster boolean",
+        description: "`component.cluster` boolean",
         yaml: `
 ---
 components:
@@ -269,7 +269,7 @@ components:
       `,
       },
       {
-        description: "component.cluster string boolean",
+        description: "`component.cluster` string boolean",
         yaml: `
 ---
 components:
@@ -278,7 +278,7 @@ components:
       `,
       },
       {
-        description: "component.cluster == 0 ",
+        description: "`component.cluster` == 0 ",
         yaml: `
 ---
 components:
@@ -287,7 +287,7 @@ components:
       `,
       },
       {
-        description: "component.cluster == 1 ",
+        description: "`component.cluster` == 1 ",
         yaml: `
 ---
 components:
@@ -296,7 +296,7 @@ components:
       `,
       },
       {
-        description: "component.cluster template",
+        description: "`component.cluster` template",
         yaml: `
 ---
 components:

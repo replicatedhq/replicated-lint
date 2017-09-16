@@ -3,7 +3,7 @@ import { YAMLRule } from "../lint";
 export const configitemTestprocRunOnSave: YAMLRule = {
   name: "prop-configitem-testproc-run-on-save",
   type: "info",
-  message: `If a config item's test_proc.run_on_save is not set to 'true', test_proc's will not be checked automatically. Consider setting to ‘true’ to automatically validate inputs`,
+  message: "If a config item's `test_proc.run_on_save` is not set to `true`, test_proc's will not be checked automatically. Consider setting to `true` to automatically validate inputs",
   links: [
     "https://www.replicated.com/docs/packaging-an-application/test-procs/",
   ],
@@ -109,7 +109,7 @@ config:
 export const testProcValidCommand: YAMLRule = {
   name: "prop-configitem-testproc-command-valid",
   type: "error",
-  message: `A test_proc's command entry must be a valid command.`,
+  message: "A `test_proc`'s command entry must be a valid command.",
   links: [
     "https://www.replicated.com/docs/packaging-an-application/test-procs/",
   ],

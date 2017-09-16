@@ -102,3 +102,6 @@
 
 0.6.22 / 2017-09-05
     * Fix an issue where `when` clauses on config groups weren't being validated
+
+0.6.23 / 2017-09-15
+    * Tweak `mesg-yaml-empty` description, update docs generation.

@@ -14,17 +14,17 @@ describe("mesg-yaml-valid", () => {
     [undefined, [{
       type: "warn",
       rule: "mesg-yaml-not-empty",
-      message: "No document provided",
+      message: "Document must not be empty",
     }]],
     [null, [{
       type: "warn",
       rule: "mesg-yaml-not-empty",
-      message: "No document provided",
+      message: "Document must not be empty",
     }]],
     ["", [{
       type: "warn",
       rule: "mesg-yaml-not-empty",
-      message: "No document provided",
+      message: "Document must not be empty",
     }]],
   ];
 
@@ -94,7 +94,7 @@ bar: {}
       findings: [{
         type: "warn",
         rule: "mesg-yaml-not-empty",
-        message: "No document provided",
+        message: "Document must not be empty",
       }],
     }, {
       index: 2,

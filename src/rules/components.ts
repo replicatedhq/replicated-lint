@@ -311,7 +311,7 @@ components:
 export const componentPortMinAPIVersion: YAMLRule = {
   name: "prop-port-min-api-version",
   type: "error",
-  message: "`The minimum Replicated API version to use container.ports.public_port is 2.8.0",
+  message: "The minimum Replicated API version to use container.ports.public_port is 2.8.0",
   test: {
     And: {
       preds: [
@@ -338,7 +338,7 @@ export const componentPortMinAPIVersion: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "`public_port minimum version testing, 2.7.0",
+        description: "public_port used and replicated api version set to 2.7.0",
         yaml: `
 ---
 replicated_api_version: "2.7.0"
@@ -352,7 +352,7 @@ components:
       `,
       },
       {
-        description: "`public_port minimum version testing, 1.8.5",
+        description: "public_port used and replicated api version set to 1.8.5",
         yaml: `
 ---
 replicated_api_version: "1.8.5"
@@ -368,7 +368,7 @@ components:
     ],
     right: [
       {
-        description: "`public_port minimum version testing, 2.8.0",
+        description: "public_port used and replicated api version set to 2.8.0",
         yaml: `
 ---
 replicated_api_version: "2.8.0"
@@ -382,7 +382,7 @@ components:
       `,
       },
       {
-        description: "`public_port minimum version testing, 2.8.1",
+        description: "public_port used and replicated api version set to 2.8.1",
         yaml: `
 ---
 replicated_api_version: "2.8.1"

@@ -134,7 +134,7 @@ export default {
           "type": ["string", "boolean"],
         },
         "hidden": {
-          "type": "string",
+          "type": ["string", "boolean"],
         },
         "kubernetes": {
           "type": "object",

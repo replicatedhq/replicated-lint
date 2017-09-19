@@ -963,3 +963,38 @@ export class SemverMinimum implements Predicate<any> {
     return { matched: false };
   }
 }
+
+export class IsUint implements Predicate<any> {
+  public static fromJson(obj: any): IsUint {
+    return new IsUint(obj.path);
+  }
+
+  constructor(
+      private readonly path: string,
+  ) {
+  }
+
+  public test(root: any): RuleMatchedAt {
+
+    const val = _.get(root, this.path);
+
+    // if this is a number >=0, and an integer, we'll call it a uint
+    if (_.isNumber(val)) {
+      if (Number.isInteger(val) && val >= 0) {
+        return { matched: false };
+      }
+    }
+
+    // if this is a string of digits, with no leading 0s, we'll still call it a uint
+    if (_.isString(val)) {
+      if (/^(0|[1-9]\d*)$/.test(val)) {
+        return { matched: false };
+      }
+    }
+
+    return {
+      matched: true,
+      paths: [this.path],
+    };
+  }
+}

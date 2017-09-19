@@ -109,3 +109,6 @@
 0.6.24 / 2017-09-19
     * Ensure minimum Replicated API version of 2.8.0 when specifying a public port
     * Ensure swarm secrets have a name and value and that any labels have keys that are not the empty string
+
+0.6.25 /2017-09-19
+    * Schema fix for backup.hidden, now can be boolean or string. Formerly could only be string.

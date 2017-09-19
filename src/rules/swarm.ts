@@ -43,8 +43,8 @@ swarm:
 replicated_api_version: "2.7.0"
 swarm:
 - secrets:
-  - name: 
-    value: bar 
+  - name:
+    value: bar
         `,
       },
       {

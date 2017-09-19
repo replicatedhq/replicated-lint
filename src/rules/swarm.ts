@@ -6,20 +6,15 @@ export const swarmSecretNameValue: YAMLRule = {
   message: "Swarm secrets require both a `name` and a `value` to function.",
   test: {
     AnyOf: {
-      path: "swarm",
+      path: "swarm.secrets",
       pred: {
-        AnyOf: {
-          path: "secrets",
-          pred: {
-            Or: {
-              preds: [
-                { IsEmpty: { path: "name"} },
-                { IsEmpty: { path: "value"} },
-                { Eq: { path: "name", value: ""} },
-                { Eq: { path: "value", value: ""} },
-              ],
-            },
-          },
+        Or: {
+          preds: [
+            { IsEmpty: { path: "name"} },
+            { IsEmpty: { path: "value"} },
+            { Eq: { path: "name", value: ""} },
+            { Eq: { path: "value", value: ""} },
+          ],
         },
       },
     },
@@ -32,7 +27,7 @@ export const swarmSecretNameValue: YAMLRule = {
 ---
 replicated_api_version: "2.7.0"
 swarm:
-- secrets:
+  secrets:
   - name: foo
         `,
       },
@@ -42,7 +37,7 @@ swarm:
 ---
 replicated_api_version: "2.7.0"
 swarm:
-- secrets:
+  secrets:
   - name:
     value: bar
         `,
@@ -53,7 +48,7 @@ swarm:
 ---
 replicated_api_version: "2.7.0"
 swarm:
-- secrets:
+  secrets:
   - name:
     value: bar
     labels:
@@ -68,7 +63,7 @@ swarm:
 ---
 replicated_api_version: "2.7.0"
 swarm:
-- secrets:
+  secrets:
   - name: foo
     value: bar
         `,
@@ -83,17 +78,12 @@ export const swarmSecretLabelKeys: YAMLRule = {
   message: "Labels within a swarm secret must have keys.",
   test: {
     AnyOf: {
-      path: "swarm",
+      path: "swarm.secrets",
       pred: {
         AnyOf: {
-          path: "secrets",
+          path: "labels",
           pred: {
-            AnyOf: {
-              path: "labels",
-              pred: {
-                Exists: {path: ""},
-              },
-            },
+            Exists: {path: ""},
           },
         },
       },
@@ -107,7 +97,7 @@ export const swarmSecretLabelKeys: YAMLRule = {
 ---
 replicated_api_version: "2.7.0"
 swarm:
-- secrets:
+  secrets:
   - name: foo
     value: bar
     labels:
@@ -123,7 +113,7 @@ swarm:
 ---
 replicated_api_version: "2.7.0"
 swarm:
-- secrets:
+  secrets:
   - name: foo
     value: bar
     labels:

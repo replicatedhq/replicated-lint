@@ -7,6 +7,7 @@ import * as testproc from "./testproc";
 import * as hostreq from "./host_requirements";
 import * as kubernetes from "./kubernetes";
 import * as admin from "./admin_commands";
+import * as swarm from "./swarm";
 import { YAMLRule } from "../lint";
 
 export const all: YAMLRule[] = [
@@ -19,6 +20,7 @@ export const all: YAMLRule[] = [
   ...hostreq.all,
   ...kubernetes.all,
   ...admin.all,
+  ...swarm.all,
 ];
 
 export { root, monitors, configoption, testproc, hostreq, kubernetes };

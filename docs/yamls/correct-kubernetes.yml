@@ -23,7 +23,8 @@ properties:
   logo_url: http://logonoid.com/images/batman-logo.png
   console_title: QA Application - Bravo Console
 backup:
-  enabled: true
+  enabled: "true"
+  hidden: "false"
   kubernetes:
     pvc_names: [ "redis-pvc" ]
 

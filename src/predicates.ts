@@ -940,3 +940,26 @@ export class ContainerNamesNotUnique implements Predicate<any> {
   }
 
 }
+
+export class SemverMinimum implements Predicate<any> {
+  // return true if the minimum version is after the provided version
+  public static fromJson(obj: any): SemverMinimum {
+    return new SemverMinimum(obj.path, obj.minimum);
+  }
+
+  constructor(
+      private readonly path: string,
+      private readonly minimum: string,
+  ) {
+  }
+
+  public test(root: any): RuleMatchedAt {
+    const value = _.get(root, this.path);
+
+    if (semver.lt(value, this.minimum)) {
+      return {matched: true, paths: [this.path]};
+    }
+
+    return { matched: false };
+  }
+}

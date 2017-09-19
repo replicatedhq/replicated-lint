@@ -308,9 +308,101 @@ components:
   },
 };
 
+export const componentPortMinAPIVersion: YAMLRule = {
+  name: "prop-port-min-api-version",
+  type: "error",
+  message: "`The minimum Replicated API version to use container.ports.public_port is 2.8.0",
+  test: {
+    And: {
+      preds: [
+        { SemverMinimum: {path: "replicated_api_version", minimum: "2.8.0"}},
+        {
+          AnyOf: {
+            path: "components",
+            pred: {
+              AnyOf: {
+                path: "containers",
+                pred: {
+                  AnyOf: {
+                    path: "ports",
+                    pred: { Truthy: {path: "public_port"} },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "`public_port minimum version testing, 2.7.0",
+        yaml: `
+---
+replicated_api_version: "2.7.0"
+components:
+- name: DB
+  containers:
+    - source: public
+      ports:
+        - public_port: "10000"
+
+      `,
+      },
+      {
+        description: "`public_port minimum version testing, 1.8.5",
+        yaml: `
+---
+replicated_api_version: "1.8.5"
+components:
+- name: DB
+  containers:
+    - source: public
+      ports:
+        - public_port: "10000"
+
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "`public_port minimum version testing, 2.8.0",
+        yaml: `
+---
+replicated_api_version: "2.8.0"
+components:
+- name: DB
+  containers:
+    - source: public
+      ports:
+        - public_port: "10000"
+
+      `,
+      },
+      {
+        description: "`public_port minimum version testing, 2.8.1",
+        yaml: `
+---
+replicated_api_version: "2.8.1"
+components:
+- name: DB
+  containers:
+    - source: public
+      ports:
+        - public_port: "10000"
+
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   componentClusterCount,
   componentClusterStrategy,
   componentHostVolumePathAbsolute,
   componentClusterBoolstring,
+  componentPortMinAPIVersion,
 ];

@@ -81,6 +81,10 @@ export interface Test {
     path: string;
     required: boolean;
   };
+  SemverMinimum?: {
+    path: string;
+    minimum: string;
+  };
   Exists?: {
     path: string;
   };

@@ -1,7 +1,7 @@
 import { YAMLRule } from "../lint";
 
 export const swarmSecretNameValue: YAMLRule = {
-  name: "prop-swarm-sectet-name-value",
+  name: "prop-swarm-secret-name-value",
   type: "error",
   message: "Swarm secrets require both a `name` and a `value` to function.",
   test: {
@@ -73,7 +73,7 @@ swarm:
 };
 
 export const swarmSecretLabelKeys: YAMLRule = {
-  name: "prop-swarm-sectet-name-value",
+  name: "prop-swarm-secret-label-key",
   type: "error",
   message: "Labels within a swarm secret must have keys.",
   test: {

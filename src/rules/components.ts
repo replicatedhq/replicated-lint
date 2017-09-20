@@ -399,10 +399,136 @@ components:
   },
 };
 
+export const componentClusterHostCountUint: YAMLRule = {
+  name: "prop-component-container-host-count-uint",
+  type: "error",
+  message: "Container's cluster_host_count properties must be unsigned integers",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        Or: {
+          preds: [
+            {
+              And: {
+                preds: [
+                  {IsUint: {path: "cluster_host_count.min"}},
+                  {Truthy: {path: "cluster_host_count.min"}},
+                ],
+              },
+            },
+            {
+              And: {
+                preds: [
+                  {IsUint: {path: "cluster_host_count.max"}},
+                  {Truthy: {path: "cluster_host_count.max"}},
+                ],
+              },
+            },
+            {
+              And: {
+                preds: [
+                  {IsUint: {path: "cluster_host_count.threshold_degraded"}},
+                  {Truthy: {path: "cluster_host_count.threshold_degraded"}},
+                ],
+              },
+            },
+            {
+              And: {
+                preds: [
+                  {IsUint: {path: "cluster_host_count.threshold_healthy"}},
+                  {Truthy: {path: "cluster_host_count.threshold_healthy"}},
+                ],
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "cluster_host_count.min must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    min: 3.5
+    max: 10
+    threshold_degraded: 2
+    threshold_healthy: 5
+      `,
+      },
+      {
+        description: "cluster_host_count.max must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    min: 1
+    max: -10
+    threshold_degraded: 2
+    threshold_healthy: 5
+      `,
+      },
+      {
+        description: "cluster_host_count.threshold_degraded must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    min: 1
+    max: 10
+    threshold_degraded: "2.8"
+    threshold_healthy: 5
+      `,
+      },
+      {
+        description: "cluster_host_count.threshold_healthy must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    min: 1
+    max: 10
+    threshold_degraded: 2
+    threshold_healthy: "all"
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "cluster_host_count properties must be unsigned integers",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    min: 1
+    max: 10
+    threshold_degraded: "2"
+    threshold_healthy: "5"
+      `,
+      },
+      {
+        description: "cluster_host_count properties must be unsigned integers, and none are required to be present",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    min: 1
+    max: 10
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   componentClusterCount,
   componentClusterStrategy,
   componentHostVolumePathAbsolute,
   componentClusterBoolstring,
   componentPortMinAPIVersion,
+  componentClusterHostCountUint,
 ];

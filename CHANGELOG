@@ -112,3 +112,7 @@
 
 0.6.25 /2017-09-19
     * Schema fix for backup.hidden, now can be boolean or string. Formerly could only be string.
+
+0.6.26 /2017-09-20
+    * components.cluster_host_count and components.containers.cluster_instance_count uint properties are now checked to make sure they are actually uints
+    * Schema fix for cluster_instance_count and cluster_host_count, all of their uint properties can now be strings or numbers

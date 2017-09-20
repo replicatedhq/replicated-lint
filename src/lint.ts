@@ -57,7 +57,7 @@ export interface Test {
   IsEmpty?: {
     path: string;
   };
-  IsUint?: {
+  IsNotUint?: {
     path: string;
   };
   Truthy?: {

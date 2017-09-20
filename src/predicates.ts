@@ -964,9 +964,9 @@ export class SemverMinimum implements Predicate<any> {
   }
 }
 
-export class IsUint implements Predicate<any> {
-  public static fromJson(obj: any): IsUint {
-    return new IsUint(obj.path);
+export class IsNotUint implements Predicate<any> {
+  public static fromJson(obj: any): IsNotUint {
+    return new IsNotUint(obj.path);
   }
 
   constructor(

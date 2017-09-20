@@ -592,7 +592,7 @@ export const containerClusterInstanceCountInitialUint: YAMLRule = {
           pred: {
             And: {
               preds: [
-                {IsUint: {path: "cluster_instance_count.initial"}},
+                {IsNotUint: {path: "cluster_instance_count.initial"}},
                 {Exists: {path: "cluster_instance_count.initial"}},
               ],
             },
@@ -671,7 +671,7 @@ export const containerClusterInstanceCountMaxUint: YAMLRule = {
           pred: {
             And: {
               preds: [
-                {IsUint: {path: "cluster_instance_count.max"}},
+                {IsNotUint: {path: "cluster_instance_count.max"}},
                 {Exists: {path: "cluster_instance_count.max"}},
               ],
             },
@@ -730,7 +730,7 @@ export const containerClusterInstanceCountDegradedUint: YAMLRule = {
           pred: {
             And: {
               preds: [
-                {IsUint: {path: "cluster_instance_count.threshold_degraded"}},
+                {IsNotUint: {path: "cluster_instance_count.threshold_degraded"}},
                 {Exists: {path: "cluster_instance_count.threshold_degraded"}},
               ],
             },
@@ -789,7 +789,7 @@ export const containerClusterInstanceCountHealthyUint: YAMLRule = {
           pred: {
             And: {
               preds: [
-                {IsUint: {path: "cluster_instance_count.threshold_healthy"}},
+                {IsNotUint: {path: "cluster_instance_count.threshold_healthy"}},
                 {Exists: {path: "cluster_instance_count.threshold_healthy"}},
               ],
             },

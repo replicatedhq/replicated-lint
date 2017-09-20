@@ -409,7 +409,7 @@ export const containerClusterHostCountMinUint: YAMLRule = {
       pred: {
         And: {
           preds: [
-            {IsUint: {path: "cluster_host_count.min"}},
+            {IsNotUint: {path: "cluster_host_count.min"}},
             {Exists: {path: "cluster_host_count.min"}},
           ],
         },
@@ -478,7 +478,7 @@ export const containerClusterHostCountMaxUint: YAMLRule = {
       pred: {
         And: {
           preds: [
-            {IsUint: {path: "cluster_host_count.max"}},
+            {IsNotUint: {path: "cluster_host_count.max"}},
             {Exists: {path: "cluster_host_count.max"}},
           ],
         },
@@ -529,7 +529,7 @@ export const containerClusterHostCountHealthyUint: YAMLRule = {
       pred: {
         And: {
           preds: [
-            {IsUint: {path: "cluster_host_count.threshold_healthy"}},
+            {IsNotUint: {path: "cluster_host_count.threshold_healthy"}},
             {Exists: {path: "cluster_host_count.threshold_healthy"}},
           ],
         },
@@ -580,7 +580,7 @@ export const containerClusterHostCountDegradedUint: YAMLRule = {
       pred: {
         And: {
           preds: [
-            {IsUint: {path: "cluster_host_count.threshold_degraded"}},
+            {IsNotUint: {path: "cluster_host_count.threshold_degraded"}},
             {Exists: {path: "cluster_host_count.threshold_degraded"}},
           ],
         },

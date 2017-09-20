@@ -397,10 +397,59 @@ config:
   },
 };
 
+export const customRequirementIdsUnique: YAMLRule = {
+  name: "prop-component-container-names-unique",
+  type: "error",
+  message: "Custom requirements must have unique ids",
+  test: {   CustomRequirementsNotUnique : {}},
+  examples: {
+    wrong: [
+      {
+        description: "duplicated ids",
+        yaml: `
+---
+custom_requirements:
+- id: alpha
+  message: beta
+- id: alpha
+  message: delta
+    `,
+      },
+      {
+        description: "seperated duplicated ids",
+        yaml: `
+---
+custom_requirements:
+- id: alpha
+  message: beta
+- id: gamma
+  message: delta
+- id: alpha
+  message: zeta
+    `,
+      },
+    ],
+    right: [
+      {
+        description: "no duplicated ids",
+        yaml: `
+---
+custom_requirements:
+- id: alpha
+  message: beta
+- id: gamma
+  message: delta
+    `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   configOptionExists,
   configOptionPasswordType,
   configOptionNotCircular,
   configOptionTypeValid,
   configOptionWhenValid,
+  customRequirementIdsUnique,
 ];

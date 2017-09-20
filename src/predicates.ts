@@ -998,3 +998,37 @@ export class IsNotUint implements Predicate<any> {
     };
   }
 }
+
+export class CustomRequirementsNotUnique implements Predicate<any> {
+  public static fromJson(): CustomRequirementsNotUnique {
+    return new CustomRequirementsNotUnique();
+  }
+
+  public test(root: any): RuleMatchedAt {
+    if (_.isEmpty(root.custom_requirements)) {
+      return { matched: false };
+    }
+
+    const seenNames = {} as any;
+    const matches = _.flatMap(root.custom_requirements, (requirement: any, requirementIndex) => {
+      if (_.isUndefined(requirement.id)) {
+        return [{ matched: false }];
+      }
+
+      if (_.isUndefined(seenNames[requirement.id])) {
+        seenNames[requirement.id] = `requirements.${requirementIndex}.id`;
+        return { matched: false };
+      }
+
+      return {
+        matched: true,
+        paths: [
+          `requirements.${requirementIndex}.id`,
+          seenNames[requirement.id],
+        ],
+      };
+    });
+
+    return collapseMatches(matches);
+  }
+}

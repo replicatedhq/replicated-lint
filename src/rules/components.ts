@@ -399,10 +399,236 @@ components:
   },
 };
 
+export const containerClusterHostCountMinUint: YAMLRule = {
+  name: "prop-component-container-host-count-min-uint",
+  type: "error",
+  message: "Container's cluster_host_count property `min` must be an unsigned integer",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        And: {
+          preds: [
+            {IsNotUint: {path: "cluster_host_count.min"}},
+            {Exists: {path: "cluster_host_count.min"}},
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "cluster_host_count.min must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    min: 3.5
+      `,
+      },
+      {
+        description: "cluster_host_count.min must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    min: "-2"
+      `,
+      },
+      {
+        description: "cluster_host_count.min must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    min: false
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "cluster_host_count.min must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    min: 3
+      `,
+      },
+      {
+        description: "cluster_host_count.min is not required to be present",
+        yaml: `
+---
+components:
+- cluster_host_count:
+      `,
+      },
+    ],
+  },
+};
+
+export const containerClusterHostCountMaxUint: YAMLRule = {
+  name: "prop-component-container-host-count-max-uint",
+  type: "error",
+  message: "Container's cluster_host_count property `max` must be an unsigned integer",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        And: {
+          preds: [
+            {IsNotUint: {path: "cluster_host_count.max"}},
+            {Exists: {path: "cluster_host_count.max"}},
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "cluster_host_count.max must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    max: -10
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "cluster_host_count.max must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    max: 10
+      `,
+      },
+      {
+        description: "cluster_host_count.max is not required to be present",
+        yaml: `
+---
+components:
+- cluster_host_count:
+      `,
+      },
+    ],
+  },
+};
+
+export const containerClusterHostCountHealthyUint: YAMLRule = {
+  name: "prop-component-container-host-count-healthy-uint",
+  type: "error",
+  message: "Container's cluster_host_count property `threshold_healthy` must be an unsigned integer",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        And: {
+          preds: [
+            {IsNotUint: {path: "cluster_host_count.threshold_healthy"}},
+            {Exists: {path: "cluster_host_count.threshold_healthy"}},
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "cluster_host_count.threshold_healthy must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    threshold_healthy: "all"
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "cluster_host_count.threshold_healthy must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    threshold_healthy: 5
+      `,
+      },
+      {
+        description: "cluster_host_count.threshold_healthy is not required to be present",
+        yaml: `
+---
+components:
+- cluster_host_count:
+      `,
+      },
+    ],
+  },
+};
+
+export const containerClusterHostCountDegradedUint: YAMLRule = {
+  name: "prop-component-container-host-count-degraded-uint",
+  type: "error",
+  message: "Container's cluster_host_count property `threshold_degraded` must be an unsigned integer",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        And: {
+          preds: [
+            {IsNotUint: {path: "cluster_host_count.threshold_degraded"}},
+            {Exists: {path: "cluster_host_count.threshold_degraded"}},
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "cluster_host_count.threshold_degraded must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    threshold_degraded: "2.5"
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "cluster_host_count.threshold_degraded must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    threshold_degraded: 2
+      `,
+      },
+      {
+        description: "cluster_host_count.threshold_degraded is not required to be present",
+        yaml: `
+---
+components:
+- cluster_host_count:
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   componentClusterCount,
   componentClusterStrategy,
   componentHostVolumePathAbsolute,
   componentClusterBoolstring,
   componentPortMinAPIVersion,
+  containerClusterHostCountMinUint,
+  containerClusterHostCountMaxUint,
+  containerClusterHostCountHealthyUint,
+  containerClusterHostCountDegradedUint,
 ];

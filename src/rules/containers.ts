@@ -579,6 +579,262 @@ components:
   },
 };
 
+export const containerClusterInstanceCountInitialUint: YAMLRule = {
+  name: "prop-component-container-instance-count-initial-uint",
+  type: "error",
+  message: "Container's cluster_instance_count property `initial` must be an unsigned integer",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            And: {
+              preds: [
+                {IsNotUint: {path: "cluster_instance_count.initial"}},
+                {Exists: {path: "cluster_instance_count.initial"}},
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "cluster_instance_count.initial must be an unsigned integer",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      initial: 3.5
+      `,
+      },
+      {
+        description: "cluster_instance_count.initial must be an unsigned integer",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      initial: "-2"
+      `,
+      },
+      {
+        description: "cluster_instance_count.initial must be an unsigned integer",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      initial: false
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "cluster_instance_count.initial must be an unsigned integer",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      initial: 3
+      `,
+      },
+      {
+        description: "cluster_instance_count.initial is not required to be present",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      `,
+      },
+    ],
+  },
+};
+
+export const containerClusterInstanceCountMaxUint: YAMLRule = {
+  name: "prop-component-container-instance-count-max-uint",
+  type: "error",
+  message: "Container's cluster_instance_count property `max` must be an unsigned integer",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            And: {
+              preds: [
+                {IsNotUint: {path: "cluster_instance_count.max"}},
+                {Exists: {path: "cluster_instance_count.max"}},
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "cluster_instance_count.max must be an unsigned integer",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      max: -10
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "cluster_instance_count.max must be an unsigned integer",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      max: 10
+      `,
+      },
+      {
+        description: "cluster_instance_count.max is not required to be present",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      `,
+      },
+    ],
+  },
+};
+
+export const containerClusterInstanceCountDegradedUint: YAMLRule = {
+  name: "prop-component-container-instance-count-degraded-uint",
+  type: "error",
+  message: "Container's cluster_instance_count property `threshold_degraded` must be an unsigned integer",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            And: {
+              preds: [
+                {IsNotUint: {path: "cluster_instance_count.threshold_degraded"}},
+                {Exists: {path: "cluster_instance_count.threshold_degraded"}},
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "cluster_instance_count.threshold_degraded must be an unsigned integer",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      threshold_degraded: "2.8"
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "cluster_instance_count.threshold_degraded must be an unsigned integer",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      threshold_degraded: "2"
+      `,
+      },
+      {
+        description: "cluster_instance_count.threshold_degraded is not required to be present",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      `,
+      },
+    ],
+  },
+};
+
+export const containerClusterInstanceCountHealthyUint: YAMLRule = {
+  name: "prop-component-container-instance-count-healthy-uint",
+  type: "error",
+  message: "Container's cluster_instance_count property `threshold_healthy` must be an unsigned integer",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            And: {
+              preds: [
+                {IsNotUint: {path: "cluster_instance_count.threshold_healthy"}},
+                {Exists: {path: "cluster_instance_count.threshold_healthy"}},
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "cluster_instance_count.threshold_healthy must be an unsigned integer",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      threshold_healthy: "all"
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "cluster_instance_count.threshold_healthy must be an unsigned integer",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      threshold_healthy: "5"
+      `,
+      },
+      {
+        description: "cluster_instance_count.threshold_healthy is not required to be present",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   notClusteredIfNamedContainer,
   eventSubscriptionContainerExists,
@@ -587,4 +843,8 @@ export const all: YAMLRule[] = [
   containerContentTrustValid,
   containerVolumesFromExists,
   containerNamesUnique,
+  containerClusterInstanceCountInitialUint,
+  containerClusterInstanceCountMaxUint,
+  containerClusterInstanceCountDegradedUint,
+  containerClusterInstanceCountHealthyUint,
 ];

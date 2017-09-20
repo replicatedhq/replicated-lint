@@ -199,10 +199,10 @@ export default {
                 "type": "string",
               },
               "threshold_degraded": {
-                "type": "string",
+                "type": ["string", "number"],
               },
               "threshold_healthy": {
-                "type": "string",
+                "type": ["string", "number"],
               },
             },
           },
@@ -233,10 +233,10 @@ export default {
                       "type": ["string", "number"],
                     },
                     "threshold_degraded": {
-                      "type": "string",
+                      "type": ["string", "number"],
                     },
                     "threshold_healthy": {
-                      "type": "string",
+                      "type": ["string", "number"],
                     },
                   },
                 },

@@ -1,7 +1,7 @@
 {
     "name": "replicated-lint",
     "author": "Replicated, Inc.",
-    "version": "0.6.26",
+    "version": "0.6.27",
     "engines": {
         "node": ">=4.3.2"
     },

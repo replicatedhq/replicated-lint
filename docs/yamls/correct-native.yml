@@ -186,6 +186,11 @@ components:
     ephemeral: true
     cmd: '["sleep", "10"]'
     name: "temp"
+    ports:
+    - private_port: 80806
+      public_port: 80805
+      port_type: tcp
+      when: ""
 - name: LB
   cluster: true
   cluster_host_count:

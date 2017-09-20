@@ -8,6 +8,7 @@ import {
   ConfigOptionIsCircular,
   ContainerNamesNotUnique,
   ContainerVolumesFromMissing,
+  CustomRequirementsNotUnique,
   Dot,
   Eq,
   EventSubscriptionContainerMissing,
@@ -84,6 +85,7 @@ const defaultPredicates: PredicateRegistry = {
   InvalidURL,
   ContainerVolumesFromMissing,
   ContainerNamesNotUnique,
+  CustomRequirementsNotUnique,
 };
 
 export class MutableRegistry implements Registry {

@@ -80,12 +80,7 @@ export const swarmSecretLabelKeys: YAMLRule = {
     AnyOf: {
       path: "swarm.secrets",
       pred: {
-        AnyOf: {
-          path: "labels",
-          pred: {
-            Exists: {path: ""},
-          },
-        },
+        Exists: {path: "labels."},
       },
     },
   },
@@ -101,8 +96,8 @@ swarm:
   - name: foo
     value: bar
     labels:
-    - alpha: beta
-      "": wrong
+      alpha: beta
+      "": delta
         `,
       },
     ],
@@ -117,7 +112,7 @@ swarm:
   - name: foo
     value: bar
     labels:
-    - alpha: beta
+      alpha: beta
       gamma: delta
         `,
       },

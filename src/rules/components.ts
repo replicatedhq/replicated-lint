@@ -410,7 +410,7 @@ export const containerClusterHostCountMinUint: YAMLRule = {
         And: {
           preds: [
             {IsUint: {path: "cluster_host_count.min"}},
-            {Truthy: {path: "cluster_host_count.min"}},
+            {Exists: {path: "cluster_host_count.min"}},
           ],
         },
       },
@@ -434,6 +434,15 @@ components:
 components:
 - cluster_host_count:
     min: "-2"
+      `,
+      },
+      {
+        description: "cluster_host_count.min must be an unsigned integer",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    min: false
       `,
       },
     ],
@@ -470,7 +479,7 @@ export const containerClusterHostCountMaxUint: YAMLRule = {
         And: {
           preds: [
             {IsUint: {path: "cluster_host_count.max"}},
-            {Truthy: {path: "cluster_host_count.max"}},
+            {Exists: {path: "cluster_host_count.max"}},
           ],
         },
       },
@@ -521,7 +530,7 @@ export const containerClusterHostCountHealthyUint: YAMLRule = {
         And: {
           preds: [
             {IsUint: {path: "cluster_host_count.threshold_healthy"}},
-            {Truthy: {path: "cluster_host_count.threshold_healthy"}},
+            {Exists: {path: "cluster_host_count.threshold_healthy"}},
           ],
         },
       },
@@ -572,7 +581,7 @@ export const containerClusterHostCountDegradedUint: YAMLRule = {
         And: {
           preds: [
             {IsUint: {path: "cluster_host_count.threshold_degraded"}},
-            {Truthy: {path: "cluster_host_count.threshold_degraded"}},
+            {Exists: {path: "cluster_host_count.threshold_degraded"}},
           ],
         },
       },

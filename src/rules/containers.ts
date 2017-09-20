@@ -593,7 +593,7 @@ export const containerClusterInstanceCountInitialUint: YAMLRule = {
             And: {
               preds: [
                 {IsUint: {path: "cluster_instance_count.initial"}},
-                {Truthy: {path: "cluster_instance_count.initial"}},
+                {Exists: {path: "cluster_instance_count.initial"}},
               ],
             },
           },
@@ -621,6 +621,16 @@ components:
 - containers:
   - cluster_instance_count:
       initial: "-2"
+      `,
+      },
+      {
+        description: "cluster_instance_count.initial must be an unsigned integer",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      initial: false
       `,
       },
     ],
@@ -662,7 +672,7 @@ export const containerClusterInstanceCountMaxUint: YAMLRule = {
             And: {
               preds: [
                 {IsUint: {path: "cluster_instance_count.max"}},
-                {Truthy: {path: "cluster_instance_count.max"}},
+                {Exists: {path: "cluster_instance_count.max"}},
               ],
             },
           },
@@ -721,7 +731,7 @@ export const containerClusterInstanceCountDegradedUint: YAMLRule = {
             And: {
               preds: [
                 {IsUint: {path: "cluster_instance_count.threshold_degraded"}},
-                {Truthy: {path: "cluster_instance_count.threshold_degraded"}},
+                {Exists: {path: "cluster_instance_count.threshold_degraded"}},
               ],
             },
           },
@@ -780,7 +790,7 @@ export const containerClusterInstanceCountHealthyUint: YAMLRule = {
             And: {
               preds: [
                 {IsUint: {path: "cluster_instance_count.threshold_healthy"}},
-                {Truthy: {path: "cluster_instance_count.threshold_healthy"}},
+                {Exists: {path: "cluster_instance_count.threshold_healthy"}},
               ],
             },
           },

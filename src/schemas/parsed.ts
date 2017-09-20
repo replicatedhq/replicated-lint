@@ -408,10 +408,10 @@ export default {
                         "type": "string",
                       },
                       "private_port": {
-                        "type": "string",
+                        "type": ["string", "number"],
                       },
                       "public_port": {
-                        "type": "string",
+                        "type": ["string", "number"],
                       },
                       "when": {
                         "type": ["string", "boolean"],

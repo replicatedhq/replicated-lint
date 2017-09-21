@@ -1032,3 +1032,62 @@ export class CustomRequirementsNotUnique implements Predicate<any> {
     return collapseMatches(matches);
   }
 }
+
+export class ContainerVolumesFromSubscription implements Predicate<any> {
+  public static fromJson(): ContainerVolumesFromSubscription {
+    return new ContainerVolumesFromSubscription();
+  }
+
+  public test(root: any): RuleMatchedAt {
+    if (_.isEmpty(root.components)) {
+      return { matched: false };
+
+    }
+    const matches: RuleMatchedAt[] = _.flatMap(root.components, (component, componentIndex) => {
+      if (_.isEmpty(component.containers)) {
+        return [{ matched: false }];
+      }
+      return _.flatMap(component.containers, (container, containerIndex) => {
+
+        return _.map(container.volumes_from, (name: string, nameIndex) => {
+
+          // check that everything listed in volumes_from has an entry in publish_events.subscriptions for this container
+          let found: boolean = false;
+          console.log(`\nchecking for container ${name}\n`);
+
+          if (container.name === name) {
+            // volumes_from can't refer to self
+            return {
+              matched: true,
+              paths: [`components.${componentIndex}.containers.${containerIndex}.volumes_from.${nameIndex}`],
+            };
+          }
+
+          for (const otherComponent of root.components) {
+            for (const otherContainer of otherComponent.containers) {
+              if (otherContainer.name === name) {
+                for (const event of otherContainer.publish_events) {
+                  for (const subscription of event.subscriptions) {
+                    if (subscription.container === container.image_name) {
+                      found = true;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          if (!found) {
+            return {
+              matched: true,
+              paths: [`components.${componentIndex}.containers.${containerIndex}.volumes_from.${nameIndex}`],
+            };
+          }
+          return { matched: false };
+        });
+      });
+    });
+
+    return collapseMatches(matches);
+  }
+}

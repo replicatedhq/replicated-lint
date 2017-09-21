@@ -835,6 +835,115 @@ components:
   },
 };
 
+export const containerVolumesSubscribtionExists: YAMLRule = {
+  name: "prop-component-container-volumesfrom-subscription-exists",
+  type: "error",
+  message: "A container's `volumes_from` must reference a container that it is subscribed to",
+  test: { ContainerVolumesFromSubscription: {}},
+  examples: {
+    wrong: [
+      {
+        description: "`volumes_from` references container that does not exist",
+        yaml: `
+---
+components:
+- containers:
+  - name: notalpha
+    publish_events:
+    - subscriptions:
+      - container: beta
+  - image_name: beta
+    volumes_from:
+    - alpha
+    `,
+      },
+      {
+        description: "`volumes_from` references container that does not subscribe to it",
+        yaml: `
+---
+components:
+- containers:
+  - name: alpha
+    publish_events:
+    - subscriptions:
+      - container: notalpine
+  - image_name: alpine
+    volumes_from:
+    - alpha
+    `,
+      },
+      {
+        description: "`volumes_from` references multiple containers, of which one is not valid",
+        yaml: `
+---
+components:
+- containers:
+  - name: alpha
+    publish_events:
+    - subscriptions:
+      - container: beta
+  - image_name: beta
+    volumes_from: 
+    - alpha
+    - gamma
+    `,
+      },
+      {
+        description: "`volumes_from` references itself",
+        yaml: `
+---
+components:
+- containers:
+  - name: alphaname
+    image_name: alpha
+    volumes_from:
+    - alphaname
+    publish_events:
+    - subscriptions:
+      - container: alpha
+    `,
+      },
+    ],
+    right: [
+      {
+        description: "valid `volumes_from` reference",
+        yaml: `
+---
+components:
+- containers:
+  - name: alpha
+    publish_events:
+    - subscriptions:
+      - container: beta
+  - image_name: beta
+    volumes_from:
+    - alpha
+    `,
+      },
+      {
+        description: "multiple valid `volumes_from` references",
+        yaml: `
+---
+components:
+- containers:
+  - name: alpha
+    publish_events:
+    - subscriptions:
+      - container: beta
+  - name: gamma
+    publish_events:
+    - subscriptions:
+      - container: beta
+  - image_name: beta
+    volumes_from:
+    - alpha
+    - gamma
+    `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   notClusteredIfNamedContainer,
   eventSubscriptionContainerExists,
@@ -847,4 +956,5 @@ export const all: YAMLRule[] = [
   containerClusterInstanceCountMaxUint,
   containerClusterInstanceCountDegradedUint,
   containerClusterInstanceCountHealthyUint,
+  containerVolumesSubscribtionExists,
 ];

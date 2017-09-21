@@ -137,6 +137,7 @@ export interface Test {
   EventSubscriptionContainerMissing?: {};
   WhenExpressionConfigInvalid?: {};
   CustomRequirementsNotUnique?: {};
+  ContainerVolumesFromSubscription?: {};
 
   MoreThan?: {
     limit: number;

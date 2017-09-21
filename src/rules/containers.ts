@@ -889,7 +889,7 @@ components:
       - component: DB
         container: beta
   - image_name: beta
-    volumes_from: 
+    volumes_from:
     - alpha
     - gamma
     `,

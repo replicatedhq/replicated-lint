@@ -1034,7 +1034,7 @@ export class CustomRequirementsNotUnique implements Predicate<any> {
 }
 
 function buildSubscriptionMap(root: any): { [s: string]: string; } {
-  let subscriptionMap: { [s: string]: string; } = {};
+  const subscriptionMap: { [s: string]: string; } = {};
 
   for (const component of root.components) {
     for (const container of component.containers) {
@@ -1059,7 +1059,7 @@ function dependsOn(subs: { [s: string]: string; }, current: string, subscribed: 
   if (!(current in subs)) {
     return false;
   }
-  let nextCurrent: string = subs[current];
+  const nextCurrent: string = subs[current];
   if (nextCurrent === subscribed) {
     return true;
   }
@@ -1104,11 +1104,11 @@ export class ContainerVolumesFromSubscription implements Predicate<any> {
           }
 
           // get subscription map
-          let subscriptionMap: { [s: string]: string; } = buildSubscriptionMap(root);
+          const subscriptionMap: { [s: string]: string; } = buildSubscriptionMap(root);
 
           // console.log(`${component.name}:${container.image_name}, ${subscribedComponentName}:${subscribedName}\n`);
 
-          let found: boolean = dependsOn(subscriptionMap, component.name + ":" + container.image_name, subscribedComponentName + ":" + subscribedName);
+          const found: boolean = dependsOn(subscriptionMap, component.name + ":" + container.image_name, subscribedComponentName + ":" + subscribedName);
 
           if (!found) {
             return {

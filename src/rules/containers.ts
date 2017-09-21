@@ -847,11 +847,13 @@ export const containerVolumesSubscribtionExists: YAMLRule = {
         yaml: `
 ---
 components:
-- containers:
-  - name: notalpha
+- name: DB
+  containers:
+  - image_name: notalpha
     publish_events:
     - subscriptions:
-      - container: beta
+      - component: DB
+        container: beta
   - image_name: beta
     volumes_from:
     - alpha
@@ -862,11 +864,13 @@ components:
         yaml: `
 ---
 components:
-- containers:
-  - name: alpha
+- name: DB
+  containers:
+  - image_name: alpha
     publish_events:
     - subscriptions:
-      - container: notalpine
+      - component: DB
+        container: notalpine
   - image_name: alpine
     volumes_from:
     - alpha
@@ -877,11 +881,13 @@ components:
         yaml: `
 ---
 components:
-- containers:
-  - name: alpha
+- name: DB
+  containers:
+  - image_name: alpha
     publish_events:
     - subscriptions:
-      - container: beta
+      - component: DB
+        container: beta
   - image_name: beta
     volumes_from: 
     - alpha
@@ -893,14 +899,16 @@ components:
         yaml: `
 ---
 components:
-- containers:
+- name: DB
+  containers:
   - name: alphaname
     image_name: alpha
     volumes_from:
-    - alphaname
+    - alpha
     publish_events:
     - subscriptions:
-      - container: alpha
+      - component: DB
+        container: alpha
     `,
       },
     ],
@@ -910,11 +918,13 @@ components:
         yaml: `
 ---
 components:
-- containers:
-  - name: alpha
+- name: DB
+  containers:
+  - image_name: alpha
     publish_events:
     - subscriptions:
-      - container: beta
+      - component: DB
+        container: beta
   - image_name: beta
     volumes_from:
     - alpha
@@ -925,19 +935,45 @@ components:
         yaml: `
 ---
 components:
-- containers:
-  - name: alpha
+- name: DB
+  containers:
+  - image_name: alpha
     publish_events:
     - subscriptions:
-      - container: beta
-  - name: gamma
-    publish_events:
-    - subscriptions:
-      - container: beta
+      - component: DB
+        container: beta
+      - component: DB
+        container: gamma
+  - image_name: gamma
+    volumes_from:
+    - alpha
   - image_name: beta
     volumes_from:
     - alpha
-    - gamma
+    `,
+      },
+      {
+        description: "Chained dependency for `volumes_from` across containers",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - image_name: alpha
+    publish_events:
+    - subscriptions:
+      - component: DB2
+        container: gamma
+  - image_name: beta
+    volumes_from:
+    - alpha
+- name: DB2
+  containers:
+  - image_name: gamma
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: beta
     `,
       },
     ],

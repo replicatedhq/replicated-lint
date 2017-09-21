@@ -1033,6 +1033,40 @@ export class CustomRequirementsNotUnique implements Predicate<any> {
   }
 }
 
+function buildSubscriptionMap(root: any): { [s: string]: string; } {
+  let subscriptionMap: { [s: string]: string; } = {};
+
+  for (const component of root.components) {
+    for (const container of component.containers) {
+      if (!_.isUndefined(container.publish_events)) {
+        for (const event of container.publish_events) {
+          if (!_.isUndefined(event.subscriptions)) {
+            for (const subscription of event.subscriptions) {
+              subscriptionMap[subscription.component + ":" + subscription.container] = component.name + ":" + container.image_name;
+            }
+          }
+        }
+      }
+    }
+  }
+  // console.log(JSON.stringify(subscriptionMap) + "\n");
+  return subscriptionMap;
+}
+
+// dependsOn checks if there is a subscription/dependency chain from current->subscribed
+function dependsOn(subs: { [s: string]: string; }, current: string, subscribed: string): boolean {
+  // console.log(JSON.stringify(subs) + "\n");
+  if (!(current in subs)) {
+    return false;
+  }
+  let nextCurrent: string = subs[current];
+  if (nextCurrent === subscribed) {
+    return true;
+  }
+  delete subs[current]; // delete the previously used link to avoid loops
+  return dependsOn(subs, nextCurrent, subscribed);
+}
+
 export class ContainerVolumesFromSubscription implements Predicate<any> {
   public static fromJson(): ContainerVolumesFromSubscription {
     return new ContainerVolumesFromSubscription();
@@ -1049,13 +1083,19 @@ export class ContainerVolumesFromSubscription implements Predicate<any> {
       }
       return _.flatMap(component.containers, (container, containerIndex) => {
 
-        return _.map(container.volumes_from, (name: string, nameIndex) => {
+        return _.map(container.volumes_from, (subscribedName: string, nameIndex) => {
 
-          // check that everything listed in volumes_from has an entry in publish_events.subscriptions for this container
-          let found: boolean = false;
-          console.log(`\nchecking for container ${name}\n`);
+          // find what component has a container of this name
+          let subscribedComponentName: string = "";
+          for (const otherComponent of root.components) {
+            for (const otherContainer of otherComponent.containers) {
+              if (otherContainer.image_name === subscribedName) {
+                subscribedComponentName = otherComponent.name;
+              }
+            }
+          }
 
-          if (container.name === name) {
+          if (container.image_name === subscribedName && component.name === subscribedComponentName) {
             // volumes_from can't refer to self
             return {
               matched: true,
@@ -1063,19 +1103,12 @@ export class ContainerVolumesFromSubscription implements Predicate<any> {
             };
           }
 
-          for (const otherComponent of root.components) {
-            for (const otherContainer of otherComponent.containers) {
-              if (otherContainer.name === name) {
-                for (const event of otherContainer.publish_events) {
-                  for (const subscription of event.subscriptions) {
-                    if (subscription.container === container.image_name) {
-                      found = true;
-                    }
-                  }
-                }
-              }
-            }
-          }
+          // get subscription map
+          let subscriptionMap: { [s: string]: string; } = buildSubscriptionMap(root);
+
+          // console.log(`${component.name}:${container.image_name}, ${subscribedComponentName}:${subscribedName}\n`);
+
+          let found: boolean = dependsOn(subscriptionMap, component.name + ":" + container.image_name, subscribedComponentName + ":" + subscribedName);
 
           if (!found) {
             return {

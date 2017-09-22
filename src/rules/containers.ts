@@ -835,7 +835,7 @@ components:
   },
 };
 
-export const containerVolumesSubscribtionExists: YAMLRule = {
+export const containerVolumesSubscriptionExists: YAMLRule = {
   name: "prop-component-container-volumesfrom-subscription-exists",
   type: "error",
   message: "A container's `volumes_from` must reference a container that it is subscribed to",
@@ -953,7 +953,7 @@ components:
     `,
       },
       {
-        description: "Chained dependency for `volumes_from` across containers",
+        description: "Chained dependency for `volumes_from` across components",
         yaml: `
 ---
 components:
@@ -992,5 +992,5 @@ export const all: YAMLRule[] = [
   containerClusterInstanceCountMaxUint,
   containerClusterInstanceCountDegradedUint,
   containerClusterInstanceCountHealthyUint,
-  containerVolumesSubscribtionExists,
+  containerVolumesSubscriptionExists,
 ];

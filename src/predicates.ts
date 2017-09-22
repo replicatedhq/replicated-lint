@@ -1049,13 +1049,11 @@ function buildSubscriptionMap(root: any): { [s: string]: string; } {
       }
     }
   }
-  // console.log(JSON.stringify(subscriptionMap) + "\n");
   return subscriptionMap;
 }
 
 // dependsOn checks if there is a subscription/dependency chain from current->subscribed
 function dependsOn(subs: { [s: string]: string; }, current: string, subscribed: string): boolean {
-  // console.log(JSON.stringify(subs) + "\n");
   if (!(current in subs)) {
     return false;
   }
@@ -1105,8 +1103,6 @@ export class ContainerVolumesFromSubscription implements Predicate<any> {
 
           // get subscription map
           const subscriptionMap: { [s: string]: string; } = buildSubscriptionMap(root);
-
-          // console.log(`${component.name}:${container.image_name}, ${subscribedComponentName}:${subscribedName}\n`);
 
           const found: boolean = dependsOn(subscriptionMap, component.name + ":" + container.image_name, subscribedComponentName + ":" + subscribedName);
 

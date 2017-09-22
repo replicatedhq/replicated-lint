@@ -57,6 +57,12 @@ export interface Test {
   IsEmpty?: {
     path: string;
   };
+  IsNotBytesCount?: {
+    path: string;
+  };
+  IsNotKubernetesQuantity?: {
+    path: string;
+  };
   IsNotUint?: {
     path: string;
   };

@@ -178,7 +178,113 @@ host_requirements:
   },
 };
 
+export const hostSystemRamSpecsValid: YAMLRule = {
+  name: "prop-hostreq-system-ram-specs-valid",
+  type: "error",
+  message: "`host_requirements.memory` must be a positive decimal with a unit of measurement like M, MB, G, or GB",
+  test: {
+    And: {
+      preds: [
+          { IsNotBytesCount: { path: "host_requirements.memory" } },
+          { Exists: { path: "host_requirements.memory" } },
+      ],
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "Invalid memory size, not a properly formatted size",
+        yaml: `
+---
+host_requirements:
+  memory: 128
+      `,
+      },
+      {
+        description: "Invalid memory size, too many digits past the decimal point",
+        yaml: `
+---
+host_requirements:
+  memory: 0.0625TB
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "Valid memory size, 2.0TB",
+        yaml: `
+---
+host_requirements:
+  memory: 2.0TB
+      `,
+      },
+      {
+        description: "Valid memory size, 128KB",
+        yaml: `
+---
+host_requirements:
+  memory: 128KB
+      `,
+      },
+    ],
+  },
+};
+
+export const hostSystemStorageSpecsValid: YAMLRule = {
+  name: "prop-hostreq-system-storage-specs-valid",
+  type: "error",
+  message: "`host_requirements.disk_space` be a positive decimal with a unit of measurement like M, MB, G, or GB",
+  test: {
+    And: {
+      preds: [
+          { IsNotBytesCount: { path: "host_requirements.disk_space" } },
+          { Exists: { path: "host_requirements.disk_space" } },
+      ],
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "Invalid disk size, not a properly formatted size",
+        yaml: `
+---
+host_requirements:
+  disk_space: 128
+      `,
+      },
+      {
+        description: "Invalid disk size, too many digits past the decimal point",
+        yaml: `
+---
+host_requirements:
+  disk_space: 0.0625EB
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "Valid disk size, 20.0TB",
+        yaml: `
+---
+host_requirements:
+  disk_space: 20.0TB
+      `,
+      },
+      {
+        description: "Valid disk size, 128GB",
+        yaml: `
+---
+host_requirements:
+  disk_space: 128GB
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   dockerVersionValid,
   replicatedVersionSemverRange,
+  hostSystemRamSpecsValid,
+  hostSystemStorageSpecsValid,
 ];

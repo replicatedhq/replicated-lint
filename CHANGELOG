@@ -128,3 +128,6 @@
 
 0.6.30 /2017-09-20
     * Validate `volumes_from` usage
+
+0.6.31 /2017-09-21
+    * Validate storage and memory sizes in host_requirements and kubernetes

@@ -67,6 +67,153 @@ kubernetes:
   },
 };
 
+export const kubernetesTotalMemoryValidation: YAMLRule = {
+  name: "prop-kubernetes-total-memory-valid",
+  type: "error",
+  message: "`kubernetes.requirements.total_memory` must be expressed as a plain integer, a fixed-point integer, or the power-of-two equivalent (e.g. 128974848, 129e6, 129M, 123Mi)",
+  test: {
+    And: {
+      preds: [
+          { IsNotBytesCount: { path: "kubernetes.requirements.total_memory" } },
+          { IsNotKubernetesQuantity: { path: "kubernetes.requirements.total_memory" } },
+          { Exists: { path: "kubernetes.requirements.total_memory" } },
+      ],
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "Invalid memory size, too many digits past the decimal point",
+        yaml: `
+---
+kubernetes:
+  requirements:
+    total_memory: 0.0625TB
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "Valid memory size, 2.0TB",
+        yaml: `
+---
+kubernetes:
+  requirements:
+    total_memory: 2.0TB
+      `,
+      },
+      {
+        description: "Valid memory size, 128KB",
+        yaml: `
+---
+kubernetes:
+  requirements:
+    total_memory: 128KB
+      `,
+      },
+      {
+        description: "Valid kubernetes memory size, 128",
+        yaml: `
+---
+kubernetes:
+  requirements:
+    total_memory: "128"
+      `,
+      },
+      {
+        description: "Valid kubernetes memory size, 129e6",
+        yaml: `
+---
+kubernetes:
+  requirements:
+    total_memory: "129e6"
+      `,
+      },
+    ],
+  },
+};
+
+export const kubernetesPersistentStorageValidation: YAMLRule = {
+  name: "prop-kubernetes-persistent-storage-valid",
+  type: "error",
+  message: "`kubernetes.persistent_volume_claims.storage` must be expressed as a plain integer, a fixed-point integer, or the power-of-two equivalent (e.g. 128974848, 129e6, 129M, 123Mi)",
+  test: {
+    AnyOf: {
+      path: "kubernetes.persistent_volume_claims",
+      pred: {
+        And: {
+          preds: [
+              { IsNotBytesCount: { path: "storage" } },
+              { IsNotKubernetesQuantity: { path: "storage" } },
+              { Exists: { path: "storage" } },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "Invalid storage size, too many digits past the decimal point",
+        yaml: `
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: 0.0625TB
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "Valid storage size, 2.0TB",
+        yaml: `
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: 2.0TB
+      `,
+      },
+      {
+        description: "Valid storage size, 128KB",
+        yaml: `
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: 128KB
+      `,
+      },
+      {
+        description: "Valid kubernetes storage size, 128",
+        yaml: `
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: "128"
+      `,
+      },
+      {
+        description: "Valid kubernetes storage size, 129e6",
+        yaml: `
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: "129e6"
+      `,
+      },
+      {
+        description: "No storage size given",
+        yaml: `
+---
+kubernetes:
+  persistent_volume_claims:
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   kubernetesServerVersionValid,
+  kubernetesTotalMemoryValidation,
+  kubernetesPersistentStorageValidation,
 ];

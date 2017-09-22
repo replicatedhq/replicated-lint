@@ -1120,3 +1120,65 @@ export class ContainerVolumesFromSubscription implements Predicate<any> {
     return collapseMatches(matches);
   }
 }
+
+export class IsNotBytesCount implements Predicate<any> {
+  public static fromJson(obj: any): IsNotBytesCount {
+    return new IsNotBytesCount(obj.path);
+  }
+
+  constructor(
+      private readonly path: string,
+  ) {
+  }
+
+  public test(root: any): RuleMatchedAt {
+
+    const val = _.get(root, this.path);
+
+    // check against a regular expression to ensure number:unit format
+    if (_.isString(val)) {
+      if (/^(\d+(?:\.\d{1,3})?)([KMGTPE]B?)$/i.test(val.trim())) {
+        return { matched: false };
+      }
+    }
+
+    return {
+      matched: true,
+      paths: [this.path],
+    };
+  }
+}
+
+export class IsNotKubernetesQuantity implements Predicate<any> {
+  public static fromJson(obj: any): IsNotKubernetesQuantity {
+    return new IsNotKubernetesQuantity(obj.path);
+  }
+
+  constructor(
+      private readonly path: string,
+  ) {
+  }
+
+  public test(root: any): RuleMatchedAt {
+
+    const val = _.get(root, this.path);
+
+    if (_.isNumber(val)) {
+      if (val >= 0) {
+        return { matched: false};
+      }
+    }
+
+    // check against a regular expression to ensure format
+    if (_.isString(val)) {
+      if (/^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$/.test(val.trim())) {
+        return { matched: false };
+      }
+    }
+
+    return {
+      matched: true,
+      paths: [this.path],
+    };
+  }
+}

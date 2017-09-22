@@ -1032,3 +1032,91 @@ export class CustomRequirementsNotUnique implements Predicate<any> {
     return collapseMatches(matches);
   }
 }
+
+function buildSubscriptionMap(root: any): { [s: string]: string; } {
+  const subscriptionMap: { [s: string]: string; } = {};
+
+  for (const component of root.components) {
+    for (const container of component.containers) {
+      if (!_.isUndefined(container.publish_events)) {
+        for (const event of container.publish_events) {
+          if (!_.isUndefined(event.subscriptions)) {
+            for (const subscription of event.subscriptions) {
+              subscriptionMap[subscription.component + ":" + subscription.container] = component.name + ":" + container.image_name;
+            }
+          }
+        }
+      }
+    }
+  }
+  return subscriptionMap;
+}
+
+// dependsOn checks if there is a subscription/dependency chain from current->subscribed
+function dependsOn(subs: { [s: string]: string; }, current: string, subscribed: string): boolean {
+  if (!(current in subs)) {
+    return false;
+  }
+  const nextCurrent: string = subs[current];
+  if (nextCurrent === subscribed) {
+    return true;
+  }
+  delete subs[current]; // delete the previously used link to avoid loops
+  return dependsOn(subs, nextCurrent, subscribed);
+}
+
+export class ContainerVolumesFromSubscription implements Predicate<any> {
+  public static fromJson(): ContainerVolumesFromSubscription {
+    return new ContainerVolumesFromSubscription();
+  }
+
+  public test(root: any): RuleMatchedAt {
+    if (_.isEmpty(root.components)) {
+      return { matched: false };
+
+    }
+    const matches: RuleMatchedAt[] = _.flatMap(root.components, (component, componentIndex) => {
+      if (_.isEmpty(component.containers)) {
+        return [{ matched: false }];
+      }
+      return _.flatMap(component.containers, (container, containerIndex) => {
+
+        return _.map(container.volumes_from, (subscribedName: string, nameIndex) => {
+
+          // find what component has a container of this name
+          let subscribedComponentName: string = "";
+          for (const otherComponent of root.components) {
+            for (const otherContainer of otherComponent.containers) {
+              if (otherContainer.image_name === subscribedName) {
+                subscribedComponentName = otherComponent.name;
+              }
+            }
+          }
+
+          if (container.image_name === subscribedName && component.name === subscribedComponentName) {
+            // volumes_from can't refer to self
+            return {
+              matched: true,
+              paths: [`components.${componentIndex}.containers.${containerIndex}.volumes_from.${nameIndex}`],
+            };
+          }
+
+          // get subscription map
+          const subscriptionMap: { [s: string]: string; } = buildSubscriptionMap(root);
+
+          const found: boolean = dependsOn(subscriptionMap, component.name + ":" + container.image_name, subscribedComponentName + ":" + subscribedName);
+
+          if (!found) {
+            return {
+              matched: true,
+              paths: [`components.${componentIndex}.containers.${containerIndex}.volumes_from.${nameIndex}`],
+            };
+          }
+          return { matched: false };
+        });
+      });
+    });
+
+    return collapseMatches(matches);
+  }
+}

@@ -835,6 +835,151 @@ components:
   },
 };
 
+export const containerVolumesSubscriptionExists: YAMLRule = {
+  name: "prop-component-container-volumesfrom-subscription-exists",
+  type: "error",
+  message: "A container's `volumes_from` must reference a container that it is subscribed to",
+  test: { ContainerVolumesFromSubscription: {}},
+  examples: {
+    wrong: [
+      {
+        description: "`volumes_from` references container that does not exist",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - image_name: notalpha
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: beta
+  - image_name: beta
+    volumes_from:
+    - alpha
+    `,
+      },
+      {
+        description: "`volumes_from` references container that does not subscribe to it",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - image_name: alpha
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: notalpine
+  - image_name: alpine
+    volumes_from:
+    - alpha
+    `,
+      },
+      {
+        description: "`volumes_from` references multiple containers, of which one is not valid",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - image_name: alpha
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: beta
+  - image_name: beta
+    volumes_from:
+    - alpha
+    - gamma
+    `,
+      },
+      {
+        description: "`volumes_from` references itself",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - name: alphaname
+    image_name: alpha
+    volumes_from:
+    - alpha
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: alpha
+    `,
+      },
+    ],
+    right: [
+      {
+        description: "valid `volumes_from` reference",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - image_name: alpha
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: beta
+  - image_name: beta
+    volumes_from:
+    - alpha
+    `,
+      },
+      {
+        description: "multiple valid `volumes_from` references",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - image_name: alpha
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: beta
+      - component: DB
+        container: gamma
+  - image_name: gamma
+    volumes_from:
+    - alpha
+  - image_name: beta
+    volumes_from:
+    - alpha
+    `,
+      },
+      {
+        description: "Chained dependency for `volumes_from` across components",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - image_name: alpha
+    publish_events:
+    - subscriptions:
+      - component: DB2
+        container: gamma
+  - image_name: beta
+    volumes_from:
+    - alpha
+- name: DB2
+  containers:
+  - image_name: gamma
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: beta
+    `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   notClusteredIfNamedContainer,
   eventSubscriptionContainerExists,
@@ -847,4 +992,5 @@ export const all: YAMLRule[] = [
   containerClusterInstanceCountMaxUint,
   containerClusterInstanceCountDegradedUint,
   containerClusterInstanceCountHealthyUint,
+  containerVolumesSubscriptionExists,
 ];

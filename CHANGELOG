@@ -125,3 +125,6 @@
 
 0.6.29 /2017-09-19
     * Check that custom_requirements have unique ids
+
+0.6.30 /2017-09-20
+    * Validate `volumes_from` usage

@@ -8,6 +8,7 @@ import {
   ConfigOptionIsCircular,
   ContainerNamesNotUnique,
   ContainerVolumesFromMissing,
+  ContainerVolumesFromSubscription,
   CustomRequirementsNotUnique,
   Dot,
   Eq,
@@ -86,6 +87,7 @@ const defaultPredicates: PredicateRegistry = {
   ContainerVolumesFromMissing,
   ContainerNamesNotUnique,
   CustomRequirementsNotUnique,
+  ContainerVolumesFromSubscription,
 };
 
 export class MutableRegistry implements Registry {

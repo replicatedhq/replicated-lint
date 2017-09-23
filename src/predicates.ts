@@ -639,15 +639,28 @@ export class AdminCommandContainerMissing implements Predicate<any> {
     const paths = [] as string[];
 
     _.forEach(commands, (command, index) => {
-      if (!_.isEmpty(command.kubernetes) || !_.isEmpty(command.swarm)) {
+      if ((!_.isEmpty(command.kubernetes) || !_.isEmpty(command.swarm)) && _.isEmpty(command.replicated)) {
         return;
       }
 
       let { component, container } = command;
 
+      // for oldstyle
+      if (!_.isEmpty(command.image)) {
+        component = command.component;
+        container = command.image.image_name;
+      }
+
+      // for newstyle_multi
       if (!_.isEmpty(command.replicated)) {
         component = command.replicated.component;
         container = command.replicated.container;
+      }
+
+      // for newstyle_multi_long
+      if (!_.isEmpty(command.source) && !_.isEmpty(command.source.replicated)) {
+        component = command.source.replicated.component;
+        container = command.source.replicated.container;
       }
 
       const matched = isContainerMissing(root.components, component, container);
@@ -667,11 +680,11 @@ export class AdminCommandContainerMissing implements Predicate<any> {
 }
 
 function isKubernetesApp(schedulerSourced: any[]) {
-  return !_.isEmpty(_.filter(schedulerSourced, c => c.selector || c.selectors || (c.source && c.source.kuberentes)));
+  return !_.isEmpty(_.filter(schedulerSourced, c => c.selector || c.selectors));
 }
 
 function isSwarmApp(schedulerSourced: any[]) {
-  return !_.isEmpty(_.filter(schedulerSourced, c => c.service || (c.source && c.source.swarm)));
+  return !_.isEmpty(_.filter(schedulerSourced, c => c.service));
 }
 
 function isContainerMissing(components: any[], component: string, container: string): RuleMatchedAt {
@@ -1180,5 +1193,21 @@ export class IsNotKubernetesQuantity implements Predicate<any> {
       matched: true,
       paths: [this.path],
     };
+  }
+}
+
+export class Not<T_El> implements Predicate<T_El> {
+  public static fromJson<E>(obj: any, registry: Registry): Not<E> {
+    return new Not<E>(registry.compile(obj.pred));
+  }
+
+  constructor(
+      private readonly pred: Predicate<T_El>,
+  ) {
+  }
+
+  public test(root: any): RuleMatchedAt {
+    const result = this.pred.test(root);
+    return { matched: !result.matched, paths: result.paths};
   }
 }

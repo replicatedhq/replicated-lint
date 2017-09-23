@@ -13,8 +13,7 @@ export const adminCommandComponentExists: YAMLRule = {
 ---
 admin_commands:
 - alias: aliasecho
-  command: ["echo"]
-  run_type: exec
+  command: [echo]
   component: DB
   container: redis
       `,
@@ -25,15 +24,80 @@ admin_commands:
 ---
 admin_commands:
 - alias: aliasecho
-  command: ["echo"]
-  run_type: exec
+  command: [echo]
   component: DB
   container: redis
 
 components:
-  - name: DB
-    containers:
-    - image_name: postgres
+- name: DB
+  containers:
+  - image_name: postgres
+      `,
+      },
+      {
+        description: "Old style admin command but no matching containers",
+        yaml: `
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  component: DB
+  image:
+    image_name: redis
+
+components:
+- name: DB
+  containers:
+  - image_name: postgres
+      `,
+      },
+      {
+        description: "Admin multi command but no matching containers",
+        yaml: `
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  replicated:
+    component: DB
+    container: redis
+  swarm:
+    service: myapp
+  kubernetes:
+    selector:
+      tier: backend
+      app: mine
+    container: node
+
+components:
+- name: DB
+  containers:
+  - image_name: postgres
+      `,
+      },
+      {
+        description: "Admin source multi command but no matching containers",
+        yaml: `
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  source:
+    replicated:
+      component: DB
+      container: redis
+    swarm:
+      service: myapp
+    kubernetes:
+      selector:
+        tier: backend
+        app: mine
+      container: node
+
+components:
+- name: DB
+  containers:
+  - image_name: postgres
       `,
       },
     ],
@@ -53,15 +117,14 @@ components: []
 ---
 admin_commands:
 - alias: aliasecho
-  command: ["echo"]
-  run_type: exec
+  command: [echo]
   component: DB
   container: redis
 
 components:
-  - name: DB
-    containers:
-    - image_name: redis
+- name: DB
+  containers:
+  - image_name: redis
       `,
       },
       {
@@ -70,8 +133,7 @@ components:
 ---
 admin_commands:
 - alias: aliasecho
-  command: ["echo"]
-  run_type: exec
+  command: [echo]
   service: database
       `,
       },
@@ -81,10 +143,277 @@ admin_commands:
 ---
 admin_commands:
 - alias: aliasecho
-  command: ["echo"]
-  run_type: exec
+  command: [echo]
   selector:
     - tier: database
+      `,
+      },
+      {
+        description: "Old style admin command with a matching container",
+        yaml: `
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  component: DB
+  image:
+    image_name: redis
+
+components:
+- name: DB
+  containers:
+  - image_name: redis
+      `,
+      },
+      {
+        description: "Admin multi command with matching container",
+        yaml: `
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  replicated:
+    component: DB
+    container: redis
+  swarm:
+    service: myapp
+  kubernetes:
+    selector:
+      tier: backend
+      app: mine
+    container: node
+
+components:
+- name: DB
+  containers:
+  - image_name: redis
+      `,
+      },
+      {
+        description: "Admin source multi command with matching container",
+        yaml: `
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  source:
+    replicated:
+      component: DB
+      container: redis
+    swarm:
+      service: myapp
+    kubernetes:
+      selector:
+        tier: backend
+        app: mine
+      container: node
+
+components:
+- name: DB
+  containers:
+  - image_name: redis
+      `,
+      },
+    ],
+  },
+};
+
+export const adminVerifyRequirementsPresent: YAMLRule = {
+  name: "prop-admincommand-requirements-present",
+  type: "error",
+  message: "All required subheadings of any present headings within admin_commands must be present",
+  test: {
+    AnyOf: {
+      path: "admin_commands",
+      pred: {
+        Or: {
+          preds: [
+            {
+              And: {
+                preds: [
+                  { Exists: { path: "image" } },
+                  { Not: { pred: { Exists: { path: "image.image_name"} } } },
+                ],
+              },
+            },
+            {
+              And: {
+                preds: [
+                  { Exists: { path: "image" } },
+                  { Not: { pred: { Exists: { path: "component"} } } },
+                ],
+              },
+            },
+            {
+              And: {
+                preds: [
+                  { Exists: { path: "replicated" } },
+                  { Not: { pred: { Exists: { path: "replicated.component"} } } },
+                ],
+              },
+            },
+            {
+              And: {
+                preds: [
+                  { Exists: { path: "replicated" } },
+                  { Not: { pred: { Exists: { path: "replicated.container"} } } },
+                ],
+              },
+            },
+            {
+              And: {
+                preds: [
+                  { Exists: { path: "source" } },
+                  { Exists: { path: "source.replicated" } },
+                  { Not: { pred: { Exists: { path: "source.replicated.component"} } } },
+                ],
+              },
+            },
+            {
+              And: {
+                preds: [
+                  { Exists: { path: "source" } },
+                  { Exists: { path: "source.replicated" } },
+                  { Not: { pred: { Exists: { path: "source.replicated.container"} } } },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "`image` is present, but not `image.image_name`",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: alpha
+  image:
+    number: 5
+      `,
+      },
+      {
+        description: "`image` is present, but not `component`",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  image:
+    image_name: redis
+      `,
+      },
+      {
+        description: "`replicated` is present, but not `replicated.component`",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  replicated:
+    container: redis
+  swarm:
+    service: myapp
+      `,
+      },
+      {
+        description: "`replicated` is present, but not `replicated.container`",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  replicated:
+    component: DB
+  swarm:
+    service: myapp
+      `,
+      },
+      {
+        description: "`source.replicated` is present, but not `source.replicated.component`",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  source:
+    replicated:
+      container: redis
+    swarm:
+      service: myapp
+      `,
+      },
+      {
+        description: "`source.replicated` is present, but not `source.replicated.container`",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  source:
+    replicated:
+      component: redis
+    swarm:
+      service: myapp
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "Valid old-style (depreciated) command",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: DB
+  image:
+    image_name: redis
+      `,
+      },
+      {
+        description: "Valid new-style replicated command",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: DB
+  container: redis
+      `,
+      },
+      {
+        description: "Valid multi command",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  replicated:
+    component: DB
+    container: redis
+  swarm:
+    service: myapp
+      `,
+      },
+      {
+        description: "Valid long multi command",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  source:
+    replicated:
+      component: DB
+      container: redis
+    swarm:
+      service: myapp
       `,
       },
     ],
@@ -155,4 +484,5 @@ admin_commands:
 export const all: YAMLRule[] = [
   adminCommandComponentExists,
   adminCommandShellAlias,
+  adminVerifyRequirementsPresent,
 ];

@@ -5,44 +5,40 @@ export default {
     "admin_commands": {
       "type": "array",
       "items": {
-        "anyOf": [
-          {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "type": "string",
+          },
+          "command": {
+            "type": "array",
+            "items": {
+              "type": "string",
+            },
+          },
+          "run_type": {
+            "type": "string",
+          },
+          "component": {
+            "type": "string",
+          },
+          "container": {
+            "type": "string",
+          },
+          "image": {
             "type": "object",
             "properties": {
-              "component": {
+              "image_name": {
                 "type": "string",
               },
-              "image": {
-                "type": "object",
-                "properties": {
-                  "image_name": {
-                    "type": "string",
-                  },
-                  "version": {
-                    "type": "string",
-                  },
-                },
+              "version": {
+                "type": "string",
               },
             },
           },
-          {
+          "kubernetes": {
             "type": "object",
             "properties": {
-              "alias": {
-                "type": "string",
-              },
-              "command": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                },
-              },
-              "run_type": {
-                "type": "string",
-              },
-              "component": {
-                "type": "string",
-              },
               "container": {
                 "type": "string",
               },
@@ -62,69 +58,107 @@ export default {
                   },
                 },
               },
-              "service": {
+            },
+          },
+          "replicated": {
+            "type": "object",
+            "properties": {
+              "component": {
                 "type": "string",
               },
-              "source": {
+              "container": {
+                "type": "string",
+              },
+            },
+          },
+          "selector": {
+            "type": "object",
+            "patternProperties": {
+              ".*": {
+                "type": "string",
+              },
+            },
+          },
+          "selectors": {
+            "type": "object",
+            "patternProperties": {
+              ".*": {
+                "type": "string",
+              },
+            },
+          },
+          "service": {
+            "type": "string",
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "kubernetes": {
                 "type": "object",
                 "properties": {
-                  "kubernetes": {
-                    "type": "object",
-                    "properties": {
-                      "container": {
-                        "type": "string",
-                      },
-                      "selector": {
-                        "type": "object",
-                        "patternProperties": {
-                          ".*": {
-                            "type": "string",
-                          },
-                        },
-                      },
-                      "selectors": {
-                        "type": "object",
-                        "patternProperties": {
-                          ".*": {
-                            "type": "string",
-                          },
-                        },
-                      },
-                    },
+                  "container": {
+                    "type": "string",
                   },
-                  "replicated": {
+                  "selector": {
                     "type": "object",
-                    "properties": {
-                      "component": {
-                        "type": "string",
-                      },
-                      "container": {
+                    "patternProperties": {
+                      ".*": {
                         "type": "string",
                       },
                     },
                   },
-                  "swarm": {
+                  "selectors": {
                     "type": "object",
-                    "properties": {
-                      "container": {
-                        "type": "string",
-                      },
-                      "service": {
+                    "patternProperties": {
+                      ".*": {
                         "type": "string",
                       },
                     },
                   },
                 },
               },
-              "timeout": {
-                "type": "integer",
+              "replicated": {
+                "type": "object",
+                "properties": {
+                  "component": {
+                    "type": "string",
+                  },
+                  "container": {
+                    "type": "string",
+                  },
+                },
               },
-              "when": {
-                "type": ["string", "boolean"],
+              "swarm": {
+                "type": "object",
+                "properties": {
+                  "container": {
+                    "type": "string",
+                  },
+                  "service": {
+                    "type": "string",
+                  },
+                },
               },
             },
           },
-        ],
+          "swarm": {
+            "type": "object",
+            "properties": {
+              "container": {
+                "type": "string",
+              },
+              "service": {
+                "type": "string",
+              },
+            },
+          },
+          "timeout": {
+            "type": "integer",
+          },
+          "when": {
+            "type": ["string", "boolean"],
+          },
+        },
       },
     },
     "backup": {

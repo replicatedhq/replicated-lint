@@ -54,6 +54,9 @@ export interface Test {
   Or?: {
     preds: Test[];
   };
+  Not?: {
+    pred: Test;
+  };
   IsEmpty?: {
     path: string;
   };

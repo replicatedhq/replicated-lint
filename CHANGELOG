@@ -131,3 +131,7 @@
 
 0.6.31 /2017-09-21
     * Validate storage and memory sizes in host_requirements and kubernetes
+
+0.6.32 /2017-09-25
+    * Accept and validate a greater variety of admin command formats
+    * Added a new predicate, `Not`

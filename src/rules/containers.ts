@@ -997,11 +997,7 @@ export const containerVolumeEphemeralTypeCheck: YAMLRule = {
                 And: {
                   preds: [
                     { Exists: { path: "is_ephemeral" } },
-                    { Neq: { path: "is_ephemeral", value: 0 } },
-                    { Neq: { path: "is_ephemeral", value: 1 } },
-                    { NotMatch: { path: "is_ephemeral", pattern: "^[Tt]rue$" } },
-                    { NotMatch: { path: "is_ephemeral", pattern: "^[Ff]alse$" } },
-                    { NotMatch: { path: "is_ephemeral", pattern: "^{{repl.*}}$" } },
+                    { NotBoolString: { path: "is_ephemeral" } },
                   ],
                 },
               },
@@ -1034,42 +1030,30 @@ components:
       `,
       },
       {
-        description: "`\"1\"` is not a valid value for `is_ephemeral`, though `1` is",
+        description: "`1` is not a valid value for `is_ephemeral`, though `\"1\"` is",
         yaml: `
 ---
 components:
 - containers:
   - volumes:
-    - is_ephemeral: "1"
-      `,
-      },
-      {
-        description: "`{{repl AppID` is not a valid template function as it is missing the closing `}}` and is thus not a valid value for `is_ephemeral`",
-        yaml: `
----
-components:
-- containers:
-  - volumes:
-    - is_ephemeral: "{{repl AppID"
+    - is_ephemeral: 1
       `,
       },
     ],
     right: [
       {
-        description: "`\"True\"`, `\"true\"`, `\"False\"` and `\"false\"` are all valid values for `is_ephemeral`",
+        description: "`\"true\"` and `\"false\"` are both valid values for `is_ephemeral`",
         yaml: `
 ---
 components:
 - containers:
   - volumes:
-    - is_ephemeral: "True"
     - is_ephemeral: "true"
-    - is_ephemeral: "False"
     - is_ephemeral: "false"
       `,
       },
       {
-        description: "`true`, `false`, `1` and `0` are all valid values for `is_ephemeral`",
+        description: "`true` and `false` are both valid values for `is_ephemeral`",
         yaml: `
 ---
 components:
@@ -1077,12 +1061,10 @@ components:
   - volumes:
     - is_ephemeral: true
     - is_ephemeral: false
-    - is_ephemeral: 1
-    - is_ephemeral: 0
       `,
       },
       {
-        description: "`{{repl AppID}}` is a valid template function and is thus not a valid value for `is_ephemeral`",
+        description: "`{{repl AppID}}` is a valid template function and is thus a valid value for `is_ephemeral`",
         yaml: `
 ---
 components:
@@ -1112,11 +1094,7 @@ export const containerVolumeExcludedTypeCheck: YAMLRule = {
                 And: {
                   preds: [
                     { Exists: { path: "is_excluded_from_backup" } },
-                    { Neq: { path: "is_excluded_from_backup", value: 0 } },
-                    { Neq: { path: "is_excluded_from_backup", value: 1 } },
-                    { NotMatch: { path: "is_excluded_from_backup", pattern: "^[Tt]rue$" } },
-                    { NotMatch: { path: "is_excluded_from_backup", pattern: "^[Ff]alse$" } },
-                    { NotMatch: { path: "is_excluded_from_backup", pattern: "^{{repl.*}}$" } },
+                    { NotBoolString: { path: "is_excluded_from_backup" } },
                   ],
                 },
               },
@@ -1149,42 +1127,30 @@ components:
       `,
       },
       {
-        description: "`\"1\"` is not a valid value for `is_excluded_from_backup`, though `1` is",
+        description: "`1` is not a valid value for `is_excluded_from_backup`, though `\"1\"` is",
         yaml: `
 ---
 components:
 - containers:
   - volumes:
-    - is_excluded_from_backup: "1"
-      `,
-      },
-      {
-        description: "`{{repl AppID` is not a valid template function as it is missing the closing `}}` and is thus not a valid value for `is_excluded_from_backup`",
-        yaml: `
----
-components:
-- containers:
-  - volumes:
-    - is_excluded_from_backup: "{{repl AppID"
+    - is_excluded_from_backup: 1
       `,
       },
     ],
     right: [
       {
-        description: "`\"True\"`, `\"true\"`, `\"False\"` and `\"false\"` are all valid values for `is_excluded_from_backup`",
+        description: "`\"true\"` and `\"false\"` are both valid values for `is_excluded_from_backup`",
         yaml: `
 ---
 components:
 - containers:
   - volumes:
-    - is_excluded_from_backup: "True"
     - is_excluded_from_backup: "true"
-    - is_excluded_from_backup: "False"
     - is_excluded_from_backup: "false"
       `,
       },
       {
-        description: "`true`, `false`, `1` and `0` are all valid values for `is_excluded_from_backup`",
+        description: "`true` and `false` are both valid values for `is_excluded_from_backup`",
         yaml: `
 ---
 components:
@@ -1192,12 +1158,10 @@ components:
   - volumes:
     - is_excluded_from_backup: true
     - is_excluded_from_backup: false
-    - is_excluded_from_backup: 1
-    - is_excluded_from_backup: 0
       `,
       },
       {
-        description: "`{{repl AppID}}` is a valid template function and is thus not a valid value for `is_excluded_from_backup`",
+        description: "`{{repl AppID}}` is a valid template function and is thus a valid value for `is_excluded_from_backup`",
         yaml: `
 ---
 components:

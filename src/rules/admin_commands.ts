@@ -515,6 +515,110 @@ admin_commands:
   },
 };
 
+export const adminVerifyOneTypePresent: YAMLRule = {
+  name: "prop-admincommand-one-present",
+  type: "error",
+  message: "Admin command must have some identifier for the relevant container",
+  test: {
+    AnyOf: {
+      path: "admin_commands",
+      pred: {
+        Not: {
+          pred: {
+            Or: {
+              preds: [
+                {
+                  And: {
+                    preds: [
+                      { Exists: { path: "component" } },
+                      { Exists: { path: "container" } },
+                    ],
+                  },
+                },
+                { Exists: { path: "image" } },
+                { Exists: { path: "service" } },
+                { Exists: { path: "selector" } },
+                { Exists: { path: "selectors" } },
+                { Exists: { path: "replicated" } },
+                { Exists: { path: "kubernetes" } },
+                { Exists: { path: "swarm" } },
+                { Exists: { path: "source" } },
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "None of the options are present",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "Valid new-style replicated command",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: DB
+  container: redis
+      `,
+      },
+      {
+        description: "Valid old-style (depreciated) command",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: DB
+  image:
+    image_name: redis
+      `,
+      },
+      {
+        description: "Valid multi command",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  replicated:
+    component: DB
+    container: redis
+  swarm:
+    service: myapp
+      `,
+      },
+      {
+        description: "Valid long multi command",
+        yaml: `
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  source:
+    replicated:
+      component: DB
+      container: redis
+    swarm:
+      service: myapp
+      `,
+      },
+    ],
+  },
+};
+
 export const adminCommandShellAlias: YAMLRule = {
   name: "prop-admincommand-shellalias-valid",
   type: "error",
@@ -583,4 +687,5 @@ export const all: YAMLRule[] = [
   adminVerifyOldRequirementsPresent,
   adminVerifyMultiRequirementsPresent,
   adminVerifyVerboseRequirementsPresent,
+  adminVerifyOneTypePresent,
 ];

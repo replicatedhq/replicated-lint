@@ -1208,6 +1208,10 @@ export class Not<T_El> implements Predicate<T_El> {
 
   public test(root: any): RuleMatchedAt {
     const result = this.pred.test(root);
-    return { matched: !result.matched, paths: result.paths};
+    if (!result.matched && _.isUndefined(result.paths)) {
+      return { matched: !result.matched, paths: [""] };
+    } else {
+      return { matched: !result.matched, paths: result.paths };
+    }
   }
 }

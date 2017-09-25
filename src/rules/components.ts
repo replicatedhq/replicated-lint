@@ -650,10 +650,10 @@ export const componentClusterSizeWithPublicPort: YAMLRule = {
                           preds: [
                             { Exists: {path: "cluster_instance_count.max"}},
                             {
-                              Or: {
+                              And: {
                                 preds: [
-                                  {GT: {path: "cluster_instance_count.max", value: 1} },
-                                  {LT: {path: "cluster_instance_count.max", value: 1} },
+                                  { Neq: {path: "cluster_instance_count.max", value: 1} },
+                                  { NotMatch: {path: "cluster_instance_count.max", pattern: "^1$"} },
                                 ],
                               },
                             },
@@ -665,10 +665,10 @@ export const componentClusterSizeWithPublicPort: YAMLRule = {
                           preds: [
                             { Exists: {path: "cluster_instance_count.initial"}},
                             {
-                              Or: {
+                              And: {
                                 preds: [
-                                  {GT: {path: "cluster_instance_count.initial", value: 1} },
-                                  {LT: {path: "cluster_instance_count.initial", value: 1} },
+                                  { Neq: {path: "cluster_instance_count.initial", value: 1} },
+                                  { NotMatch: {path: "cluster_instance_count.initial", pattern: "^1$"} },
                                 ],
                               },
                             },
@@ -694,7 +694,7 @@ export const componentClusterSizeWithPublicPort: YAMLRule = {
 components:
 - name: DB
   containers:
-  - cluster_instance_count: 
+  - cluster_instance_count:
       max: 2
     cluster: "true"
     ports:
@@ -708,8 +708,8 @@ components:
 components:
 - name: DB
   containers:
-  - cluster_instance_count: 
-      max: 0
+  - cluster_instance_count:
+      max: "0"
     cluster: true
     ports:
     - public_port: "10000"
@@ -724,7 +724,7 @@ components:
 components:
 - name: DB
   containers:
-  - cluster_instance_count: 
+  - cluster_instance_count:
       max: 1
     cluster: true
     ports:
@@ -738,8 +738,8 @@ components:
 components:
 - name: DB
   containers:
-  - cluster_instance_count: 
-      initial: 1
+  - cluster_instance_count:
+      initial: "1"
     cluster: true
     ports:
     - public_port: "10000"

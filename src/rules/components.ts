@@ -648,30 +648,18 @@ export const componentClusterSizeWithPublicPort: YAMLRule = {
                       {
                         And: {
                           preds: [
-                            { Exists: {path: "cluster_instance_count.max"}},
-                            {
-                              And: {
-                                preds: [
-                                  { Neq: {path: "cluster_instance_count.max", value: 1} },
-                                  { NotMatch: {path: "cluster_instance_count.max", pattern: "^1$"} },
-                                ],
-                              },
-                            },
+                            { Exists: {path: "cluster_instance_count.max"} },
+                            { Neq: {path: "cluster_instance_count.max", value: 1} },
+                            { NotMatch: {path: "cluster_instance_count.max", pattern: "^1$"} },
                           ],
                         },
                       },
                       {
                         And: {
                           preds: [
-                            { Exists: {path: "cluster_instance_count.initial"}},
-                            {
-                              And: {
-                                preds: [
-                                  { Neq: {path: "cluster_instance_count.initial", value: 1} },
-                                  { NotMatch: {path: "cluster_instance_count.initial", pattern: "^1$"} },
-                                ],
-                              },
-                            },
+                            { Exists: {path: "cluster_instance_count.initial"} },
+                            { Neq: {path: "cluster_instance_count.initial", value: 1} },
+                            { NotMatch: {path: "cluster_instance_count.initial", pattern: "^1$"} },
                           ],
                         },
                       },

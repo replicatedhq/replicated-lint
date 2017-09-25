@@ -178,6 +178,7 @@ function findNodeRec(current: YAMLNode[], pathParts: string[]): YAMLNode[] {
 }
 
 function tokenize(path: string): string[] {
+  path = path.replace(/\.$/, "");
   return path.split(".");
 }
 

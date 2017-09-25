@@ -621,6 +621,145 @@ components:
   },
 };
 
+export const componentClusterSizeWithPublicPort: YAMLRule = {
+  name: "prop-cluster-size-public-port",
+  type: "error",
+  message: "If using container.ports.public_port, cluster must be disabled or cluster size must be 1",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            And: {
+              preds: [
+                {
+                  AnyOf: {
+                    path: "ports",
+                    pred: { Truthy: {path: "public_port"} },
+                  },
+                },
+                { Truthy: {path: "cluster"} },
+                { Exists: {path: "cluster_instance_count"} },
+                {
+                  Or: {
+                    preds: [
+                      {
+                        And: {
+                          preds: [
+                            { Exists: {path: "cluster_instance_count.max"} },
+                            { Neq: {path: "cluster_instance_count.max", value: 1} },
+                            { NotMatch: {path: "cluster_instance_count.max", pattern: "^1$"} },
+                          ],
+                        },
+                      },
+                      {
+                        And: {
+                          preds: [
+                            { Exists: {path: "cluster_instance_count.initial"} },
+                            { Neq: {path: "cluster_instance_count.initial", value: 1} },
+                            { NotMatch: {path: "cluster_instance_count.initial", pattern: "^1$"} },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "public_port used and cluster_instance_count.max != 1",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - cluster_instance_count:
+      max: 2
+    cluster: "true"
+    ports:
+    - public_port: "10000"
+      `,
+      },
+      {
+        description: "public_port used and cluster_instance_count.max != 1",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - cluster_instance_count:
+      max: "0"
+    cluster: true
+    ports:
+    - public_port: "10000"
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "public_port used and cluster_instance_count.max == 1",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - cluster_instance_count:
+      max: 1
+    cluster: true
+    ports:
+    - public_port: "10000"
+      `,
+      },
+      {
+        description: "public_port used and cluster_instance_count.initial == 1",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - cluster_instance_count:
+      initial: "1"
+    cluster: true
+    ports:
+    - public_port: "10000"
+      `,
+      },
+      {
+        description: "public_port used and cluster is set to false",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - cluster: false
+    ports:
+    - public_port: "10000"
+      `,
+      },
+      {
+        description: "public_port used and cluster does not exist",
+        yaml: `
+---
+components:
+- name: DB
+  containers:
+  - ports:
+    - public_port: "10000"
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   componentClusterCount,
   componentClusterStrategy,
@@ -631,4 +770,5 @@ export const all: YAMLRule[] = [
   containerClusterHostCountMaxUint,
   containerClusterHostCountHealthyUint,
   containerClusterHostCountDegradedUint,
+  componentClusterSizeWithPublicPort,
 ];

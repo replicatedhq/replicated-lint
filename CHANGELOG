@@ -138,3 +138,7 @@
 
 0.6.33 /2017-09-25
     * Verifies that if a public port is set, only one instance can run per cluster host
+
+0.6.34 /2017-09-25
+    * Added value checking to `components.*.containers.*.volumes.*.is_ephemeral` and `.is_excluded_from_backup`
+    * Now can only be booleans literals, boolean strings, or templates

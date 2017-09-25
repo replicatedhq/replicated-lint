@@ -980,6 +980,236 @@ components:
   },
 };
 
+export const containerVolumeEphemeralTypeCheck: YAMLRule = {
+  name: "prop-component-container-volume-ephemeral-type-check",
+  type: "error",
+  message: "is_ephemeral must be a bool string, boolean literal, or template function",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            AnyOf: {
+              path: "volumes",
+              pred: {
+                And: {
+                  preds: [
+                    { Exists: { path: "is_ephemeral" } },
+                    { Neq: { path: "is_ephemeral", value: 0 } },
+                    { Neq: { path: "is_ephemeral", value: 1 } },
+                    { NotMatch: { path: "is_ephemeral", pattern: "^[Tt]rue$" } },
+                    { NotMatch: { path: "is_ephemeral", pattern: "^[Ff]alse$" } },
+                    { NotMatch: { path: "is_ephemeral", pattern: "^{{repl.*}}$" } },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "`yes` is not a valid value for `is_ephemeral`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: "yes"
+      `,
+      },
+      {
+        description: "`2` is not a valid value for `is_ephemeral`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: 2
+      `,
+      },
+      {
+        description: "`\"1\"` is not a valid value for `is_ephemeral`, though `1` is",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: "1"
+      `,
+      },
+      {
+        description: "`{{repl AppID` is not a valid template function as it is missing the closing `}}` and is thus not a valid value for `is_ephemeral`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: "{{repl AppID"
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "`\"True\"`, `\"true\"`, `\"False\"` and `\"false\"` are all valid values for `is_ephemeral`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: "True"
+    - is_ephemeral: "true"
+    - is_ephemeral: "False"
+    - is_ephemeral: "false"
+      `,
+      },
+      {
+        description: "`true`, `false`, `1` and `0` are all valid values for `is_ephemeral`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: true
+    - is_ephemeral: false
+    - is_ephemeral: 1
+    - is_ephemeral: 0
+      `,
+      },
+      {
+        description: "`{{repl AppID}}` is a valid template function and is thus not a valid value for `is_ephemeral`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: "{{repl AppID}}"
+      `,
+      },
+    ],
+  },
+};
+
+export const containerVolumeExcludedTypeCheck: YAMLRule = {
+  name: "prop-component-container-volume-excluded-type-check",
+  type: "error",
+  message: "is_excluded_from_backup must be a bool string, boolean literal, or template function",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            AnyOf: {
+              path: "volumes",
+              pred: {
+                And: {
+                  preds: [
+                    { Exists: { path: "is_excluded_from_backup" } },
+                    { Neq: { path: "is_excluded_from_backup", value: 0 } },
+                    { Neq: { path: "is_excluded_from_backup", value: 1 } },
+                    { NotMatch: { path: "is_excluded_from_backup", pattern: "^[Tt]rue$" } },
+                    { NotMatch: { path: "is_excluded_from_backup", pattern: "^[Ff]alse$" } },
+                    { NotMatch: { path: "is_excluded_from_backup", pattern: "^{{repl.*}}$" } },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "`yes` is not a valid value for `is_excluded_from_backup`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: "yes"
+      `,
+      },
+      {
+        description: "`2` is not a valid value for `is_excluded_from_backup`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: 2
+      `,
+      },
+      {
+        description: "`\"1\"` is not a valid value for `is_excluded_from_backup`, though `1` is",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: "1"
+      `,
+      },
+      {
+        description: "`{{repl AppID` is not a valid template function as it is missing the closing `}}` and is thus not a valid value for `is_excluded_from_backup`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: "{{repl AppID"
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "`\"True\"`, `\"true\"`, `\"False\"` and `\"false\"` are all valid values for `is_excluded_from_backup`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: "True"
+    - is_excluded_from_backup: "true"
+    - is_excluded_from_backup: "False"
+    - is_excluded_from_backup: "false"
+      `,
+      },
+      {
+        description: "`true`, `false`, `1` and `0` are all valid values for `is_excluded_from_backup`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: true
+    - is_excluded_from_backup: false
+    - is_excluded_from_backup: 1
+    - is_excluded_from_backup: 0
+      `,
+      },
+      {
+        description: "`{{repl AppID}}` is a valid template function and is thus not a valid value for `is_excluded_from_backup`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: "{{repl AppID}}"
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   notClusteredIfNamedContainer,
   eventSubscriptionContainerExists,
@@ -993,4 +1223,6 @@ export const all: YAMLRule[] = [
   containerClusterInstanceCountDegradedUint,
   containerClusterInstanceCountHealthyUint,
   containerVolumesSubscriptionExists,
+  containerVolumeEphemeralTypeCheck,
+  containerVolumeExcludedTypeCheck,
 ];

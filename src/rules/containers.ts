@@ -604,7 +604,7 @@ export const containerClusterInstanceCountInitialUint: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "cluster_instance_count.initial must be an unsigned integer",
+        description: "cluster_instance_count.initial must be an unsigned integer, and this is a float",
         yaml: `
 ---
 components:
@@ -614,7 +614,7 @@ components:
       `,
       },
       {
-        description: "cluster_instance_count.initial must be an unsigned integer",
+        description: "cluster_instance_count.initial must be an unsigned integer, and this parses as a negative integer",
         yaml: `
 ---
 components:
@@ -623,35 +623,16 @@ components:
       initial: "-2"
       `,
       },
-      {
-        description: "cluster_instance_count.initial must be an unsigned integer",
-        yaml: `
----
-components:
-- containers:
-  - cluster_instance_count:
-      initial: false
-      `,
-      },
     ],
     right: [
       {
-        description: "cluster_instance_count.initial must be an unsigned integer",
+        description: "cluster_instance_count.initial is an unsigned integer",
         yaml: `
 ---
 components:
 - containers:
   - cluster_instance_count:
       initial: 3
-      `,
-      },
-      {
-        description: "cluster_instance_count.initial is not required to be present",
-        yaml: `
----
-components:
-- containers:
-  - cluster_instance_count:
       `,
       },
     ],
@@ -683,7 +664,7 @@ export const containerClusterInstanceCountMaxUint: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "cluster_instance_count.max must be an unsigned integer",
+        description: "cluster_instance_count.max must be an unsigned integer, and this is a negative integer",
         yaml: `
 ---
 components:
@@ -695,22 +676,13 @@ components:
     ],
     right: [
       {
-        description: "cluster_instance_count.max must be an unsigned integer",
+        description: "cluster_instance_count.max is an unsigned integer",
         yaml: `
 ---
 components:
 - containers:
   - cluster_instance_count:
       max: 10
-      `,
-      },
-      {
-        description: "cluster_instance_count.max is not required to be present",
-        yaml: `
----
-components:
-- containers:
-  - cluster_instance_count:
       `,
       },
     ],
@@ -742,7 +714,7 @@ export const containerClusterInstanceCountDegradedUint: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "cluster_instance_count.threshold_degraded must be an unsigned integer",
+        description: "cluster_instance_count.threshold_degraded must be an unsigned integer, and this parses as a float",
         yaml: `
 ---
 components:
@@ -754,22 +726,13 @@ components:
     ],
     right: [
       {
-        description: "cluster_instance_count.threshold_degraded must be an unsigned integer",
+        description: "cluster_instance_count.threshold_degraded is an unsigned integer",
         yaml: `
 ---
 components:
 - containers:
   - cluster_instance_count:
       threshold_degraded: "2"
-      `,
-      },
-      {
-        description: "cluster_instance_count.threshold_degraded is not required to be present",
-        yaml: `
----
-components:
-- containers:
-  - cluster_instance_count:
       `,
       },
     ],
@@ -801,7 +764,7 @@ export const containerClusterInstanceCountHealthyUint: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "cluster_instance_count.threshold_healthy must be an unsigned integer",
+        description: "cluster_instance_count.threshold_healthy must be an unsigned integer, and this is a string",
         yaml: `
 ---
 components:
@@ -813,22 +776,13 @@ components:
     ],
     right: [
       {
-        description: "cluster_instance_count.threshold_healthy must be an unsigned integer",
+        description: "cluster_instance_count.threshold_healthy is an unsigned integer",
         yaml: `
 ---
 components:
 - containers:
   - cluster_instance_count:
       threshold_healthy: "5"
-      `,
-      },
-      {
-        description: "cluster_instance_count.threshold_healthy is not required to be present",
-        yaml: `
----
-components:
-- containers:
-  - cluster_instance_count:
       `,
       },
     ],
@@ -838,7 +792,7 @@ components:
 export const containerVolumesSubscriptionExists: YAMLRule = {
   name: "prop-component-container-volumesfrom-subscription-exists",
   type: "error",
-  message: "A container's `volumes_from` must reference a container that it is subscribed to",
+  message: "A container's `volumes_from` must reference a container that subscribes to it",
   test: { ContainerVolumesFromSubscription: {}},
   examples: {
     wrong: [
@@ -1042,7 +996,7 @@ components:
     ],
     right: [
       {
-        description: "`\"true\"` and `\"false\"` are both valid values for `is_ephemeral`",
+        description: "`\"true\"`, `true`, `\"false\"` and `false` are all valid values for `is_ephemeral`",
         yaml: `
 ---
 components:
@@ -1050,21 +1004,12 @@ components:
   - volumes:
     - is_ephemeral: "true"
     - is_ephemeral: "false"
-      `,
-      },
-      {
-        description: "`true` and `false` are both valid values for `is_ephemeral`",
-        yaml: `
----
-components:
-- containers:
-  - volumes:
     - is_ephemeral: true
     - is_ephemeral: false
       `,
       },
       {
-        description: "`{{repl AppID}}` is a valid template function and is thus a valid value for `is_ephemeral`",
+        description: "`{{repl AppID}}` is a valid template function and is thus a valid if questionable value for `is_ephemeral`",
         yaml: `
 ---
 components:
@@ -1139,7 +1084,7 @@ components:
     ],
     right: [
       {
-        description: "`\"true\"` and `\"false\"` are both valid values for `is_excluded_from_backup`",
+        description: "`\"true\"`, `true`, `\"false\"` and `false` are all valid values for `is_excluded_from_backup`",
         yaml: `
 ---
 components:
@@ -1147,15 +1092,6 @@ components:
   - volumes:
     - is_excluded_from_backup: "true"
     - is_excluded_from_backup: "false"
-      `,
-      },
-      {
-        description: "`true` and `false` are both valid values for `is_excluded_from_backup`",
-        yaml: `
----
-components:
-- containers:
-  - volumes:
     - is_excluded_from_backup: true
     - is_excluded_from_backup: false
       `,

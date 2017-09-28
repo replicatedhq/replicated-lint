@@ -416,7 +416,7 @@ custom_requirements:
     `,
       },
       {
-        description: "seperated duplicated ids",
+        description: "separated duplicated ids",
         yaml: `
 ---
 custom_requirements:

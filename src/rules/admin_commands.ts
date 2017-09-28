@@ -128,7 +128,7 @@ components:
       `,
       },
       {
-        description: "Admin command has `service`, so we're probably in swarm",
+        description: "Admin command has `service`, so this is probably a swarm command and thus is not tested here",
         yaml: `
 ---
 admin_commands:
@@ -138,7 +138,7 @@ admin_commands:
       `,
       },
       {
-        description: "Admin command has `selector`, so we're probably in kubernetes",
+        description: "Admin command has `selector`, so this is probably a kubernetes command and thus is not tested here",
         yaml: `
 ---
 admin_commands:
@@ -414,7 +414,7 @@ admin_commands:
     ],
     right: [
       {
-        description: "Valid multi command",
+        description: "Valid admin multi command",
         yaml: `
 ---
 admin_commands:
@@ -497,7 +497,7 @@ admin_commands:
     ],
     right: [
       {
-        description: "Valid long multi command",
+        description: "Valid verbose admin multi command",
         yaml: `
 ---
 admin_commands:
@@ -518,7 +518,7 @@ admin_commands:
 export const adminVerifyOneTypePresent: YAMLRule = {
   name: "prop-admincommand-one-present",
   type: "error",
-  message: "Admin command must have some identifier for the relevant container",
+  message: "Admin command must use one of several methods to identify the relevant container",
   test: {
     AnyOf: {
       path: "admin_commands",
@@ -575,7 +575,7 @@ admin_commands:
       `,
       },
       {
-        description: "Valid old-style (depreciated) command",
+        description: "Valid old-style (depreciated) admin command",
         yaml: `
 ---
 admin_commands:
@@ -587,7 +587,7 @@ admin_commands:
       `,
       },
       {
-        description: "Valid multi command",
+        description: "Valid admin multi command",
         yaml: `
 ---
 admin_commands:
@@ -601,7 +601,7 @@ admin_commands:
       `,
       },
       {
-        description: "Valid long multi command",
+        description: "Valid verbose admin multi command",
         yaml: `
 ---
 admin_commands:

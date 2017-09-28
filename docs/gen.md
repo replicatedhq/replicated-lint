@@ -285,6 +285,349 @@ components:
 
     
 
+## `prop-port-min-api-version`
+
+The minimum Replicated API version to use container.ports.public_port is 2.8.0
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: public_port used and replicated api version set to 2.7.0
+
+```yaml
+---
+replicated_api_version: "2.7.0"
+components:
+- name: DB
+  containers:
+    - source: public
+      ports:
+        - public_port: "10000"
+
+      
+```
+
+
+*Incorrect*: public_port used and replicated api version set to 1.8.5
+
+```yaml
+---
+replicated_api_version: "1.8.5"
+components:
+- name: DB
+  containers:
+    - source: public
+      ports:
+        - public_port: "10000"
+
+      
+```
+
+
+
+*Correct*: public_port used and replicated api version set to 2.8.0
+
+```yaml
+---
+replicated_api_version: "2.8.0"
+components:
+- name: DB
+  containers:
+    - source: public
+      ports:
+        - public_port: "10000"
+
+      
+```
+
+
+*Correct*: public_port used and replicated api version set to 2.8.1
+
+```yaml
+---
+replicated_api_version: "2.8.1"
+components:
+- name: DB
+  containers:
+    - source: public
+      ports:
+        - public_port: "10000"
+
+      
+```
+
+
+    
+
+## `prop-component-container-host-count-min-uint`
+
+Container's cluster_host_count property `min` must be an unsigned integer
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: cluster_host_count.min must be an unsigned integer, and this is a float
+
+```yaml
+---
+components:
+- cluster_host_count:
+    min: 3.5
+      
+```
+
+
+*Incorrect*: cluster_host_count.min must be an unsigned integer, and this parses as a negative integer
+
+```yaml
+---
+components:
+- cluster_host_count:
+    min: "-2"
+      
+```
+
+
+*Incorrect*: cluster_host_count.min must be an unsigned integer, and this is a boolean
+
+```yaml
+---
+components:
+- cluster_host_count:
+    min: false
+      
+```
+
+
+
+*Correct*: cluster_host_count.min is an unsigned integer
+
+```yaml
+---
+components:
+- cluster_host_count:
+    min: 3
+      
+```
+
+
+    
+
+## `prop-component-container-host-count-max-uint`
+
+Container's cluster_host_count property `max` must be an unsigned integer
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: cluster_host_count.max must be an unsigned integer, and this is a negative integer
+
+```yaml
+---
+components:
+- cluster_host_count:
+    max: -10
+      
+```
+
+
+
+*Correct*: cluster_host_count.max is an unsigned integer
+
+```yaml
+---
+components:
+- cluster_host_count:
+    max: 10
+      
+```
+
+
+    
+
+## `prop-component-container-host-count-healthy-uint`
+
+Container's cluster_host_count property `threshold_healthy` must be an unsigned integer
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: cluster_host_count.threshold_healthy must be an unsigned integer, and this is a string
+
+```yaml
+---
+components:
+- cluster_host_count:
+    threshold_healthy: "all"
+      
+```
+
+
+
+*Correct*: cluster_host_count.threshold_healthy is an unsigned integer
+
+```yaml
+---
+components:
+- cluster_host_count:
+    threshold_healthy: 5
+      
+```
+
+
+    
+
+## `prop-component-container-host-count-degraded-uint`
+
+Container's cluster_host_count property `threshold_degraded` must be an unsigned integer
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: cluster_host_count.threshold_degraded must be an unsigned integer, and this parses as a float
+
+```yaml
+---
+components:
+- cluster_host_count:
+    threshold_degraded: "2.5"
+      
+```
+
+
+
+*Correct*: cluster_host_count.threshold_degraded is an unsigned integer
+
+```yaml
+---
+components:
+- cluster_host_count:
+    threshold_degraded: 2
+      
+```
+
+
+    
+
+## `prop-cluster-size-public-port`
+
+If using container.ports.public_port, cluster must be disabled or cluster size must be 1
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: public_port used and cluster_instance_count.max is not 1
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - cluster_instance_count:
+      max: 2
+    cluster: "true"
+    ports:
+    - public_port: "10000"
+      
+```
+
+
+*Incorrect*: public_port used and cluster_instance_count.max is not 1
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - cluster_instance_count:
+      max: "0"
+    cluster: true
+    ports:
+    - public_port: "10000"
+      
+```
+
+
+
+*Correct*: public_port used and cluster_instance_count.max is 1
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - cluster_instance_count:
+      max: 1
+    cluster: true
+    ports:
+    - public_port: "10000"
+      
+```
+
+
+*Correct*: public_port used and cluster_instance_count.initial is 1
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - cluster_instance_count:
+      initial: "1"
+    cluster: true
+    ports:
+    - public_port: "10000"
+      
+```
+
+
+*Correct*: public_port used and cluster is set to false
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - cluster: false
+    ports:
+    - public_port: "10000"
+      
+```
+
+
+*Correct*: public_port used and cluster is not set
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - ports:
+    - public_port: "10000"
+      
+```
+
+
+    
+
 ## `tmpl-configoption-exists`
 
 Options referenced with `{{repl ConfigOption }}` must be present in the `config` section
@@ -672,6 +1015,60 @@ config:
     title: Use SSL
     type: bool
       
+```
+
+
+    
+
+## `prop-component-container-names-unique`
+
+Custom requirements must have unique ids
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: duplicated ids
+
+```yaml
+---
+custom_requirements:
+- id: alpha
+  message: beta
+- id: alpha
+  message: delta
+    
+```
+
+
+*Incorrect*: separated duplicated ids
+
+```yaml
+---
+custom_requirements:
+- id: alpha
+  message: beta
+- id: gamma
+  message: delta
+- id: alpha
+  message: zeta
+    
+```
+
+
+
+*Correct*: no duplicated ids
+
+```yaml
+---
+custom_requirements:
+- id: alpha
+  message: beta
+- id: gamma
+  message: delta
+    
 ```
 
 
@@ -1201,6 +1598,477 @@ components:
       name: mongo
       version: 3.2
     
+```
+
+
+    
+
+## `prop-component-container-instance-count-initial-uint`
+
+Container's cluster_instance_count property `initial` must be an unsigned integer
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: cluster_instance_count.initial must be an unsigned integer, and this is a float
+
+```yaml
+---
+components:
+- containers:
+  - cluster_instance_count:
+      initial: 3.5
+      
+```
+
+
+*Incorrect*: cluster_instance_count.initial must be an unsigned integer, and this parses as a negative integer
+
+```yaml
+---
+components:
+- containers:
+  - cluster_instance_count:
+      initial: "-2"
+      
+```
+
+
+
+*Correct*: cluster_instance_count.initial is an unsigned integer
+
+```yaml
+---
+components:
+- containers:
+  - cluster_instance_count:
+      initial: 3
+      
+```
+
+
+    
+
+## `prop-component-container-instance-count-max-uint`
+
+Container's cluster_instance_count property `max` must be an unsigned integer
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: cluster_instance_count.max must be an unsigned integer, and this is a negative integer
+
+```yaml
+---
+components:
+- containers:
+  - cluster_instance_count:
+      max: -10
+      
+```
+
+
+
+*Correct*: cluster_instance_count.max is an unsigned integer
+
+```yaml
+---
+components:
+- containers:
+  - cluster_instance_count:
+      max: 10
+      
+```
+
+
+    
+
+## `prop-component-container-instance-count-degraded-uint`
+
+Container's cluster_instance_count property `threshold_degraded` must be an unsigned integer
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: cluster_instance_count.threshold_degraded must be an unsigned integer, and this parses as a float
+
+```yaml
+---
+components:
+- containers:
+  - cluster_instance_count:
+      threshold_degraded: "2.8"
+      
+```
+
+
+
+*Correct*: cluster_instance_count.threshold_degraded is an unsigned integer
+
+```yaml
+---
+components:
+- containers:
+  - cluster_instance_count:
+      threshold_degraded: "2"
+      
+```
+
+
+    
+
+## `prop-component-container-instance-count-healthy-uint`
+
+Container's cluster_instance_count property `threshold_healthy` must be an unsigned integer
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: cluster_instance_count.threshold_healthy must be an unsigned integer, and this is a string
+
+```yaml
+---
+components:
+- containers:
+  - cluster_instance_count:
+      threshold_healthy: "all"
+      
+```
+
+
+
+*Correct*: cluster_instance_count.threshold_healthy is an unsigned integer
+
+```yaml
+---
+components:
+- containers:
+  - cluster_instance_count:
+      threshold_healthy: "5"
+      
+```
+
+
+    
+
+## `prop-component-container-volumesfrom-subscription-exists`
+
+A container's `volumes_from` must reference a container that subscribes to it
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: `volumes_from` references container that does not exist
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - image_name: notalpha
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: beta
+  - image_name: beta
+    volumes_from:
+    - alpha
+    
+```
+
+
+*Incorrect*: `volumes_from` references container that does not subscribe to it
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - image_name: alpha
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: notalpine
+  - image_name: alpine
+    volumes_from:
+    - alpha
+    
+```
+
+
+*Incorrect*: `volumes_from` references multiple containers, of which one is not valid
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - image_name: alpha
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: beta
+  - image_name: beta
+    volumes_from:
+    - alpha
+    - gamma
+    
+```
+
+
+*Incorrect*: `volumes_from` references itself
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - name: alphaname
+    image_name: alpha
+    volumes_from:
+    - alpha
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: alpha
+    
+```
+
+
+
+*Correct*: valid `volumes_from` reference
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - image_name: alpha
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: beta
+  - image_name: beta
+    volumes_from:
+    - alpha
+    
+```
+
+
+*Correct*: multiple valid `volumes_from` references
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - image_name: alpha
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: beta
+      - component: DB
+        container: gamma
+  - image_name: gamma
+    volumes_from:
+    - alpha
+  - image_name: beta
+    volumes_from:
+    - alpha
+    
+```
+
+
+*Correct*: Chained dependency for `volumes_from` across components
+
+```yaml
+---
+components:
+- name: DB
+  containers:
+  - image_name: alpha
+    publish_events:
+    - subscriptions:
+      - component: DB2
+        container: gamma
+  - image_name: beta
+    volumes_from:
+    - alpha
+- name: DB2
+  containers:
+  - image_name: gamma
+    publish_events:
+    - subscriptions:
+      - component: DB
+        container: beta
+    
+```
+
+
+    
+
+## `prop-component-container-volume-ephemeral-type-check`
+
+is_ephemeral must be a bool string, boolean literal, or template function
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: `yes` is not a valid value for `is_ephemeral`
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: "yes"
+      
+```
+
+
+*Incorrect*: `2` is not a valid value for `is_ephemeral`
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: 2
+      
+```
+
+
+*Incorrect*: `1` is not a valid value for `is_ephemeral`, though `"1"` is
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: 1
+      
+```
+
+
+
+*Correct*: `"true"`, `true`, `"false"` and `false` are all valid values for `is_ephemeral`
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: "true"
+    - is_ephemeral: "false"
+    - is_ephemeral: true
+    - is_ephemeral: false
+      
+```
+
+
+*Correct*: `{{repl AppID}}` is a valid template function and is thus a valid if questionable value for `is_ephemeral`
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: "{{repl AppID}}"
+      
+```
+
+
+    
+
+## `prop-component-container-volume-excluded-type-check`
+
+is_excluded_from_backup must be a bool string, boolean literal, or template function
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: `yes` is not a valid value for `is_excluded_from_backup`
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: "yes"
+      
+```
+
+
+*Incorrect*: `2` is not a valid value for `is_excluded_from_backup`
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: 2
+      
+```
+
+
+*Incorrect*: `1` is not a valid value for `is_excluded_from_backup`, though `"1"` is
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: 1
+      
+```
+
+
+
+*Correct*: `"true"`, `true`, `"false"` and `false` are all valid values for `is_excluded_from_backup`
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: "true"
+    - is_excluded_from_backup: "false"
+    - is_excluded_from_backup: true
+    - is_excluded_from_backup: false
+      
+```
+
+
+*Correct*: `{{repl AppID}}` is a valid template function and is thus a valid value for `is_excluded_from_backup`
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: "{{repl AppID}}"
+      
 ```
 
 
@@ -2513,6 +3381,112 @@ host_requirements:
 
     
 
+## `prop-hostreq-system-ram-specs-valid`
+
+`host_requirements.memory` must be a positive decimal with a unit of measurement like M, MB, G, or GB
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Invalid memory size, not a properly formatted size
+
+```yaml
+---
+host_requirements:
+  memory: 128
+      
+```
+
+
+*Incorrect*: Invalid memory size, too many digits past the decimal point
+
+```yaml
+---
+host_requirements:
+  memory: 0.0625TB
+      
+```
+
+
+
+*Correct*: Valid memory size, 2.0TB
+
+```yaml
+---
+host_requirements:
+  memory: 2.0TB
+      
+```
+
+
+*Correct*: Valid memory size, 128KB
+
+```yaml
+---
+host_requirements:
+  memory: 128KB
+      
+```
+
+
+    
+
+## `prop-hostreq-system-storage-specs-valid`
+
+`host_requirements.disk_space` be a positive decimal with a unit of measurement like M, MB, G, or GB
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Invalid disk size, not a properly formatted size
+
+```yaml
+---
+host_requirements:
+  disk_space: 128
+      
+```
+
+
+*Incorrect*: Invalid disk size, too many digits past the decimal point
+
+```yaml
+---
+host_requirements:
+  disk_space: 0.0625EB
+      
+```
+
+
+
+*Correct*: Valid disk size, 20.0TB
+
+```yaml
+---
+host_requirements:
+  disk_space: 20.0TB
+      
+```
+
+
+*Correct*: Valid disk size, 128GB
+
+```yaml
+---
+host_requirements:
+  disk_space: 128GB
+      
+```
+
+
+    
+
 ## `prop-kubernetes-requirements-version-valid`
 
 `kubernetes.requirements.server_version` must be a valid semver specification
@@ -2592,6 +3566,152 @@ kubernetes:
 
     
 
+## `prop-kubernetes-total-memory-valid`
+
+`kubernetes.requirements.total_memory` must be expressed as a plain integer, a fixed-point integer, or the power-of-two equivalent (e.g. 128974848, 129e6, 129M, 123Mi)
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Invalid memory size, too many digits past the decimal point
+
+```yaml
+---
+kubernetes:
+  requirements:
+    total_memory: 0.0625TB
+      
+```
+
+
+
+*Correct*: Valid memory size, 2.0TB
+
+```yaml
+---
+kubernetes:
+  requirements:
+    total_memory: 2.0TB
+      
+```
+
+
+*Correct*: Valid memory size, 128KB
+
+```yaml
+---
+kubernetes:
+  requirements:
+    total_memory: 128KB
+      
+```
+
+
+*Correct*: Valid kubernetes memory size, 128
+
+```yaml
+---
+kubernetes:
+  requirements:
+    total_memory: "128"
+      
+```
+
+
+*Correct*: Valid kubernetes memory size, 129e6
+
+```yaml
+---
+kubernetes:
+  requirements:
+    total_memory: "129e6"
+      
+```
+
+
+    
+
+## `prop-kubernetes-persistent-storage-valid`
+
+`kubernetes.persistent_volume_claims.storage` must be expressed as a plain integer, a fixed-point integer, or the power-of-two equivalent (e.g. 128974848, 129e6, 129M, 123Mi)
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Invalid storage size, too many digits past the decimal point
+
+```yaml
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: 0.0625TB
+      
+```
+
+
+
+*Correct*: Valid storage size, 2.0TB
+
+```yaml
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: 2.0TB
+      
+```
+
+
+*Correct*: Valid storage size, 128KB
+
+```yaml
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: 128KB
+      
+```
+
+
+*Correct*: Valid kubernetes storage size, 128
+
+```yaml
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: "128"
+      
+```
+
+
+*Correct*: Valid kubernetes storage size, 129e6
+
+```yaml
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: "129e6"
+      
+```
+
+
+*Correct*: No storage size given
+
+```yaml
+---
+kubernetes:
+  persistent_volume_claims:
+      
+```
+
+
+    
+
 ## `prop-admincommand-component-exists`
 
 Admin commands must reference an existing component and container
@@ -2608,8 +3728,7 @@ Admin commands must reference an existing component and container
 ---
 admin_commands:
 - alias: aliasecho
-  command: ["echo"]
-  run_type: exec
+  command: [echo]
   component: DB
   container: redis
       
@@ -2622,15 +3741,86 @@ admin_commands:
 ---
 admin_commands:
 - alias: aliasecho
-  command: ["echo"]
-  run_type: exec
+  command: [echo]
   component: DB
   container: redis
 
 components:
-  - name: DB
-    containers:
-    - image_name: postgres
+- name: DB
+  containers:
+  - image_name: postgres
+      
+```
+
+
+*Incorrect*: Old style admin command but no matching containers
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  component: DB
+  image:
+    image_name: redis
+
+components:
+- name: DB
+  containers:
+  - image_name: postgres
+      
+```
+
+
+*Incorrect*: Admin multi command but no matching containers
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  replicated:
+    component: DB
+    container: redis
+  swarm:
+    service: myapp
+  kubernetes:
+    selector:
+      tier: backend
+      app: mine
+    container: node
+
+components:
+- name: DB
+  containers:
+  - image_name: postgres
+      
+```
+
+
+*Incorrect*: Admin source multi command but no matching containers
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  source:
+    replicated:
+      component: DB
+      container: redis
+    swarm:
+      service: myapp
+    kubernetes:
+      selector:
+        tier: backend
+        app: mine
+      container: node
+
+components:
+- name: DB
+  containers:
+  - image_name: postgres
       
 ```
 
@@ -2652,42 +3842,111 @@ components: []
 ---
 admin_commands:
 - alias: aliasecho
-  command: ["echo"]
-  run_type: exec
+  command: [echo]
   component: DB
   container: redis
 
 components:
-  - name: DB
-    containers:
-    - image_name: redis
+- name: DB
+  containers:
+  - image_name: redis
       
 ```
 
 
-*Correct*: Admin command has `service`, so we're probably in swarm
+*Correct*: Admin command has `service`, so this is probably a swarm command and thus is not tested here
 
 ```yaml
 ---
 admin_commands:
 - alias: aliasecho
-  command: ["echo"]
-  run_type: exec
+  command: [echo]
   service: database
       
 ```
 
 
-*Correct*: Admin command has `selector`, so we're probably in kubernetes
+*Correct*: Admin command has `selector`, so this is probably a kubernetes command and thus is not tested here
 
 ```yaml
 ---
 admin_commands:
 - alias: aliasecho
-  command: ["echo"]
-  run_type: exec
+  command: [echo]
   selector:
     - tier: database
+      
+```
+
+
+*Correct*: Old style admin command with a matching container
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  component: DB
+  image:
+    image_name: redis
+
+components:
+- name: DB
+  containers:
+  - image_name: redis
+      
+```
+
+
+*Correct*: Admin multi command with matching container
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  replicated:
+    component: DB
+    container: redis
+  swarm:
+    service: myapp
+  kubernetes:
+    selector:
+      tier: backend
+      app: mine
+    container: node
+
+components:
+- name: DB
+  containers:
+  - image_name: redis
+      
+```
+
+
+*Correct*: Admin source multi command with matching container
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  source:
+    replicated:
+      component: DB
+      container: redis
+    swarm:
+      service: myapp
+    kubernetes:
+      selector:
+        tier: backend
+        app: mine
+      container: node
+
+components:
+- name: DB
+  containers:
+  - image_name: redis
       
 ```
 
@@ -2744,6 +4003,426 @@ admin_commands:
   component: DB
   container: redis
       
+```
+
+
+    
+
+## `prop-admincommand-requirements-present`
+
+Basic requirements for an admin command must be present - an `alias` and a `command`
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: `alias` missing
+
+```yaml
+---
+admin_commands:
+- command: [echo]
+  component: DB
+  container: redis
+      
+```
+
+
+*Incorrect*: `command` missing
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  component: DB
+  container: redis
+      
+```
+
+
+
+*Correct*: Valid new-style replicated command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: DB
+  container: redis
+      
+```
+
+
+    
+
+## `prop-admincommand-old-style-requirements-present`
+
+`image_name` must be present within `admin_commands.image` and `admin_commands.component` must exist if `admin_commands.image` is present
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: `image` is present, but not `image.image_name`
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: alpha
+  image:
+    number: 5
+      
+```
+
+
+*Incorrect*: `image` is present, but not `component`
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  image:
+    image_name: redis
+      
+```
+
+
+
+*Correct*: Valid old-style (depreciated) command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: DB
+  image:
+    image_name: redis
+      
+```
+
+
+    
+
+## `prop-admincommand-multi-requirements-present`
+
+`container` and `component` must both be present within `admin_commands.replicated` if it is present
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: `replicated` is present, but not `replicated.component`
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  replicated:
+    container: redis
+  swarm:
+    service: myapp
+      
+```
+
+
+*Incorrect*: `replicated` is present, but not `replicated.container`
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  replicated:
+    component: DB
+  swarm:
+    service: myapp
+      
+```
+
+
+
+*Correct*: Valid admin multi command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  replicated:
+    component: DB
+    container: redis
+  swarm:
+    service: myapp
+      
+```
+
+
+    
+
+## `prop-admincommand-verbose-requirements-present`
+
+`container` and `component` must both be present within `admin_commands.source.replicated` if it is present
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: `source.replicated` is present, but not `source.replicated.component`
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  source:
+    replicated:
+      container: redis
+    swarm:
+      service: myapp
+      
+```
+
+
+*Incorrect*: `source.replicated` is present, but not `source.replicated.container`
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  source:
+    replicated:
+      component: redis
+    swarm:
+      service: myapp
+      
+```
+
+
+
+*Correct*: Valid verbose admin multi command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  source:
+    replicated:
+      component: DB
+      container: redis
+    swarm:
+      service: myapp
+      
+```
+
+
+    
+
+## `prop-admincommand-one-present`
+
+Admin command must one of several methods to identify the relevant container
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: None of the options are present
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+      
+```
+
+
+
+*Correct*: Valid new-style replicated command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: DB
+  container: redis
+      
+```
+
+
+*Correct*: Valid old-style (depreciated) admin command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: DB
+  image:
+    image_name: redis
+      
+```
+
+
+*Correct*: Valid admin multi command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  replicated:
+    component: DB
+    container: redis
+  swarm:
+    service: myapp
+      
+```
+
+
+*Correct*: Valid verbose admin multi command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  source:
+    replicated:
+      component: DB
+      container: redis
+    swarm:
+      service: myapp
+      
+```
+
+
+    
+
+## `prop-swarm-secret-name-value`
+
+Swarm secrets require both a `name` and a `value` to function.
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: A swarm secret must contain a `name` and a `value`, and this only has a `name`
+
+```yaml
+---
+replicated_api_version: "2.7.0"
+swarm:
+  secrets:
+  - name: foo
+        
+```
+
+
+*Incorrect*: A swarm secret must contain a `name` and a `value`, and this `name` is empty
+
+```yaml
+---
+replicated_api_version: "2.7.0"
+swarm:
+  secrets:
+  - name:
+    value: bar
+        
+```
+
+
+*Incorrect*: A swarm secret must contain a `name` and a `value` even when labels exist
+
+```yaml
+---
+replicated_api_version: "2.7.0"
+swarm:
+  secrets:
+  - name:
+    value: bar
+    labels:
+      alpha: beta
+        
+```
+
+
+
+*Correct*: This swarm secret contains a `name` and a `value`
+
+```yaml
+---
+replicated_api_version: "2.7.0"
+swarm:
+  secrets:
+  - name: foo
+    value: bar
+        
+```
+
+
+    
+
+## `prop-swarm-secret-label-key`
+
+Labels within a swarm secret must have keys.
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Swarm secret labels must not be the empty string
+
+```yaml
+---
+replicated_api_version: "2.7.0"
+swarm:
+  secrets:
+  - name: foo
+    value: bar
+    labels:
+      alpha: beta
+      "": delta
+        
+```
+
+
+
+*Correct*: These swarm secret labels are not the empty string
+
+```yaml
+---
+replicated_api_version: "2.7.0"
+swarm:
+  secrets:
+  - name: foo
+    value: bar
+    labels:
+      alpha: beta
+      gamma: delta
+        
 ```
 
 
@@ -2826,5 +4505,5 @@ replicated_api_version: 2.11
 
 
 Autogenerated reference documentation for [Replicated YAML Linter](https://github.com/replicatedhq/replicated-lint)
-*Generated at Fri Sep 15 2017 17:54:54 GMT-0700 (PDT)*
+*Generated at Thu Sep 28 2017 00:27:07 GMT+0000 (UTC)*
 

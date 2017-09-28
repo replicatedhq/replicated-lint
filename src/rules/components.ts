@@ -419,7 +419,7 @@ export const containerClusterHostCountMinUint: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "cluster_host_count.min must be an unsigned integer",
+        description: "cluster_host_count.min must be an unsigned integer, and this is a float",
         yaml: `
 ---
 components:
@@ -428,7 +428,7 @@ components:
       `,
       },
       {
-        description: "cluster_host_count.min must be an unsigned integer",
+        description: "cluster_host_count.min must be an unsigned integer, and this parses as a negative integer",
         yaml: `
 ---
 components:
@@ -437,7 +437,7 @@ components:
       `,
       },
       {
-        description: "cluster_host_count.min must be an unsigned integer",
+        description: "cluster_host_count.min must be an unsigned integer, and this is a boolean",
         yaml: `
 ---
 components:
@@ -448,20 +448,12 @@ components:
     ],
     right: [
       {
-        description: "cluster_host_count.min must be an unsigned integer",
+        description: "cluster_host_count.min is an unsigned integer",
         yaml: `
 ---
 components:
 - cluster_host_count:
     min: 3
-      `,
-      },
-      {
-        description: "cluster_host_count.min is not required to be present",
-        yaml: `
----
-components:
-- cluster_host_count:
       `,
       },
     ],
@@ -488,7 +480,7 @@ export const containerClusterHostCountMaxUint: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "cluster_host_count.max must be an unsigned integer",
+        description: "cluster_host_count.max must be an unsigned integer, and this is a negative integer",
         yaml: `
 ---
 components:
@@ -499,20 +491,12 @@ components:
     ],
     right: [
       {
-        description: "cluster_host_count.max must be an unsigned integer",
+        description: "cluster_host_count.max is an unsigned integer",
         yaml: `
 ---
 components:
 - cluster_host_count:
     max: 10
-      `,
-      },
-      {
-        description: "cluster_host_count.max is not required to be present",
-        yaml: `
----
-components:
-- cluster_host_count:
       `,
       },
     ],
@@ -539,7 +523,7 @@ export const containerClusterHostCountHealthyUint: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "cluster_host_count.threshold_healthy must be an unsigned integer",
+        description: "cluster_host_count.threshold_healthy must be an unsigned integer, and this is a string",
         yaml: `
 ---
 components:
@@ -550,20 +534,12 @@ components:
     ],
     right: [
       {
-        description: "cluster_host_count.threshold_healthy must be an unsigned integer",
+        description: "cluster_host_count.threshold_healthy is an unsigned integer",
         yaml: `
 ---
 components:
 - cluster_host_count:
     threshold_healthy: 5
-      `,
-      },
-      {
-        description: "cluster_host_count.threshold_healthy is not required to be present",
-        yaml: `
----
-components:
-- cluster_host_count:
       `,
       },
     ],
@@ -590,7 +566,7 @@ export const containerClusterHostCountDegradedUint: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "cluster_host_count.threshold_degraded must be an unsigned integer",
+        description: "cluster_host_count.threshold_degraded must be an unsigned integer, and this parses as a float",
         yaml: `
 ---
 components:
@@ -601,20 +577,12 @@ components:
     ],
     right: [
       {
-        description: "cluster_host_count.threshold_degraded must be an unsigned integer",
+        description: "cluster_host_count.threshold_degraded is an unsigned integer",
         yaml: `
 ---
 components:
 - cluster_host_count:
     threshold_degraded: 2
-      `,
-      },
-      {
-        description: "cluster_host_count.threshold_degraded is not required to be present",
-        yaml: `
----
-components:
-- cluster_host_count:
       `,
       },
     ],
@@ -676,7 +644,7 @@ export const componentClusterSizeWithPublicPort: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "public_port used and cluster_instance_count.max != 1",
+        description: "public_port used and cluster_instance_count.max is not 1",
         yaml: `
 ---
 components:
@@ -690,7 +658,7 @@ components:
       `,
       },
       {
-        description: "public_port used and cluster_instance_count.max != 1",
+        description: "public_port used and cluster_instance_count.max is not 1",
         yaml: `
 ---
 components:
@@ -706,7 +674,7 @@ components:
     ],
     right: [
       {
-        description: "public_port used and cluster_instance_count.max == 1",
+        description: "public_port used and cluster_instance_count.max is 1",
         yaml: `
 ---
 components:
@@ -720,7 +688,7 @@ components:
       `,
       },
       {
-        description: "public_port used and cluster_instance_count.initial == 1",
+        description: "public_port used and cluster_instance_count.initial is 1",
         yaml: `
 ---
 components:
@@ -746,7 +714,7 @@ components:
       `,
       },
       {
-        description: "public_port used and cluster does not exist",
+        description: "public_port used and cluster is not set",
         yaml: `
 ---
 components:

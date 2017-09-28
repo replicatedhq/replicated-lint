@@ -22,7 +22,7 @@ export const swarmSecretNameValue: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "A swarm secret must contain a `name` and a `value`",
+        description: "A swarm secret must contain a `name` and a `value`, and this only has a `name`",
         yaml: `
 ---
 replicated_api_version: "2.7.0"
@@ -32,7 +32,7 @@ swarm:
         `,
       },
       {
-        description: "A swarm secret must contain a `name` and a `value`",
+        description: "A swarm secret must contain a `name` and a `value`, and this `name` is empty",
         yaml: `
 ---
 replicated_api_version: "2.7.0"
@@ -58,7 +58,7 @@ swarm:
     ],
     right: [
       {
-        description: "A swarm secret must contain a `name` and a `value`",
+        description: "This swarm secret contains a `name` and a `value`",
         yaml: `
 ---
 replicated_api_version: "2.7.0"
@@ -103,7 +103,7 @@ swarm:
     ],
     right: [
       {
-        description: "Swarm secret labels must not be the empty string",
+        description: "These swarm secret labels are not the empty string",
         yaml: `
 ---
 replicated_api_version: "2.7.0"

@@ -518,7 +518,7 @@ admin_commands:
 export const adminVerifyOneTypePresent: YAMLRule = {
   name: "prop-admincommand-one-present",
   type: "error",
-  message: "Admin command must one of several methods to identify the relevant container",
+  message: "Admin command must use one of several methods to identify the relevant container",
   test: {
     AnyOf: {
       path: "admin_commands",

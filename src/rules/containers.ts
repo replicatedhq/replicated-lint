@@ -803,7 +803,8 @@ export const containerVolumesSubscriptionExists: YAMLRule = {
 components:
 - name: DB
   containers:
-  - image_name: notalpha
+  - name: notalpha
+    image_name: irrelevant
     publish_events:
     - subscriptions:
       - component: DB
@@ -820,7 +821,8 @@ components:
 components:
 - name: DB
   containers:
-  - image_name: alpha
+  - name: alpha
+    image_name: irrelevant
     publish_events:
     - subscriptions:
       - component: DB
@@ -837,7 +839,8 @@ components:
 components:
 - name: DB
   containers:
-  - image_name: alpha
+  - name: alpha
+    image_name: irrelevant
     publish_events:
     - subscriptions:
       - component: DB
@@ -862,7 +865,7 @@ components:
     publish_events:
     - subscriptions:
       - component: DB
-        container: alpha
+        container: alphaname
     `,
       },
     ],
@@ -874,7 +877,8 @@ components:
 components:
 - name: DB
   containers:
-  - image_name: alpha
+  - name: alpha
+    image_name: irrelevant
     publish_events:
     - subscriptions:
       - component: DB
@@ -891,7 +895,8 @@ components:
 components:
 - name: DB
   containers:
-  - image_name: alpha
+  - name: alpha
+    image_name: irrelevant
     publish_events:
     - subscriptions:
       - component: DB
@@ -913,7 +918,8 @@ components:
 components:
 - name: DB
   containers:
-  - image_name: alpha
+  - name: alpha
+    image_name: irrelevant
     publish_events:
     - subscriptions:
       - component: DB2

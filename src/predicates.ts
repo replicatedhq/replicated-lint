@@ -1098,10 +1098,12 @@ export class ContainerVolumesFromSubscription implements Predicate<any> {
 
           // find what component has a container of this name
           let subscribedComponentName: string = "";
+          let subscribedContainerImageName: string = "";
           for (const otherComponent of root.components) {
             for (const otherContainer of otherComponent.containers) {
-              if (otherContainer.image_name === subscribedName) {
+              if (otherContainer.name === subscribedName) {
                 subscribedComponentName = otherComponent.name;
+                subscribedContainerImageName = otherContainer.image_name;
               }
             }
           }
@@ -1117,7 +1119,7 @@ export class ContainerVolumesFromSubscription implements Predicate<any> {
           // get subscription map
           const subscriptionMap: { [s: string]: string; } = buildSubscriptionMap(root);
 
-          const found: boolean = dependsOn(subscriptionMap, component.name + ":" + container.image_name, subscribedComponentName + ":" + subscribedName);
+          const found: boolean = dependsOn(subscriptionMap, component.name + ":" + container.image_name, subscribedComponentName + ":" + subscribedContainerImageName);
 
           if (!found) {
             return {

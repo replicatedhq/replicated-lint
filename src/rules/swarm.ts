@@ -120,7 +120,129 @@ swarm:
   },
 };
 
+export const swarmConfigNameValue: YAMLRule = {
+  name: "prop-swarm-config-name-value",
+  type: "error",
+  message: "Swarm configs require both a `name` and a `value` to function.",
+  test: {
+    AnyOf: {
+      path: "swarm.configs",
+      pred: {
+        Or: {
+          preds: [
+            { IsEmpty: { path: "name"} },
+            { IsEmpty: { path: "value"} },
+            { Eq: { path: "name", value: ""} },
+            { Eq: { path: "value", value: ""} },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "A swarm config must contain a `name` and a `value`, and this only has a `name`",
+        yaml: `
+---
+replicated_api_version: "2.7.0"
+swarm:
+  configs:
+  - name: foo
+        `,
+      },
+      {
+        description: "A swarm config must contain a `name` and a `value`, and this `name` is empty",
+        yaml: `
+---
+replicated_api_version: "2.7.0"
+swarm:
+  configs:
+  - name:
+    value: bar
+        `,
+      },
+      {
+        description: "A swarm config must contain a `name` and a `value` even when labels exist",
+        yaml: `
+---
+replicated_api_version: "2.7.0"
+swarm:
+  configs:
+  - name:
+    value: bar
+    labels:
+      alpha: beta
+        `,
+      },
+    ],
+    right: [
+      {
+        description: "This swarm config contains a `name` and a `value`",
+        yaml: `
+---
+replicated_api_version: "2.7.0"
+swarm:
+  configs:
+  - name: foo
+    value: bar
+        `,
+      },
+    ],
+  },
+};
+
+export const swarmConfigLabelKeys: YAMLRule = {
+  name: "prop-swarm-config-label-key",
+  type: "error",
+  message: "Labels within a swarm config must have keys.",
+  test: {
+    AnyOf: {
+      path: "swarm.configs",
+      pred: {
+        Exists: {path: "labels."},
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "Swarm config labels must not be the empty string",
+        yaml: `
+---
+replicated_api_version: "2.7.0"
+swarm:
+  configs:
+  - name: foo
+    value: bar
+    labels:
+      alpha: beta
+      "": delta
+        `,
+      },
+    ],
+    right: [
+      {
+        description: "These swarm config labels are not the empty string",
+        yaml: `
+---
+replicated_api_version: "2.7.0"
+swarm:
+configs:
+  - name: foo
+    value: bar
+    labels:
+      alpha: beta
+      gamma: delta
+        `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   swarmSecretNameValue,
   swarmSecretLabelKeys,
+  swarmConfigNameValue,
+  swarmConfigLabelKeys,
 ];

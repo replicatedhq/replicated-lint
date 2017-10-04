@@ -1,9 +1,12 @@
 0.1.0 / 2017-06-09
     * Initial release
+
 0.3.0 / 2017-06-17
     * Implementation of ruleset, accept raw json and compile to rule predicates
+
 0.3.1 / 2017-06-17
     * Fix bug in testproc rule that caused it to fire when `test_proc` was not present on the config item/group
+
 0.3.2 / 2017-06-17
     * Fix bug TraverseSearcher and fix an issue where Monitor predicate not registered
 
@@ -145,3 +148,6 @@
 
 0.6.35 /2017-09-29
     * Fix `volumes_from` subscription validation
+
+0.6.36 /2017-10-04
+    * Ensure swarm configs have a name and value and that any labels have keys that are not the empty string

@@ -56,6 +56,12 @@ swarm:
     labels:
       A:
       B: C
+  configs:
+  - name: config_box
+    value: '{{repl ConfigOption "config_box" }}'
+    labels:
+      A:
+      B: C
 
 ###########################################################
 # Monitors and Custom Metrics
@@ -128,6 +134,10 @@ config:
     title: Secret
     type: password
     help_text: What is typed in here will be a Docker secret in all app containers.
+  - name: config_box
+    title: Config
+    type: password
+    help_text: What is typed in here will be a Docker config in all app containers.
 - name: hostname
   title: Hostname
   description: Ensure this domain name is routable on your network.

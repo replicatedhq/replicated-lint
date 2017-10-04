@@ -1570,6 +1570,28 @@ export default {
             },
           },
         },
+        "configs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "labels": {
+                "type": "object",
+                "patternProperties": {
+                  ".*": {
+                    "type": ["string", "null"],
+                  },
+                },
+              },
+              "name": {
+                "type": "string",
+              },
+              "value": {
+                "type": "string",
+              },
+            },
+          },
+        },
       },
     },
     "version": {

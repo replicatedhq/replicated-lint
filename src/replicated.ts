@@ -976,6 +976,7 @@ export interface ContainerCustomerFile {
 /*
 type ContainerEnvVar struct {
 	Name                  string `yaml:"name" json:"name"`
+	StaticVal             string `yaml:"value" json:"value"`
 	StaticVal             string `yaml:"static_val" json:"static_val"`
 	IsExcludedFromSupport string `yaml:"is_excluded_from_support" json:"is_excluded_from_support"`
 	When                  string `yaml:"when" json:"when"`
@@ -986,6 +987,11 @@ export interface ContainerEnvVar {
    *
    */
   name?: string;
+
+  /**
+   *
+   */
+  value?: string;
 
   /**
    *

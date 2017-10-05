@@ -369,6 +369,9 @@ export default {
                       "name": {
                         "type": "string",
                       },
+                      "value": {
+                        "type": "string",
+                      },
                       "static_val": {
                         "type": "string",
                       },

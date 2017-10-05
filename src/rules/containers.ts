@@ -1116,6 +1116,72 @@ components:
   },
 };
 
+export const containerEnvvarsStaticvalDeprecated: YAMLRule = {
+  name: "prop-component-container-envvars-staticval-deprecated",
+  type: "warn",
+  message: "`static_val` is deprecated, use `value` instead",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            AnyOf: {
+              path: "env_vars",
+              pred: {
+                And: {
+                  preds: [
+                    { Exists: { path: "static_val" } },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "`static_val` deprecated",
+        yaml: `
+---
+components:
+- containers:
+  - env_vars:
+    - static_val: blah
+      value: blah
+      `,
+      },
+      {
+        description: "`static_val` deprecated empty",
+        yaml: `
+---
+components:
+- containers:
+  - env_vars:
+    - static_val: ""
+      value: blah
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "`value` preferred over `static_val`",
+        yaml: `
+---
+components:
+- containers:
+  - volumes:
+    - value: "blah"
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   notClusteredIfNamedContainer,
   eventSubscriptionContainerExists,
@@ -1131,4 +1197,5 @@ export const all: YAMLRule[] = [
   containerVolumesSubscriptionExists,
   containerVolumeEphemeralTypeCheck,
   containerVolumeExcludedTypeCheck,
+  containerEnvvarsStaticvalDeprecated,
 ];

@@ -1118,7 +1118,7 @@ components:
 
 export const containerEnvvarsStaticvalDeprecated: YAMLRule = {
   name: "prop-component-container-envvars-staticval-deprecated",
-  type: "error",
+  type: "warn",
   message: "`static_val` is deprecated, use `value` instead",
   test: {
     AnyOf: {

@@ -151,3 +151,6 @@
 
 0.6.36 /2017-10-04
     * Ensure swarm configs have a name and value and that any labels have keys that are not the empty string
+
+0.6.37 /2017-10-05
+    * Deprecating `components.*.containers.*.env_vars.*.static_val` in favor of `value`

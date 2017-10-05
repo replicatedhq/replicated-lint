@@ -248,11 +248,11 @@ components:
     customer_files: []
     env_vars:
     - name: REDIS_HOST
-      static_val: "{{repl HostPrivateIpAddress \"DB\" \"redis\" }}"
+      value: "{{repl HostPrivateIpAddress \"DB\" \"redis\" }}"
     - name: REDIS_PORT
-      static_val: "{{repl ContainerExposedPort \"DB\" \"redis\" \"6379\" }}"
+      value: "{{repl ContainerExposedPort \"DB\" \"redis\" \"6379\" }}"
     - name: PASSWORD_BOX
-      static_val: '{{repl ConfigOption "password_box" }}'
+      value: '{{repl ConfigOption "password_box" }}'
     ports: []
     volumes: []
     support_files: []

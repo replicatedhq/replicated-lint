@@ -287,7 +287,7 @@ config:
       `,
       },
       {
-        description: "Config Section `when` uses unspported `<` operator on option `auth_source`",
+        description: "Config Section `when` uses unsupported `<` operator on option `auth_source`",
         yaml: `
 ---
 config:

@@ -78,6 +78,45 @@ Results that have issues will look something like:
 
 ```
 
+### Extending the CLI with custom rules
+
+`replicated-lint` rules can be expressed as JSON, so it is easy to add your own custom rules.
+
+If you have a custom rule set in `no-latest.json`, you can pass it to `replicated-lint` using
+
+```sh
+cat my-app.yml | replicated-lint validate -f - --extraRules no-latest.json
+```
+
+`--extraRules` can be specified multiple times. An example JSON rule set might look something like
+
+```json
+[
+  {
+    "name": "custom-no-latest",
+    "type": "error",
+    "message": "Dont use `latest` for container versions",
+    "test": {
+      "AnyOf": {
+        "path": "components",
+        "pred": {
+          "AnyOf": {
+            "path": "containers",
+            "pred": {
+              "Eq": {
+                "path": "version",
+                "value": "latest"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+]
+```
+
+
 ## Developing
 
 

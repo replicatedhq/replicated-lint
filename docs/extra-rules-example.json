@@ -1,0 +1,23 @@
+[
+  {
+    "name": "custom-no-latest",
+    "type": "error",
+    "message": "Dont use `latest` for container versions",
+    "test": {
+      "AnyOf": {
+        "path": "components",
+        "pred": {
+          "AnyOf": {
+            "path": "containers",
+            "pred": {
+              "Eq": {
+                "path": "version",
+                "value": "latest"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+]

@@ -18,20 +18,34 @@ exports.builder = {
     alias: "f",
     "default": "-",
   },
+  extraRules: {
+    alias: "e",
+    describe: "Path to a file containing JSON definitions for additional yaml rules. Can be specified multiple times.",
+    type: "array",
+  },
 };
 
 exports.handler = main;
 
 function main(argv) {
+  let extraRules = argv.extraRules;
+  if (_.isEmpty(extraRules)) {
+    extraRules = [];
+  } else if (_.isString(extraRules)) {
+    extraRules = [extraRules];
+  }
   if (argv.infile !== "-") {
-    lint(fs.readFileSync(argv.infile).toString());
+    lint(fs.readFileSync(argv.infile).toString(), extraRules);
   } else {
-    readFromStdin().then(lint);
+    readFromStdin().then(d => lint(d, extraRules));
   }
 }
 
-function lint(data: string) {
-  const results: linter.RuleTrigger[] = linter.defaultLint(data);
+function lint(data: string, extraRules: string[]) {
+
+  const extra = (extraRules).map(filePath => JSON.parse(fs.readFileSync(filePath).toString()));
+  const opts: linter.LintOpts = {rules: linter.rules.all.concat(...extra)};
+  const results: linter.RuleTrigger[] = linter.lint(data, opts);
   let found = 0;
   for (const result of results) {
     if (process.argv.indexOf("-q") !== -1) {

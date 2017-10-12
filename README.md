@@ -33,11 +33,19 @@ console.log(ruleViolations); // []
 
 ### CLI
 
-You can also lint by piping to `yarn lint` from the project root (standalone CLI coming soon)
+You can also lint with `replicated-lint validate`
 
-``` 
-cat docs/yamls/check-testproc-runonsave.yml | yarn lint
+```sh
+replicated-lint validate -f my-app.yml
 ```
+
+or pipe from stdin:
+
+```sh
+cat my-app.yml | replicated-lint validate -f -
+```
+
+Results that have issues will look something like:
 
 ```
 { type: 'info',
@@ -99,7 +107,7 @@ To watch files and re-run tests on changes, use the `tdd` script
 ### Regenerating the documentation
 
 ```
-yarn docs
+replicated-lint
 ```
 
 this will write the docs to `docs/gen.md`

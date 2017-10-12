@@ -6,19 +6,31 @@ import * as util from "util";
 import * as pad from "pad";
 import * as chalk from "chalk";
 import * as lineColumn from "line-column";
+import * as fs from "fs";
 
 const startBuffer = 100;
 const endBuffer = 300;
-process.stdin.resume();
-process.stdin.setEncoding("utf8");
 
-let data = "";
+exports.describe = "validate";
+exports.describe = "Lint a yaml document from a file or stdin";
+exports.builder = {
+  infile: {
+    alias: "f",
+    "default": "-",
+  },
+};
 
-process.stdin.on("data", (chunk) => {
-  data += chunk;
-});
+exports.handler = main;
 
-process.stdin.on("end", () => {
+function main(argv) {
+  if (argv.infile !== "-") {
+    lint(fs.readFileSync(argv.infile).toString());
+  } else {
+    readFromStdin().then(lint);
+  }
+}
+
+function lint(data: string) {
   const results: linter.RuleTrigger[] = linter.defaultLint(data);
   let found = 0;
   for (const result of results) {
@@ -53,7 +65,8 @@ process.stdin.on("end", () => {
         let color = false;
         try {
           color = lineno === usepos.line!;
-        } catch (err) { /* ignore */ }
+        } catch (err) { /* ignore */
+        }
 
         if (color) {
           console.log(`${pad(`${lineno}`, 4)} ${chalk.yellow(line)}`);
@@ -74,4 +87,21 @@ process.stdin.on("end", () => {
     console.log(chalk.green(`✓ All clear!`));
   }
 
-});
+}
+
+function readFromStdin(): Promise<string> {
+  process.stdin.resume();
+  process.stdin.setEncoding("utf8");
+
+  let data = "";
+
+  process.stdin.on("data", (chunk) => {
+    data += chunk;
+  });
+
+  return new Promise<string>((resolve) => {
+    process.stdin.on("end", () => {
+      resolve(data);
+    });
+  });
+}

@@ -7,6 +7,7 @@ import * as pad from "pad";
 import * as chalk from "chalk";
 import * as lineColumn from "line-column";
 import * as fs from "fs";
+import { ruleTypeLEQ } from "../lint";
 
 const startBuffer = 100;
 const endBuffer = 300;
@@ -16,12 +17,22 @@ exports.describe = "Lint a yaml document from a file or stdin";
 exports.builder = {
   infile: {
     alias: "f",
+    describe: "Input file to validate. Use \"-\" for stdin",
+    type: "string",
     "default": "-",
+  },
+  threshold: {
+    alias: "t",
+    describe: "Threshold of of issues to report",
+    type: "string",
+    choices: ["info", "warn", "error"],
+    "default": "error",
   },
   extraRules: {
     alias: "e",
-    describe: "Path to a file containing JSON definitions for additional yaml rules. Can be specified multiple times.",
+    describe: "Path to file containing JSON definitions for additional yaml rules. Can be specified multiple times.",
     type: "array",
+    "default": [],
   },
 };
 
@@ -35,26 +46,22 @@ function main(argv) {
     extraRules = [extraRules];
   }
   if (argv.infile !== "-") {
-    lint(fs.readFileSync(argv.infile).toString(), extraRules);
+    lint(fs.readFileSync(argv.infile).toString(), extraRules, argv.threshold);
   } else {
-    readFromStdin().then(d => lint(d, extraRules));
+    readFromStdin().then(d => lint(d, extraRules, argv.threshold));
   }
 }
 
-function lint(data: string, extraRules: string[]) {
+function lint(data: string, extraRules: string[], threshold: linter.RuleType) {
 
   const extra = (extraRules).map(filePath => JSON.parse(fs.readFileSync(filePath).toString()));
-  const opts: linter.LintOpts = {rules: linter.rules.all.concat(...extra)};
+  const opts: linter.LintOpts = { rules: linter.rules.all.concat(...extra) };
   const results: linter.RuleTrigger[] = linter.lint(data, opts);
   let found = 0;
   for (const result of results) {
-    if (process.argv.indexOf("-q") !== -1) {
-      if (result.type !== "error") {
-        continue;
-      }
+    if (ruleTypeLEQ(result.type, threshold)) {
+      continue;
     }
-
-    found += 1;
 
     console.log(util.inspect(result, false, 100, true));
 
@@ -62,6 +69,7 @@ function lint(data: string, extraRules: string[]) {
       continue;
     }
     for (const pos of result.positions!) {
+      found += 1;
 
       const usepos: linter.Position = _.isEmpty(pos.start) ? pos.end! : pos.start!;
 
@@ -97,8 +105,10 @@ function lint(data: string, extraRules: string[]) {
 
   if (found !== 0) {
     console.log(chalk.yellow(`Found ${found} issues.`));
+    process.exit(1);
   } else {
     console.log(chalk.green(`✓ All clear!`));
+    process.exit(0);
   }
 
 }

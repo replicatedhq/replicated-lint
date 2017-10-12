@@ -14,6 +14,23 @@ export type RuleType =
   "warn" |
   "info";
 
+function ruleTypeLevel(type: RuleType): number {
+  switch (type) {
+    case "error":
+      return 50;
+    case "warn":
+      return 40;
+    case "info":
+      return 30;
+    default:
+      return 99;
+  }
+}
+
+export function ruleTypeLEQ(t1: RuleType, t2: RuleType): boolean {
+  return ruleTypeLevel(t1) <= ruleTypeLevel(t2);
+}
+
 export interface LintedDoc {
   index: number;
   findings: RuleTrigger[];

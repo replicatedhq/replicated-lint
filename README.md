@@ -99,6 +99,19 @@ cat my-app.yml | replicated-lint validate -f - --extraRules no-latest.json
 ]
 ```
 
+`replicated-lint validate` supports the following options:
+
+```
+Options:
+  --version         Show version number                                [boolean]
+  --help            Show help                                          [boolean]
+  --infile, -f      Input file to validate. Use "-" for stdin
+                                                         [string] [default: "-"]
+  --threshold, -t   Threshold of of issues to report
+                  [string] [choices: "info", "warn", "error"] [default: "error"]
+  --extraRules, -e  Path to file containing JSON definitions for additional yaml
+                    rules. Can be specified multiple times.[array] [default: []]
+```
 
 ## Developing
 

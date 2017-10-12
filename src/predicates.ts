@@ -437,7 +437,7 @@ export class KeyDoesntMatch implements Predicate<any> {
 
   public test(root: any): RuleMatchedAt {
     const paths: string[] = [];
-    _.forIn(root, (_, key: string) => {
+    _.forIn(root, (__, key: string) => {
       if (!this.pattern.test(key)) {
         paths.push(key);
       }

@@ -326,55 +326,55 @@ config:
     type: bool
     default: ""
     when: null
-    
+
   - name: database_use_ssl_2
     title: Use SSL
     type: bool
     default: ""
     when: ""
-    
+
   - name: database_use_udp
-    title: Use UDP 
+    title: Use UDP
     type: boolean
     default: ""
     when: false
-    
+
   - name: database_use_tcp
-    title: Use UDP 
+    title: Use UDP
     type: boolean
     default: ""
     when: true
-    
+
   - name: database_use_index
-    title: Use Index?  
+    title: Use Index?
     type: boolean
     default: ""
     when: "false"
-    
+
   - name: database_use_btree
-    title: Use Btree? 
+    title: Use Btree?
     type: boolean
     default: ""
     when: "true"
-    
+
   - name: database_ssl_cert
     title: SSL Certificate
     type: textarea
     default: ""
     when: '{{repl ConfigOptionEquals "database_use_ssl" "1"}}'
-    
+
   - name: database_ssl_key
     title: SSL Key
     type: textarea
     default: ""
     when: database_use_ssl=1
-    
+
   - name: database_strong_password
     title: Require strong password
     type: bool
     default: ""
     when: database_use_ssl!=1
-    
+
       `,
     },
       {

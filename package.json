@@ -26,7 +26,6 @@
   "scripts": {
     "fmt": "tsfmt -r",
     "prepublish": "rm -rf ./dist && yarn run tslint && tsc -p .",
-    "preinstall": "rm -rf ./dist && yarn run tslint && tsc -p .",
     "test": "rm -rf ./dist && yarn run tslint && tsc -p . && mocha -r ts-node/register ./src/test/*.ts",
     "cover": "rm -rf ./dist && yarn run tslint && tsc -p . && istanbul cover _mocha -- ./dist/test/*.js",
     "cover-xml": "rm -rf ./dist && yarn run tslint && tsc -p . && istanbul cover _mocha -- -R mocha-junit-reporter ./dist/test/*.js",
@@ -56,7 +55,7 @@
     "mocha-junit-reporter": "^1.13.0",
     "publish": "^0.6.0",
     "ts-node": "^3.0.6",
-    "tslint": "^4.3.1",
+    "tslint": "^5.7.0",
     "typemoq": "^1.4.1",
     "typescript": "^2.2.2",
     "typescript-json-schema": "^0.16.0"

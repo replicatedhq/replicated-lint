@@ -287,18 +287,28 @@ config:
       `,
       },
       {
-        description: "Config Section `when` field references non-existent option `auth`",
+        description: "Config Section `when` uses unspported `<` operator on option `auth_source`",
         yaml: `
 ---
 config:
-- name: database
-  title: Database
-  when: auth=config
+- name: auth
+  title: Authentication
+  description: Where will user accounts be provisioned
   items:
-  - name: database_use_ssl
-    title: Use SSL
-    type: bool
-    default: ""
+  - name: auth_source
+    default: auth_type_internal
+    type: select_one
+    items:
+    - name: auth_type_internal
+      title: Built In
+    - name: auth_type_ldap
+      title: LDAP
+    - name: auth_type_ldap_advanced
+      title: LDAP Advanced
+- name: ldap_settings
+  title: LDAP Server Settings
+  when: auth_source>auth_type_ldap
+  items: []
       `,
       },
     ],

@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
-import { rules } from "../";
-import * as pad from "pad";
+import { rules } from "../../";
 import * as _ from "lodash";
-import { YAMLRule } from "../lint";
+import { YAMLRule } from "../../lint";
 
 // should probably rewrite the tests to use these too someday
-export function preRuleDocRules(): YAMLRule[] {
+function preRuleDocRules(): YAMLRule[] {
   return [
     {
       name: "mesg-yaml-valid",
@@ -14,8 +13,8 @@ export function preRuleDocRules(): YAMLRule[] {
       type: "error",
       message: "Document must be valid YAML. This could occur for many reasons, consult individual error details for more info.",
       links: [
-          "http://yaml.org/spec/",
-          "http://docs.ansible.com/ansible/latest/YAMLSyntax.html",
+        "http://yaml.org/spec/",
+        "http://docs.ansible.com/ansible/latest/YAMLSyntax.html",
       ],
     },
     {
@@ -68,27 +67,8 @@ replicated_api_version: 2.11
 
 }
 
-// generate markdown table
-export function printTable() {
-  const col1 = 52;
-  const col2 = 5;
-  const col3 = 150;
-  const header = {
-    name: "Name",
-    type: "Type",
-    message: "Message",
-  };
-
-  console.log(`${pad(header.name, col1)} | ${pad(header.type, col2)} | ${pad(header.message, col3)} |`);
-  console.log(`${"-".repeat(col1)}-|-${"-".repeat(col2)}-|-${"-".repeat(col3)} |`);
-
-  rules.all.forEach(r => {
-    console.log(`${pad("`" + r.name + "`", col1)} | ${pad(r.type, col2)} | ${pad(r.message, col3)} |`);
-  });
-}
-
 // print a lot of rules
-export function printReference() {
+export function printReferenceDocs() {
 
   const allRules = _.concat(rules.all, preRuleDocRules());
 
@@ -121,4 +101,6 @@ ${(r.examples && r.examples.right) ? r.examples.right.map(e => {
   console.log();
 }
 
-printReference();
+exports.command = "gen";
+exports.describe = "";
+exports.handler = printReferenceDocs;

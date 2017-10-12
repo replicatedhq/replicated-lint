@@ -145,7 +145,7 @@ monitors:
 monitors:
   custom:
     - name: whatever
-      target: 
+      target:
     `,
       },
       {
@@ -171,7 +171,7 @@ monitors:
     - name: whenever
       target: stats.gauges.myapp100.ping.*
     - name: whatever
-      targets: 
+      targets:
         - stats.gauges.myapp100.ping.*
         - movingAverage(stats.gauges.myapp100.ping.*,60)
         - movingAverage(stats.gauges.myapp100.ping.*,600)
@@ -264,7 +264,7 @@ monitors:
     - name: whenever
       target: stats.gauges.myapp100.ping.*
     - name: whatever
-      targets: 
+      targets:
         - stats.gauges.myapp100.ping.*
         - movingAverage(stats.gauges.myapp100.ping.*,60)
         - movingAverage(stats.gauges.myapp100.ping.*,600)

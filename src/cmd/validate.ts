@@ -6,20 +6,46 @@ import * as util from "util";
 import * as pad from "pad";
 import * as chalk from "chalk";
 import * as lineColumn from "line-column";
+import * as fs from "fs";
 
 const startBuffer = 100;
 const endBuffer = 300;
-process.stdin.resume();
-process.stdin.setEncoding("utf8");
 
-let data = "";
+exports.describe = "validate";
+exports.describe = "Lint a yaml document from a file or stdin";
+exports.builder = {
+  infile: {
+    alias: "f",
+    "default": "-",
+  },
+  extraRules: {
+    alias: "e",
+    describe: "Path to a file containing JSON definitions for additional yaml rules. Can be specified multiple times.",
+    type: "array",
+  },
+};
 
-process.stdin.on("data", (chunk) => {
-  data += chunk;
-});
+exports.handler = main;
 
-process.stdin.on("end", () => {
-  const results: linter.RuleTrigger[] = linter.defaultLint(data);
+function main(argv) {
+  let extraRules = argv.extraRules;
+  if (_.isEmpty(extraRules)) {
+    extraRules = [];
+  } else if (_.isString(extraRules)) {
+    extraRules = [extraRules];
+  }
+  if (argv.infile !== "-") {
+    lint(fs.readFileSync(argv.infile).toString(), extraRules);
+  } else {
+    readFromStdin().then(d => lint(d, extraRules));
+  }
+}
+
+function lint(data: string, extraRules: string[]) {
+
+  const extra = (extraRules).map(filePath => JSON.parse(fs.readFileSync(filePath).toString()));
+  const opts: linter.LintOpts = {rules: linter.rules.all.concat(...extra)};
+  const results: linter.RuleTrigger[] = linter.lint(data, opts);
   let found = 0;
   for (const result of results) {
     if (process.argv.indexOf("-q") !== -1) {
@@ -53,7 +79,8 @@ process.stdin.on("end", () => {
         let color = false;
         try {
           color = lineno === usepos.line!;
-        } catch (err) { /* ignore */ }
+        } catch (err) { /* ignore */
+        }
 
         if (color) {
           console.log(`${pad(`${lineno}`, 4)} ${chalk.yellow(line)}`);
@@ -74,4 +101,21 @@ process.stdin.on("end", () => {
     console.log(chalk.green(`✓ All clear!`));
   }
 
-});
+}
+
+function readFromStdin(): Promise<string> {
+  process.stdin.resume();
+  process.stdin.setEncoding("utf8");
+
+  let data = "";
+
+  process.stdin.on("data", (chunk) => {
+    data += chunk;
+  });
+
+  return new Promise<string>((resolve) => {
+    process.stdin.on("end", () => {
+      resolve(data);
+    });
+  });
+}

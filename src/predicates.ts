@@ -480,7 +480,7 @@ export class ConfigOptionExists implements Predicate<any> {
     );
     // usages that contain NONE OF configItemNames
     // every usage should match exactly one configItem
-    const filtered: FoundValue[] = _.filter(usages, this.findInvalid(configItemNames));
+    const filtered: FoundValue[] = _.filter(usages, this.isInvalid(configItemNames));
 
     return { matched: !!filtered.length, paths: _.map(filtered, f => f.path) };
   }
@@ -492,11 +492,18 @@ export class ConfigOptionExists implements Predicate<any> {
     });
   }
 
-  private findInvalid(configItemNames: string[]) {
+  // returns a function value => bool that returns true if
+  // the value is found in the list of configItemNames
+  private isInvalid(configItemNames: string[]): (FoundValue) => boolean {
     return (configOptionUsage: FoundValue) => {
       let matchesOne = false;
       _.forEach(configItemNames, itemName => {
-        if (configOptionUsage.value.indexOf(itemName) !== -1) {
+        if (configOptionUsage.value === itemName) {
+          matchesOne = true;
+        }
+
+        const isTmpl = /{{repl/g.test(configOptionUsage.value);
+        if (configOptionUsage.value.indexOf(itemName) !== -1 && isTmpl) {
           matchesOne = true;
         }
       });

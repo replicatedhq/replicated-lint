@@ -7,7 +7,7 @@ import * as pad from "pad";
 import * as chalk from "chalk";
 import * as lineColumn from "line-column";
 import * as fs from "fs";
-import { ruleTypeLEQ } from "../lint";
+import { ruleTypeLT } from "../lint";
 
 const startBuffer = 100;
 const endBuffer = 300;
@@ -59,7 +59,7 @@ function lint(data: string, extraRules: string[], threshold: linter.RuleType) {
   const results: linter.RuleTrigger[] = linter.lint(data, opts);
   let found = 0;
   for (const result of results) {
-    if (ruleTypeLEQ(result.type, threshold)) {
+    if (ruleTypeLT(result.type, threshold)) {
       continue;
     }
 

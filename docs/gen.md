@@ -1,4 +1,609 @@
 
+## `prop-admincommand-component-exists`
+
+Admin commands must reference an existing component and container
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: admin command but no containers
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  component: DB
+  container: redis
+      
+```
+
+
+*Incorrect*: Admin command but no matching containers
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  component: DB
+  container: redis
+
+components:
+- name: DB
+  containers:
+  - image_name: postgres
+      
+```
+
+
+*Incorrect*: Old style admin command but no matching containers
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  component: DB
+  image:
+    image_name: redis
+
+components:
+- name: DB
+  containers:
+  - image_name: postgres
+      
+```
+
+
+*Incorrect*: Admin multi command but no matching containers
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  replicated:
+    component: DB
+    container: redis
+  swarm:
+    service: myapp
+  kubernetes:
+    selector:
+      tier: backend
+      app: mine
+    container: node
+
+components:
+- name: DB
+  containers:
+  - image_name: postgres
+      
+```
+
+
+*Incorrect*: Admin source multi command but no matching containers
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  source:
+    replicated:
+      component: DB
+      container: redis
+    swarm:
+      service: myapp
+    kubernetes:
+      selector:
+        tier: backend
+        app: mine
+      container: node
+
+components:
+- name: DB
+  containers:
+  - image_name: postgres
+      
+```
+
+
+
+*Correct*: No commands, no containers
+
+```yaml
+---
+admin_commands: []
+components: []
+      
+```
+
+
+*Correct*: Admin command with matching container
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  component: DB
+  container: redis
+
+components:
+- name: DB
+  containers:
+  - image_name: redis
+      
+```
+
+
+*Correct*: Admin command has `service`, so this is probably a swarm command and thus is not tested here
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  service: database
+      
+```
+
+
+*Correct*: Admin command has `selector`, so this is probably a kubernetes command and thus is not tested here
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  selector:
+    - tier: database
+      
+```
+
+
+*Correct*: Old style admin command with a matching container
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  component: DB
+  image:
+    image_name: redis
+
+components:
+- name: DB
+  containers:
+  - image_name: redis
+      
+```
+
+
+*Correct*: Admin multi command with matching container
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  replicated:
+    component: DB
+    container: redis
+  swarm:
+    service: myapp
+  kubernetes:
+    selector:
+      tier: backend
+      app: mine
+    container: node
+
+components:
+- name: DB
+  containers:
+  - image_name: redis
+      
+```
+
+
+*Correct*: Admin source multi command with matching container
+
+```yaml
+---
+admin_commands:
+- alias: aliasecho
+  command: [echo]
+  source:
+    replicated:
+      component: DB
+      container: redis
+    swarm:
+      service: myapp
+    kubernetes:
+      selector:
+        tier: backend
+        app: mine
+      container: node
+
+components:
+- name: DB
+  containers:
+  - image_name: redis
+      
+```
+
+
+    
+
+## `prop-admincommand-shellalias-valid`
+
+An admin command's `alias` must be a valid shell alias
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: admin command's `alias` contains invalid character `&`
+
+```yaml
+---
+admin_commands:
+- alias: exec&echo
+  command: ["echo"]
+  run_type: exec
+  component: DB
+  container: redis
+      
+```
+
+
+*Incorrect*: admin command's `alias` contains invalid character `*`
+
+```yaml
+---
+admin_commands:
+- alias: exec**echo
+  command: ["echo"]
+  run_type: exec
+  component: DB
+  container: redis
+      
+```
+
+
+
+*Correct*: valid `alias`
+
+```yaml
+---
+admin_commands:
+- alias: redis_echo-command--
+  command: ["echo"]
+  run_type: exec
+  component: DB
+  container: redis
+      
+```
+
+
+    
+
+## `prop-admincommand-requirements-present`
+
+Basic requirements for an admin command must be present - an `alias` and a `command`
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: `alias` missing
+
+```yaml
+---
+admin_commands:
+- command: [echo]
+  component: DB
+  container: redis
+      
+```
+
+
+*Incorrect*: `command` missing
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  component: DB
+  container: redis
+      
+```
+
+
+
+*Correct*: Valid new-style replicated command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: DB
+  container: redis
+      
+```
+
+
+    
+
+## `prop-admincommand-old-style-requirements-present`
+
+`image_name` must be present within `admin_commands.image` and `admin_commands.component` must exist if `admin_commands.image` is present
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: `image` is present, but not `image.image_name`
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: alpha
+  image:
+    number: 5
+      
+```
+
+
+*Incorrect*: `image` is present, but not `component`
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  image:
+    image_name: redis
+      
+```
+
+
+
+*Correct*: Valid old-style (depreciated) command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: DB
+  image:
+    image_name: redis
+      
+```
+
+
+    
+
+## `prop-admincommand-multi-requirements-present`
+
+`container` and `component` must both be present within `admin_commands.replicated` if it is present
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: `replicated` is present, but not `replicated.component`
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  replicated:
+    container: redis
+  swarm:
+    service: myapp
+      
+```
+
+
+*Incorrect*: `replicated` is present, but not `replicated.container`
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  replicated:
+    component: DB
+  swarm:
+    service: myapp
+      
+```
+
+
+
+*Correct*: Valid admin multi command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  replicated:
+    component: DB
+    container: redis
+  swarm:
+    service: myapp
+      
+```
+
+
+    
+
+## `prop-admincommand-verbose-requirements-present`
+
+`container` and `component` must both be present within `admin_commands.source.replicated` if it is present
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: `source.replicated` is present, but not `source.replicated.component`
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  source:
+    replicated:
+      container: redis
+    swarm:
+      service: myapp
+      
+```
+
+
+*Incorrect*: `source.replicated` is present, but not `source.replicated.container`
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  source:
+    replicated:
+      component: redis
+    swarm:
+      service: myapp
+      
+```
+
+
+
+*Correct*: Valid verbose admin multi command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  source:
+    replicated:
+      component: DB
+      container: redis
+    swarm:
+      service: myapp
+      
+```
+
+
+    
+
+## `prop-admincommand-one-present`
+
+Admin command must use one of several methods to identify the relevant container
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: None of the options are present
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+      
+```
+
+
+
+*Correct*: Valid new-style replicated command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: DB
+  container: redis
+      
+```
+
+
+*Correct*: Valid old-style (depreciated) admin command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  component: DB
+  image:
+    image_name: redis
+      
+```
+
+
+*Correct*: Valid admin multi command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  replicated:
+    component: DB
+    container: redis
+  swarm:
+    service: myapp
+      
+```
+
+
+*Correct*: Valid verbose admin multi command
+
+```yaml
+---
+admin_commands:
+- alias: echo
+  command: [echo]
+  source:
+    replicated:
+      component: DB
+      container: redis
+    swarm:
+      service: myapp
+      
+```
+
+
+    
+
 ## `prop-component-cluster-count`
 
 If `cluster_host_count.min` and `cluster_host_count.max` are both set to 1, then it will be impossible to run multiple instances of this container anywhere in the cluster.
@@ -906,19 +1511,29 @@ config:
 ```
 
 
-*Incorrect*: Config Section `when` field references non-existent option `auth`
+*Incorrect*: Config Section `when` uses unsupported `<` operator on option `auth_source`
 
 ```yaml
 ---
 config:
-- name: database
-  title: Database
-  when: auth=config
+- name: auth
+  title: Authentication
+  description: Where will user accounts be provisioned
   items:
-  - name: database_use_ssl
-    title: Use SSL
-    type: bool
-    default: ""
+  - name: auth_source
+    default: auth_type_internal
+    type: select_one
+    items:
+    - name: auth_type_internal
+      title: Built In
+    - name: auth_type_ldap
+      title: LDAP
+    - name: auth_type_ldap_advanced
+      title: LDAP Advanced
+- name: ldap_settings
+  title: LDAP Server Settings
+  when: auth_source>auth_type_ldap
+  items: []
       
 ```
 
@@ -2131,6 +2746,523 @@ components:
 
     
 
+## `prop-hostreq-docker-version-valid`
+
+`host_requirements.docker_version` must be a valid docker version specification
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Invalid docker version the.good.one, not semver
+
+```yaml
+---
+host_requirements:
+  docker_version: the.good.one
+      
+```
+
+
+*Incorrect*: Invalid docker version `0.1.1`
+
+```yaml
+---
+host_requirements:
+  docker_version: 0.1.1
+      
+```
+
+
+*Incorrect*: Invalid docker version `1.09.1`, no leading zeros
+
+```yaml
+---
+host_requirements:
+  docker_version: 1.09.1
+      
+```
+
+
+*Incorrect*: Invalid docker version `1.14.1`, never released
+
+```yaml
+---
+host_requirements:
+  docker_version: 1.14.1
+      
+```
+
+
+*Incorrect*: Invalid docker version `17.13.1-ce`, 13 is not a valid month
+
+```yaml
+---
+host_requirements:
+  docker_version: 17.13.1-ce
+      
+```
+
+
+
+*Correct*: Valid docker version
+
+```yaml
+---
+host_requirements:
+  docker_version: 17.09.1-ce
+      
+```
+
+
+*Correct*: Valid docker version
+
+```yaml
+---
+host_requirements:
+  docker_version: 17.09.1
+      
+```
+
+
+*Correct*: Valid docker version
+
+```yaml
+---
+host_requirements:
+  docker_version: 1.12.1
+      
+```
+
+
+    
+
+## `prop-hostreq-replicated-version-semver-valid`
+
+`host_requirements.replicated_version` must be a semver range specification
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Invalid replicated version `the.good.one`, not semver
+
+```yaml
+---
+host_requirements:
+  replicated_version: the.good.one
+      
+```
+
+
+*Incorrect*: Invalid replicated version `alpha-0.1.1`
+
+```yaml
+---
+host_requirements:
+  replicated_version: alpha-0.1.1
+      
+```
+
+
+
+*Correct*: valid version `2.x`
+
+```yaml
+---
+host_requirements:
+    replicated_version: 2.x
+      
+```
+
+
+*Correct*: valid version `2.5.3`
+
+```yaml
+---
+host_requirements:
+    replicated_version: 2.5.3
+      
+```
+
+
+*Correct*: valid version `<=2.5.3 >2.5.x`
+
+```yaml
+---
+host_requirements:
+    replicated_version: '<=2.5.3 >2.5.x'
+      
+```
+
+
+*Correct*: valid version `1.x`
+
+```yaml
+---
+host_requirements:
+    replicated_version: '1.x'
+      
+```
+
+
+*Correct*: valid version `=1.x`
+
+```yaml
+---
+host_requirements:
+    replicated_version: '=1.x'
+      
+```
+
+
+*Correct*: valid version `>=1.4 <1.7`
+
+```yaml
+---
+host_requirements:
+    replicated_version: '>=1.4 <1.7'
+      
+```
+
+
+    
+
+## `prop-hostreq-system-ram-specs-valid`
+
+`host_requirements.memory` must be a positive decimal with a unit of measurement like M, MB, G, or GB
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Invalid memory size, not a properly formatted size
+
+```yaml
+---
+host_requirements:
+  memory: 128
+      
+```
+
+
+*Incorrect*: Invalid memory size, too many digits past the decimal point
+
+```yaml
+---
+host_requirements:
+  memory: 0.0625TB
+      
+```
+
+
+
+*Correct*: Valid memory size, 2.0TB
+
+```yaml
+---
+host_requirements:
+  memory: 2.0TB
+      
+```
+
+
+*Correct*: Valid memory size, 128KB
+
+```yaml
+---
+host_requirements:
+  memory: 128KB
+      
+```
+
+
+    
+
+## `prop-hostreq-system-storage-specs-valid`
+
+`host_requirements.disk_space` be a positive decimal with a unit of measurement like M, MB, G, or GB
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Invalid disk size, not a properly formatted size
+
+```yaml
+---
+host_requirements:
+  disk_space: 128
+      
+```
+
+
+*Incorrect*: Invalid disk size, too many digits past the decimal point
+
+```yaml
+---
+host_requirements:
+  disk_space: 0.0625EB
+      
+```
+
+
+
+*Correct*: Valid disk size, 20.0TB
+
+```yaml
+---
+host_requirements:
+  disk_space: 20.0TB
+      
+```
+
+
+*Correct*: Valid disk size, 128GB
+
+```yaml
+---
+host_requirements:
+  disk_space: 128GB
+      
+```
+
+
+    
+
+## `prop-kubernetes-requirements-version-valid`
+
+`kubernetes.requirements.server_version` must be a valid semver specification
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: `server_version` is not valid semver
+
+```yaml
+---
+kubernetes:
+  requirements:
+    server_version: 17.01.1-ce
+      
+```
+
+
+
+*Correct*: valid version `1.5.3`
+
+```yaml
+---
+kubernetes:
+  requirements:
+    server_version: 1.5.3
+      
+```
+
+
+*Correct*: valid version `<=1.5.3 >1.5.x`
+
+```yaml
+---
+kubernetes:
+  requirements:
+    server_version: '<=1.5.3 >1.5.x'
+      
+```
+
+
+*Correct*: valid version `1.x`
+
+```yaml
+---
+kubernetes:
+  requirements:
+    server_version: '1.x'
+      
+```
+
+
+*Correct*: valid version `=1.x`
+
+```yaml
+---
+kubernetes:
+  requirements:
+    server_version: '=1.x'
+      
+```
+
+
+*Correct*: valid version `>=1.4 <1.7`
+
+```yaml
+---
+kubernetes:
+  requirements:
+    server_version: '>=1.4 <1.7'
+      
+```
+
+
+    
+
+## `prop-kubernetes-total-memory-valid`
+
+`kubernetes.requirements.total_memory` must be expressed as a plain integer, a fixed-point integer, or the power-of-two equivalent (e.g. 128974848, 129e6, 129M, 123Mi)
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Invalid memory size, too many digits past the decimal point
+
+```yaml
+---
+kubernetes:
+  requirements:
+    total_memory: 0.0625TB
+      
+```
+
+
+
+*Correct*: Valid memory size, 2.0TB
+
+```yaml
+---
+kubernetes:
+  requirements:
+    total_memory: 2.0TB
+      
+```
+
+
+*Correct*: Valid memory size, 128KB
+
+```yaml
+---
+kubernetes:
+  requirements:
+    total_memory: 128KB
+      
+```
+
+
+*Correct*: Valid kubernetes memory size, 128
+
+```yaml
+---
+kubernetes:
+  requirements:
+    total_memory: "128"
+      
+```
+
+
+*Correct*: Valid kubernetes memory size, 129e6
+
+```yaml
+---
+kubernetes:
+  requirements:
+    total_memory: "129e6"
+      
+```
+
+
+    
+
+## `prop-kubernetes-persistent-storage-valid`
+
+`kubernetes.persistent_volume_claims.storage` must be expressed as a plain integer, a fixed-point integer, or the power-of-two equivalent (e.g. 128974848, 129e6, 129M, 123Mi)
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Invalid storage size, too many digits past the decimal point
+
+```yaml
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: 0.0625TB
+      
+```
+
+
+
+*Correct*: Valid storage size, 2.0TB
+
+```yaml
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: 2.0TB
+      
+```
+
+
+*Correct*: Valid storage size, 128KB
+
+```yaml
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: 128KB
+      
+```
+
+
+*Correct*: Valid kubernetes storage size, 128
+
+```yaml
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: "128"
+      
+```
+
+
+*Correct*: Valid kubernetes storage size, 129e6
+
+```yaml
+---
+kubernetes:
+  persistent_volume_claims:
+  - storage: "129e6"
+      
+```
+
+
+*Correct*: No storage size given
+
+```yaml
+---
+kubernetes:
+  persistent_volume_claims:
+      
+```
+
+
+    
+
 ## `prop-monitors-cpuacct-container-exists`
 
 Entries in `monitors.cpuacct` must have matching component+container
@@ -3056,1324 +4188,6 @@ properties:
 
     
 
-## `prop-configitem-testproc-run-on-save`
-
-If a config item's `test_proc.run_on_save` is not set to `true`, test_proc's will not be checked automatically. Consider setting to `true` to automatically validate inputs
-
-
-
-#### More Info:
-
-- https://www.replicated.com/docs/packaging-an-application/test-procs/
-
-#### Examples:
-
-*Incorrect*: A config item's `test_proc.run_on_save` set to `false`
-
-```yaml
----
-config:
-- name: configs
-  title: Configuration
-  items:
-  - name: phone_number
-    type: text
-    test_proc:
-      display_name: Is this a Phone Number?
-      command: regex_match
-      run_on_save: false
-      args:
-      - "([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$"
-      - "That doesn't seem to be a phone number!"
-    
-```
-
-
-*Incorrect*: A config groups's `test_proc.run_on_save` set to `false`
-
-```yaml
----
-config:
-- name: configs
-  title: Configuration
-  test_proc:
-    display_name: Is this a Phone Number?
-    command: regex_match
-    run_on_save: false
-    args:
-    - "([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$"
-    - "That doesn't seem to be a phone number!"
-  items:
-  - name: phone_number
-    type: text
-    
-```
-
-
-
-*Correct*: All `test_procs` have `run_on_save` == `true`
-
-```yaml
----
-config:
-- name: configs
-  title: Configuration
-  items:
-  - name: phone_number
-    type: text
-    test_proc:
-      display_name: Is this a Phone Number?
-      command: regex_match
-      run_on_save: true
-      args:
-      - "([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$"
-      - "That doesn't seem to be a phone number!"
-      
-```
-
-
-*Correct*: No config items have test procs
-
-```yaml
----
-config:
-- name: configs
-  title: Configuration
-  items:
-  - name: phone_number
-    type: text
-      
-```
-
-
-    
-
-## `prop-configitem-testproc-command-valid`
-
-A `test_proc`'s command entry must be a valid command.
-
-
-
-#### More Info:
-
-- https://www.replicated.com/docs/packaging-an-application/test-procs/
-
-#### Examples:
-
-*Incorrect*: config item's `test_proc.command` is set to `json_is_good`, which is not a supported Test Proc command
-
-```yaml
----
-config:
-- name: configs
-  title: Configuration
-  items:
-  - name: phone_number
-    type: text
-    test_proc:
-      display_name: Is the json good?
-      command: json_is_good
-    
-```
-
-
-*Incorrect*: config group's `test_proc.command` is set to `all_the_json_is_good`, which is not a supported Test Proc command
-
-```yaml
----
-config:
-- name: configs
-  title: Configuration
-  test_proc:
-    display_name: Is the json good?
-    command: all_the_json_is_good
-  items:
-  - name: phone_number
-    type: text
-    
-```
-
-
-
-*Correct*: item and group's `test_proc.command`s are set to `resolve_host` and `smtp_auth`, both supported Test Proc commands
-
-```yaml
----
-config:
-- name: configs
-  title: Configuration
-  test_proc:
-    display_name: Is docs.replicated.com reachable?
-    command: smtp_auth
-  items:
-  - name: docs_host
-    type: text
-    test_proc:
-      display_name: Is docs.replicated.com reachable?
-      command: resolve_host
-      args:
-      - docs.replicated.com
-```
-
-
-*Correct*: item's `test_proc.command` is set to `resolve_host`
-
-```yaml
----
-config:
-- name: hostname
-  title: Hostname
-  description: Ensure this domain name is routable on your network.
-  items:
-  - name: hostname
-    title: Hostname
-    value: '{{repl ConsoleSetting "tls.hostname"}}'
-    type: text
-    test_proc:
-      display_name: Check DNS
-      command: resolve_host
-      
-```
-
-
-*Correct*: no test procs specified
-
-```yaml
----
-config:
-- name: configs
-  title: Configuration
-  items:
-  - name: docs_host
-    type: text
-      
-```
-
-
-    
-
-## `prop-hostreq-docker-version-valid`
-
-`host_requirements.docker_version` must be a valid docker version specification
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: Invalid docker version the.good.one, not semver
-
-```yaml
----
-host_requirements:
-  docker_version: the.good.one
-      
-```
-
-
-*Incorrect*: Invalid docker version `0.1.1`
-
-```yaml
----
-host_requirements:
-  docker_version: 0.1.1
-      
-```
-
-
-*Incorrect*: Invalid docker version `1.09.1`, no leading zeros
-
-```yaml
----
-host_requirements:
-  docker_version: 1.09.1
-      
-```
-
-
-*Incorrect*: Invalid docker version `1.14.1`, never released
-
-```yaml
----
-host_requirements:
-  docker_version: 1.14.1
-      
-```
-
-
-*Incorrect*: Invalid docker version `17.13.1-ce`, 13 is not a valid month
-
-```yaml
----
-host_requirements:
-  docker_version: 17.13.1-ce
-      
-```
-
-
-
-*Correct*: Valid docker version
-
-```yaml
----
-host_requirements:
-  docker_version: 17.09.1-ce
-      
-```
-
-
-*Correct*: Valid docker version
-
-```yaml
----
-host_requirements:
-  docker_version: 17.09.1
-      
-```
-
-
-*Correct*: Valid docker version
-
-```yaml
----
-host_requirements:
-  docker_version: 1.12.1
-      
-```
-
-
-    
-
-## `prop-hostreq-replicated-version-semver-valid`
-
-`host_requirements.replicated_version` must be a semver range specification
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: Invalid replicated version `the.good.one`, not semver
-
-```yaml
----
-host_requirements:
-  replicated_version: the.good.one
-      
-```
-
-
-*Incorrect*: Invalid replicated version `alpha-0.1.1`
-
-```yaml
----
-host_requirements:
-  replicated_version: alpha-0.1.1
-      
-```
-
-
-
-*Correct*: valid version `2.x`
-
-```yaml
----
-host_requirements:
-    replicated_version: 2.x
-      
-```
-
-
-*Correct*: valid version `2.5.3`
-
-```yaml
----
-host_requirements:
-    replicated_version: 2.5.3
-      
-```
-
-
-*Correct*: valid version `<=2.5.3 >2.5.x`
-
-```yaml
----
-host_requirements:
-    replicated_version: '<=2.5.3 >2.5.x'
-      
-```
-
-
-*Correct*: valid version `1.x`
-
-```yaml
----
-host_requirements:
-    replicated_version: '1.x'
-      
-```
-
-
-*Correct*: valid version `=1.x`
-
-```yaml
----
-host_requirements:
-    replicated_version: '=1.x'
-      
-```
-
-
-*Correct*: valid version `>=1.4 <1.7`
-
-```yaml
----
-host_requirements:
-    replicated_version: '>=1.4 <1.7'
-      
-```
-
-
-    
-
-## `prop-hostreq-system-ram-specs-valid`
-
-`host_requirements.memory` must be a positive decimal with a unit of measurement like M, MB, G, or GB
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: Invalid memory size, not a properly formatted size
-
-```yaml
----
-host_requirements:
-  memory: 128
-      
-```
-
-
-*Incorrect*: Invalid memory size, too many digits past the decimal point
-
-```yaml
----
-host_requirements:
-  memory: 0.0625TB
-      
-```
-
-
-
-*Correct*: Valid memory size, 2.0TB
-
-```yaml
----
-host_requirements:
-  memory: 2.0TB
-      
-```
-
-
-*Correct*: Valid memory size, 128KB
-
-```yaml
----
-host_requirements:
-  memory: 128KB
-      
-```
-
-
-    
-
-## `prop-hostreq-system-storage-specs-valid`
-
-`host_requirements.disk_space` be a positive decimal with a unit of measurement like M, MB, G, or GB
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: Invalid disk size, not a properly formatted size
-
-```yaml
----
-host_requirements:
-  disk_space: 128
-      
-```
-
-
-*Incorrect*: Invalid disk size, too many digits past the decimal point
-
-```yaml
----
-host_requirements:
-  disk_space: 0.0625EB
-      
-```
-
-
-
-*Correct*: Valid disk size, 20.0TB
-
-```yaml
----
-host_requirements:
-  disk_space: 20.0TB
-      
-```
-
-
-*Correct*: Valid disk size, 128GB
-
-```yaml
----
-host_requirements:
-  disk_space: 128GB
-      
-```
-
-
-    
-
-## `prop-kubernetes-requirements-version-valid`
-
-`kubernetes.requirements.server_version` must be a valid semver specification
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: `server_version` is not valid semver
-
-```yaml
----
-kubernetes:
-  requirements:
-    server_version: 17.01.1-ce
-      
-```
-
-
-
-*Correct*: valid version `1.5.3`
-
-```yaml
----
-kubernetes:
-  requirements:
-    server_version: 1.5.3
-      
-```
-
-
-*Correct*: valid version `<=1.5.3 >1.5.x`
-
-```yaml
----
-kubernetes:
-  requirements:
-    server_version: '<=1.5.3 >1.5.x'
-      
-```
-
-
-*Correct*: valid version `1.x`
-
-```yaml
----
-kubernetes:
-  requirements:
-    server_version: '1.x'
-      
-```
-
-
-*Correct*: valid version `=1.x`
-
-```yaml
----
-kubernetes:
-  requirements:
-    server_version: '=1.x'
-      
-```
-
-
-*Correct*: valid version `>=1.4 <1.7`
-
-```yaml
----
-kubernetes:
-  requirements:
-    server_version: '>=1.4 <1.7'
-      
-```
-
-
-    
-
-## `prop-kubernetes-total-memory-valid`
-
-`kubernetes.requirements.total_memory` must be expressed as a plain integer, a fixed-point integer, or the power-of-two equivalent (e.g. 128974848, 129e6, 129M, 123Mi)
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: Invalid memory size, too many digits past the decimal point
-
-```yaml
----
-kubernetes:
-  requirements:
-    total_memory: 0.0625TB
-      
-```
-
-
-
-*Correct*: Valid memory size, 2.0TB
-
-```yaml
----
-kubernetes:
-  requirements:
-    total_memory: 2.0TB
-      
-```
-
-
-*Correct*: Valid memory size, 128KB
-
-```yaml
----
-kubernetes:
-  requirements:
-    total_memory: 128KB
-      
-```
-
-
-*Correct*: Valid kubernetes memory size, 128
-
-```yaml
----
-kubernetes:
-  requirements:
-    total_memory: "128"
-      
-```
-
-
-*Correct*: Valid kubernetes memory size, 129e6
-
-```yaml
----
-kubernetes:
-  requirements:
-    total_memory: "129e6"
-      
-```
-
-
-    
-
-## `prop-kubernetes-persistent-storage-valid`
-
-`kubernetes.persistent_volume_claims.storage` must be expressed as a plain integer, a fixed-point integer, or the power-of-two equivalent (e.g. 128974848, 129e6, 129M, 123Mi)
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: Invalid storage size, too many digits past the decimal point
-
-```yaml
----
-kubernetes:
-  persistent_volume_claims:
-  - storage: 0.0625TB
-      
-```
-
-
-
-*Correct*: Valid storage size, 2.0TB
-
-```yaml
----
-kubernetes:
-  persistent_volume_claims:
-  - storage: 2.0TB
-      
-```
-
-
-*Correct*: Valid storage size, 128KB
-
-```yaml
----
-kubernetes:
-  persistent_volume_claims:
-  - storage: 128KB
-      
-```
-
-
-*Correct*: Valid kubernetes storage size, 128
-
-```yaml
----
-kubernetes:
-  persistent_volume_claims:
-  - storage: "128"
-      
-```
-
-
-*Correct*: Valid kubernetes storage size, 129e6
-
-```yaml
----
-kubernetes:
-  persistent_volume_claims:
-  - storage: "129e6"
-      
-```
-
-
-*Correct*: No storage size given
-
-```yaml
----
-kubernetes:
-  persistent_volume_claims:
-      
-```
-
-
-    
-
-## `prop-admincommand-component-exists`
-
-Admin commands must reference an existing component and container
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: admin command but no containers
-
-```yaml
----
-admin_commands:
-- alias: aliasecho
-  command: [echo]
-  component: DB
-  container: redis
-      
-```
-
-
-*Incorrect*: Admin command but no matching containers
-
-```yaml
----
-admin_commands:
-- alias: aliasecho
-  command: [echo]
-  component: DB
-  container: redis
-
-components:
-- name: DB
-  containers:
-  - image_name: postgres
-      
-```
-
-
-*Incorrect*: Old style admin command but no matching containers
-
-```yaml
----
-admin_commands:
-- alias: aliasecho
-  command: [echo]
-  component: DB
-  image:
-    image_name: redis
-
-components:
-- name: DB
-  containers:
-  - image_name: postgres
-      
-```
-
-
-*Incorrect*: Admin multi command but no matching containers
-
-```yaml
----
-admin_commands:
-- alias: aliasecho
-  command: [echo]
-  replicated:
-    component: DB
-    container: redis
-  swarm:
-    service: myapp
-  kubernetes:
-    selector:
-      tier: backend
-      app: mine
-    container: node
-
-components:
-- name: DB
-  containers:
-  - image_name: postgres
-      
-```
-
-
-*Incorrect*: Admin source multi command but no matching containers
-
-```yaml
----
-admin_commands:
-- alias: aliasecho
-  command: [echo]
-  source:
-    replicated:
-      component: DB
-      container: redis
-    swarm:
-      service: myapp
-    kubernetes:
-      selector:
-        tier: backend
-        app: mine
-      container: node
-
-components:
-- name: DB
-  containers:
-  - image_name: postgres
-      
-```
-
-
-
-*Correct*: No commands, no containers
-
-```yaml
----
-admin_commands: []
-components: []
-      
-```
-
-
-*Correct*: Admin command with matching container
-
-```yaml
----
-admin_commands:
-- alias: aliasecho
-  command: [echo]
-  component: DB
-  container: redis
-
-components:
-- name: DB
-  containers:
-  - image_name: redis
-      
-```
-
-
-*Correct*: Admin command has `service`, so this is probably a swarm command and thus is not tested here
-
-```yaml
----
-admin_commands:
-- alias: aliasecho
-  command: [echo]
-  service: database
-      
-```
-
-
-*Correct*: Admin command has `selector`, so this is probably a kubernetes command and thus is not tested here
-
-```yaml
----
-admin_commands:
-- alias: aliasecho
-  command: [echo]
-  selector:
-    - tier: database
-      
-```
-
-
-*Correct*: Old style admin command with a matching container
-
-```yaml
----
-admin_commands:
-- alias: aliasecho
-  command: [echo]
-  component: DB
-  image:
-    image_name: redis
-
-components:
-- name: DB
-  containers:
-  - image_name: redis
-      
-```
-
-
-*Correct*: Admin multi command with matching container
-
-```yaml
----
-admin_commands:
-- alias: aliasecho
-  command: [echo]
-  replicated:
-    component: DB
-    container: redis
-  swarm:
-    service: myapp
-  kubernetes:
-    selector:
-      tier: backend
-      app: mine
-    container: node
-
-components:
-- name: DB
-  containers:
-  - image_name: redis
-      
-```
-
-
-*Correct*: Admin source multi command with matching container
-
-```yaml
----
-admin_commands:
-- alias: aliasecho
-  command: [echo]
-  source:
-    replicated:
-      component: DB
-      container: redis
-    swarm:
-      service: myapp
-    kubernetes:
-      selector:
-        tier: backend
-        app: mine
-      container: node
-
-components:
-- name: DB
-  containers:
-  - image_name: redis
-      
-```
-
-
-    
-
-## `prop-admincommand-shellalias-valid`
-
-An admin command's `alias` must be a valid shell alias
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: admin command's `alias` contains invalid character `&`
-
-```yaml
----
-admin_commands:
-- alias: exec&echo
-  command: ["echo"]
-  run_type: exec
-  component: DB
-  container: redis
-      
-```
-
-
-*Incorrect*: admin command's `alias` contains invalid character `*`
-
-```yaml
----
-admin_commands:
-- alias: exec**echo
-  command: ["echo"]
-  run_type: exec
-  component: DB
-  container: redis
-      
-```
-
-
-
-*Correct*: valid `alias`
-
-```yaml
----
-admin_commands:
-- alias: redis_echo-command--
-  command: ["echo"]
-  run_type: exec
-  component: DB
-  container: redis
-      
-```
-
-
-    
-
-## `prop-admincommand-requirements-present`
-
-Basic requirements for an admin command must be present - an `alias` and a `command`
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: `alias` missing
-
-```yaml
----
-admin_commands:
-- command: [echo]
-  component: DB
-  container: redis
-      
-```
-
-
-*Incorrect*: `command` missing
-
-```yaml
----
-admin_commands:
-- alias: echo
-  component: DB
-  container: redis
-      
-```
-
-
-
-*Correct*: Valid new-style replicated command
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  component: DB
-  container: redis
-      
-```
-
-
-    
-
-## `prop-admincommand-old-style-requirements-present`
-
-`image_name` must be present within `admin_commands.image` and `admin_commands.component` must exist if `admin_commands.image` is present
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: `image` is present, but not `image.image_name`
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  component: alpha
-  image:
-    number: 5
-      
-```
-
-
-*Incorrect*: `image` is present, but not `component`
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  image:
-    image_name: redis
-      
-```
-
-
-
-*Correct*: Valid old-style (depreciated) command
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  component: DB
-  image:
-    image_name: redis
-      
-```
-
-
-    
-
-## `prop-admincommand-multi-requirements-present`
-
-`container` and `component` must both be present within `admin_commands.replicated` if it is present
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: `replicated` is present, but not `replicated.component`
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  replicated:
-    container: redis
-  swarm:
-    service: myapp
-      
-```
-
-
-*Incorrect*: `replicated` is present, but not `replicated.container`
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  replicated:
-    component: DB
-  swarm:
-    service: myapp
-      
-```
-
-
-
-*Correct*: Valid admin multi command
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  replicated:
-    component: DB
-    container: redis
-  swarm:
-    service: myapp
-      
-```
-
-
-    
-
-## `prop-admincommand-verbose-requirements-present`
-
-`container` and `component` must both be present within `admin_commands.source.replicated` if it is present
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: `source.replicated` is present, but not `source.replicated.component`
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  source:
-    replicated:
-      container: redis
-    swarm:
-      service: myapp
-      
-```
-
-
-*Incorrect*: `source.replicated` is present, but not `source.replicated.container`
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  source:
-    replicated:
-      component: redis
-    swarm:
-      service: myapp
-      
-```
-
-
-
-*Correct*: Valid verbose admin multi command
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  source:
-    replicated:
-      component: DB
-      container: redis
-    swarm:
-      service: myapp
-      
-```
-
-
-    
-
-## `prop-admincommand-one-present`
-
-Admin command must use one of several methods to identify the relevant container
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: None of the options are present
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-      
-```
-
-
-
-*Correct*: Valid new-style replicated command
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  component: DB
-  container: redis
-      
-```
-
-
-*Correct*: Valid old-style (depreciated) admin command
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  component: DB
-  image:
-    image_name: redis
-      
-```
-
-
-*Correct*: Valid admin multi command
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  replicated:
-    component: DB
-    container: redis
-  swarm:
-    service: myapp
-      
-```
-
-
-*Correct*: Valid verbose admin multi command
-
-```yaml
----
-admin_commands:
-- alias: echo
-  command: [echo]
-  source:
-    replicated:
-      component: DB
-      container: redis
-    swarm:
-      service: myapp
-      
-```
-
-
-    
-
 ## `prop-swarm-secret-name-value`
 
 Swarm secrets require both a `name` and a `value` to function.
@@ -4596,6 +4410,202 @@ configs:
 
     
 
+## `prop-configitem-testproc-run-on-save`
+
+If a config item's `test_proc.run_on_save` is not set to `true`, test_proc's will not be checked automatically. Consider setting to `true` to automatically validate inputs
+
+
+
+#### More Info:
+
+- https://www.replicated.com/docs/packaging-an-application/test-procs/
+
+#### Examples:
+
+*Incorrect*: A config item's `test_proc.run_on_save` set to `false`
+
+```yaml
+---
+config:
+- name: configs
+  title: Configuration
+  items:
+  - name: phone_number
+    type: text
+    test_proc:
+      display_name: Is this a Phone Number?
+      command: regex_match
+      run_on_save: false
+      args:
+      - "([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$"
+      - "That doesn't seem to be a phone number!"
+    
+```
+
+
+*Incorrect*: A config groups's `test_proc.run_on_save` set to `false`
+
+```yaml
+---
+config:
+- name: configs
+  title: Configuration
+  test_proc:
+    display_name: Is this a Phone Number?
+    command: regex_match
+    run_on_save: false
+    args:
+    - "([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$"
+    - "That doesn't seem to be a phone number!"
+  items:
+  - name: phone_number
+    type: text
+    
+```
+
+
+
+*Correct*: All `test_procs` have `run_on_save` == `true`
+
+```yaml
+---
+config:
+- name: configs
+  title: Configuration
+  items:
+  - name: phone_number
+    type: text
+    test_proc:
+      display_name: Is this a Phone Number?
+      command: regex_match
+      run_on_save: true
+      args:
+      - "([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$"
+      - "That doesn't seem to be a phone number!"
+      
+```
+
+
+*Correct*: No config items have test procs
+
+```yaml
+---
+config:
+- name: configs
+  title: Configuration
+  items:
+  - name: phone_number
+    type: text
+      
+```
+
+
+    
+
+## `prop-configitem-testproc-command-valid`
+
+A `test_proc`'s command entry must be a valid command.
+
+
+
+#### More Info:
+
+- https://www.replicated.com/docs/packaging-an-application/test-procs/
+
+#### Examples:
+
+*Incorrect*: config item's `test_proc.command` is set to `json_is_good`, which is not a supported Test Proc command
+
+```yaml
+---
+config:
+- name: configs
+  title: Configuration
+  items:
+  - name: phone_number
+    type: text
+    test_proc:
+      display_name: Is the json good?
+      command: json_is_good
+    
+```
+
+
+*Incorrect*: config group's `test_proc.command` is set to `all_the_json_is_good`, which is not a supported Test Proc command
+
+```yaml
+---
+config:
+- name: configs
+  title: Configuration
+  test_proc:
+    display_name: Is the json good?
+    command: all_the_json_is_good
+  items:
+  - name: phone_number
+    type: text
+    
+```
+
+
+
+*Correct*: item and group's `test_proc.command`s are set to `resolve_host` and `smtp_auth`, both supported Test Proc commands
+
+```yaml
+---
+config:
+- name: configs
+  title: Configuration
+  test_proc:
+    display_name: Is docs.replicated.com reachable?
+    command: smtp_auth
+  items:
+  - name: docs_host
+    type: text
+    test_proc:
+      display_name: Is docs.replicated.com reachable?
+      command: resolve_host
+      args:
+      - docs.replicated.com
+```
+
+
+*Correct*: item's `test_proc.command` is set to `resolve_host`
+
+```yaml
+---
+config:
+- name: hostname
+  title: Hostname
+  description: Ensure this domain name is routable on your network.
+  items:
+  - name: hostname
+    title: Hostname
+    value: '{{repl ConsoleSetting "tls.hostname"}}'
+    type: text
+    test_proc:
+      display_name: Check DNS
+      command: resolve_host
+      
+```
+
+
+*Correct*: no test procs specified
+
+```yaml
+---
+config:
+- name: configs
+  title: Configuration
+  items:
+  - name: docs_host
+    type: text
+      
+```
+
+
+    
+
 ## `mesg-yaml-valid`
 
 Document must be valid YAML. This could occur for many reasons, consult individual error details for more info.
@@ -4673,5 +4683,5 @@ replicated_api_version: 2.11
 
 
 Autogenerated reference documentation for [Replicated YAML Linter](https://github.com/replicatedhq/replicated-lint)
-*Generated at Thu Oct 12 2017 13:28:28 GMT-0700 (PDT)*
+*Generated at Thu Oct 12 2017 19:13:46 GMT-0700 (PDT)*
 

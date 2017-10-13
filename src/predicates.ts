@@ -3,7 +3,7 @@ import * as semver from "semver";
 import * as urlParse from "url-parse";
 import { Predicate, RuleMatchedAt } from "./lint";
 import { FoundValue, TraverseSearcher, ValueSearcher, ValueTraverser } from "./traverse";
-import { Component, ConfigOption, ConfigSection, Container } from "./replicated";
+import { Component, ConfigChildItem, ConfigOption, ConfigSection, Container } from "./replicated";
 import { Registry } from "./engine";
 
 export class And<T> implements Predicate<T> {
@@ -87,7 +87,7 @@ export class WhenExpressionConfigInvalid implements Predicate<any> {
 
     const configOptionsReferenced = [] as FoundValue[];
 
-    _.forEach(root.config, (group, groupIndex) => {
+    _.forEach(root.config, (group: ConfigSection, groupIndex) => {
       const configOptionReferencedByGroup = this.maybeGetReferencedConfigOption(group);
       if (configOptionReferencedByGroup) {
         configOptionsReferenced.push({
@@ -486,9 +486,9 @@ export class ConfigOptionExists implements Predicate<any> {
   }
 
   private configItemNames(section: ConfigSection) {
-    return _.flatMap(section.items, item => {
+    return _.flatMap(section.items, (item: ConfigOption) => {
       const hasChildren = ["select_one", "select_many"].indexOf(item.type) !== -1;
-      return hasChildren ? [item.name, ..._.map(item.items!, i => i.name)] : [item.name];
+      return hasChildren ? [item.name, ..._.map(item.items!, (i: ConfigChildItem) => i.name)] : [item.name];
     });
   }
 
@@ -730,9 +730,9 @@ export class EventSubscriptionContainerMissing implements Predicate<any> {
       return { matched: false };
     }
 
-    const subscriptions: any[] = _.flatMap(root.components, (component, componentIndex: number) => {
-      return _.flatMap(component.containers || [], (container, containerIndex: number) => {
-        return _.flatMap(container.publish_events, (event, eventIndex: number) => {
+    const subscriptions: any[] = _.flatMap(root.components, (component: any, componentIndex: number) => {
+      return _.flatMap(component.containers || [], (container: any, containerIndex: number) => {
+        return _.flatMap(container.publish_events, (event: any, eventIndex: number) => {
           return _.map(event.subscriptions, (s: any, subscriptionIndex: number) => {
             return {
               component: s.component as string,
@@ -894,11 +894,11 @@ export class ContainerVolumesFromMissing implements Predicate<any> {
       return { matched: false };
 
     }
-    const matches: RuleMatchedAt[] = _.flatMap(root.components, (component, componentIndex) => {
+    const matches: RuleMatchedAt[] = _.flatMap(root.components, (component: Component, componentIndex) => {
       if (_.isEmpty(component.containers)) {
         return [{ matched: false }];
       }
-      return _.flatMap(component.containers, (container, containerIndex) => {
+      return _.flatMap(component.containers!, (container: Container, containerIndex) => {
 
         return _.map(container.volumes_from, (name: string, nameIndex) => {
           if (container.name === name || isContainerNameMissing(root.components, name).matched) {
@@ -1095,11 +1095,11 @@ export class ContainerVolumesFromSubscription implements Predicate<any> {
       return { matched: false };
 
     }
-    const matches: RuleMatchedAt[] = _.flatMap(root.components, (component, componentIndex) => {
+    const matches: RuleMatchedAt[] = _.flatMap(root.components, (component: Component, componentIndex) => {
       if (_.isEmpty(component.containers)) {
         return [{ matched: false }];
       }
-      return _.flatMap(component.containers, (container, containerIndex) => {
+      return _.flatMap(component.containers!, (container, containerIndex) => {
 
         return _.map(container.volumes_from, (subscribedName: string, nameIndex) => {
 

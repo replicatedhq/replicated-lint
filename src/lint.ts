@@ -27,8 +27,8 @@ function ruleTypeLevel(type: RuleType): number {
   }
 }
 
-export function ruleTypeLEQ(t1: RuleType, t2: RuleType): boolean {
-  return ruleTypeLevel(t1) <= ruleTypeLevel(t2);
+export function ruleTypeLT(t1: RuleType, t2: RuleType): boolean {
+  return ruleTypeLevel(t1) < ruleTypeLevel(t2);
 }
 
 export interface LintedDoc {

@@ -1,78 +1,11 @@
 #!/usr/bin/env node
 
 import { rules } from "../../";
-import * as _ from "lodash";
-import { YAMLRule } from "../../lint";
-
-// should probably rewrite the tests to use these too someday
-function preRuleDocRules(): YAMLRule[] {
-  return [
-    {
-      name: "mesg-yaml-valid",
-      test: {},
-      type: "error",
-      message: "Document must be valid YAML. This could occur for many reasons, consult individual error details for more info.",
-      links: [
-        "http://yaml.org/spec/",
-        "http://docs.ansible.com/ansible/latest/YAMLSyntax.html",
-      ],
-    },
-    {
-      name: "mesg-yaml-not-empty",
-      test: {},
-      type: "error",
-      message: "Document must not be empty",
-      examples: {
-        wrong: [
-          {
-            description: "Document may not be empty",
-            yaml: `
----
-            `,
-          },
-        ],
-        right: [],
-      },
-    },
-    {
-      name: "prop-schema-valid",
-      test: {},
-      type: "error",
-      message: "Document must conform to the Replicated YAML document schema",
-      links: [
-        "https://help.replicated.com/api/yaml#Schema",
-      ],
-      examples: {
-        wrong: [
-          {
-            description: "Property `deploy_this_great_app` is not present in the schema",
-            yaml: `
----
-replicated_api_version: "2.10.1"
-deploy_this_great_app: plz&thx
-            `,
-          },
-          {
-            description: "Property `replicated_api_version` is not of correct type, should be `string`, but `2.11` is parsed as type `float`",
-            yaml: `
----
-replicated_api_version: 2.11
-            `,
-          },
-        ],
-        right: [],
-      },
-    },
-  ];
-
-}
 
 // print a lot of rules
 export function printReferenceDocs() {
 
-  const allRules = _.concat(rules.all, preRuleDocRules());
-
-  allRules.forEach(r => {
+  rules.all.forEach(r => {
     console.log(`
 ## ${"`" + r.name + "`"}
 

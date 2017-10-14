@@ -2,15 +2,11 @@
 
 import * as _ from "lodash";
 import * as linter from "../";
-import * as util from "util";
-import * as pad from "pad";
-import * as chalk from "chalk";
-import * as lineColumn from "line-column";
 import * as fs from "fs";
 import { ruleTypeLT } from "../lint";
-
-const startBuffer = 100;
-const endBuffer = 300;
+import { consoleReporter, junitReporter } from "../cmdutil/reporters";
+import { readFromStdin } from "../cmdutil/stdin";
+import { parsed as schema } from "../schemas";
 
 exports.describe = "validate";
 exports.describe = "Lint a yaml document from a file or stdin";
@@ -34,9 +30,27 @@ exports.builder = {
     type: "array",
     "default": [],
   },
+  reporter: {
+    alias: "r",
+    describe: "Output Format to use",
+    type: "string",
+    "default": "console",
+    choices: ["console", "junit"],
+  },
+  outputDir: {
+    alias: "o",
+    describe: "junit reporter only -- path to directory to output junit xml reports",
+    type: "string",
+    "default": "test-results",
+  },
 };
 
 exports.handler = main;
+
+export const reporters: { [key: string]: ((yaml: string, rulesUsed: linter.YAMLRule[], results: linter.RuleTrigger[], outputPath?: string) => any) } = {
+  "console": consoleReporter,
+  "junit": junitReporter,
+};
 
 function main(argv) {
   let extraRules = argv.extraRules;
@@ -45,87 +59,20 @@ function main(argv) {
   } else if (_.isString(extraRules)) {
     extraRules = [extraRules];
   }
+
   if (argv.infile !== "-") {
-    lint(fs.readFileSync(argv.infile).toString(), extraRules, argv.threshold);
+    lint(fs.readFileSync(argv.infile).toString(), extraRules, argv.threshold, argv.reporter, argv.outputDir);
   } else {
-    readFromStdin().then(d => lint(d, extraRules, argv.threshold));
+    readFromStdin().then(d => lint(d, extraRules, argv.threshold, argv.reporter, argv.outputDir));
   }
 }
 
-function lint(data: string, extraRules: string[], threshold: linter.RuleType) {
+function lint(inYaml: string, extraRules: string[], threshold: linter.RuleType, reporter: string, output: string) {
 
   const extra = (extraRules).map(filePath => JSON.parse(fs.readFileSync(filePath).toString()));
-  const opts: linter.LintOpts = { rules: linter.rules.all.concat(...extra) };
-  const results: linter.RuleTrigger[] = linter.lint(data, opts);
-  let found = 0;
-  for (const result of results) {
-    if (ruleTypeLT(result.type, threshold)) {
-      continue;
-    }
+  const rules = linter.rules.all.concat(...extra).filter(rule => !ruleTypeLT(rule.type, threshold));
+  const opts: linter.LintOpts = { rules, schema };
+  const results: linter.RuleTrigger[] = linter.lint(inYaml, opts);
 
-    console.log(util.inspect(result, false, 100, true));
-
-    if (_.isEmpty(result.positions)) {
-      continue;
-    }
-    for (const pos of result.positions!) {
-      found += 1;
-
-      const usepos: linter.Position = _.isEmpty(pos.start) ? pos.end! : pos.start!;
-
-      const start = Math.max(0, usepos.position - startBuffer);
-      const end = Math.min(data.length, usepos.position + endBuffer);
-      const startline = lineColumn(data).fromIndex(start).line - 2;
-
-      const block = data.slice(start, end);
-      const trimmed = block.slice(block.indexOf("\n"), block.lastIndexOf("\n"));
-      console.log();
-      console.log(`# ${result.rule} continued from line ${startline}`);
-      let lineno = startline;
-      for (const line of trimmed.split("\n")) {
-        lineno += 1;
-        let color = false;
-        try {
-          color = lineno === usepos.line!;
-        } catch (err) { /* ignore */
-        }
-
-        if (color) {
-          console.log(`${pad(`${lineno}`, 4)} ${chalk.yellow(line)}`);
-        } else {
-          console.log(`${pad(`${lineno}`, 4)} ${line}`);
-        }
-      }
-      console.log();
-    }
-
-  }
-  console.log();
-  console.log();
-
-  if (found !== 0) {
-    console.log(chalk.yellow(`Found ${found} issues.`));
-    process.exit(1);
-  } else {
-    console.log(chalk.green(`✓ All clear!`));
-    process.exit(0);
-  }
-
-}
-
-function readFromStdin(): Promise<string> {
-  process.stdin.resume();
-  process.stdin.setEncoding("utf8");
-
-  let data = "";
-
-  process.stdin.on("data", (chunk) => {
-    data += chunk;
-  });
-
-  return new Promise<string>((resolve) => {
-    process.stdin.on("end", () => {
-      resolve(data);
-    });
-  });
+  reporters[reporter](inYaml, rules, results, output);
 }

@@ -145,7 +145,7 @@ admin_commands:
 - alias: aliasecho
   command: [echo]
   selector:
-    - tier: database
+    tier: database
       `,
       },
       {
@@ -319,8 +319,7 @@ admin_commands:
 - alias: echo
   command: [echo]
   component: alpha
-  image:
-    number: 5
+  image: {}
       `,
       },
       {

@@ -1,6 +1,7 @@
 import * as _ from "lodash";
 import { describe, it } from "mocha";
 import { expect } from "chai";
+import { parsed as schema } from "../schemas";
 
 import * as rules from "../rules";
 import { lint } from "../lint";
@@ -41,7 +42,8 @@ describe("linter.rules.all", () => {
       for (const example of rule.examples!.right) {
         describe(example.description, () => {
           it("should pass linting", () => {
-            expect(lint(example.yaml, {rules: [rule]})).to.deep.equal([]);
+            const result = lint(example.yaml, {rules: [rule], schema });
+            expect(result).to.deep.equal([]);
           });
         });
       }
@@ -49,7 +51,8 @@ describe("linter.rules.all", () => {
       for (const example of rule.examples!.wrong) {
         describe(`${example.description}`, () => {
           it("should fail linting", () => {
-            expect(lint(example.yaml, {rules: [rule]})).to.have.deep.property("[0].rule", rule.name);
+            const result = lint(example.yaml, {rules: [rule], schema });
+            expect(result).to.have.deep.property("[0].rule", rule.name);
           });
         });
       }

@@ -12,24 +12,24 @@ describe("mesg-yaml-valid", () => {
 
   const emptyCases: any[][] = [
     [undefined, [{
-      type: "warn",
+      type: "error",
       rule: "mesg-yaml-not-empty",
       message: "Document must not be empty",
     }]],
     [null, [{
-      type: "warn",
+      type: "error",
       rule: "mesg-yaml-not-empty",
       message: "Document must not be empty",
     }]],
     ["", [{
-      type: "warn",
+      type: "error",
       rule: "mesg-yaml-not-empty",
       message: "Document must not be empty",
     }]],
   ];
 
   emptyCases.forEach(([input, expected]) => {
-    it("should return a error when passed" + input, () => {
+    it("should return an error when passed" + input, () => {
       expect(lint(input)).to.deep.equal(expected);
     });
   });
@@ -92,7 +92,7 @@ bar: {}
     }, {
       index: 1,
       findings: [{
-        type: "warn",
+        type: "error",
         rule: "mesg-yaml-not-empty",
         message: "Document must not be empty",
       }],

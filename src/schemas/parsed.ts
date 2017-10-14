@@ -939,9 +939,9 @@ export default {
             "type": "object",
             "properties": {
               "data": {
-                type: ["any", "object"],
-                properties: {},
-                additionalProperties: true,
+                "type": ["any", "object"],
+                "properties": {},
+                "additionalProperties": true,
               },
               "id": {
                 "type": "string",
@@ -1234,7 +1234,7 @@ export default {
                     "type": "boolean",
                   },
                   "label_scale": {
-                    "type": "string",
+                    "type": ["string", "number"],
                   },
                   "label_unit": {
                     "type": "string",

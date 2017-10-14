@@ -38,7 +38,7 @@ swarm:
 replicated_api_version: "2.7.0"
 swarm:
   secrets:
-  - name:
+  - name: ""
     value: bar
         `,
       },
@@ -49,7 +49,7 @@ swarm:
 replicated_api_version: "2.7.0"
 swarm:
   secrets:
-  - name:
+  - name: ""
     value: bar
     labels:
       alpha: beta
@@ -158,7 +158,7 @@ swarm:
 replicated_api_version: "2.7.0"
 swarm:
   configs:
-  - name:
+  - name: ""
     value: bar
         `,
       },
@@ -169,7 +169,7 @@ swarm:
 replicated_api_version: "2.7.0"
 swarm:
   configs:
-  - name:
+  - name: ""
     value: bar
     labels:
       alpha: beta
@@ -228,7 +228,7 @@ swarm:
 ---
 replicated_api_version: "2.7.0"
 swarm:
-configs:
+  configs:
   - name: foo
     value: bar
     labels:

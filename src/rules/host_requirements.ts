@@ -197,7 +197,7 @@ export const hostSystemRamSpecsValid: YAMLRule = {
         yaml: `
 ---
 host_requirements:
-  memory: 128
+  memory: "128"
       `,
       },
       {
@@ -249,7 +249,7 @@ export const hostSystemStorageSpecsValid: YAMLRule = {
         yaml: `
 ---
 host_requirements:
-  disk_space: 128
+  disk_space: "128"
       `,
       },
       {

@@ -205,7 +205,7 @@ kubernetes:
         yaml: `
 ---
 kubernetes:
-  persistent_volume_claims:
+  persistent_volume_claims: []
       `,
       },
     ],

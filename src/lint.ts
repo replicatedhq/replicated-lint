@@ -334,7 +334,7 @@ export class Linter {
 
   private noDocError(): RuleTrigger {
     return {
-      type: "warn",
+      type: "error",
       rule: "mesg-yaml-not-empty",
       message: "Document must not be empty",
     };

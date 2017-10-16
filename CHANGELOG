@@ -154,3 +154,24 @@
 
 0.6.37 /2017-10-05
     * Deprecating `components.*.containers.*.env_vars.*.static_val` in favor of `value`
+
+0.6.38 /2017-10-12
+    * Add packaging for replicated-lint npm-installable executable
+
+0.7.0 /2017-10-12
+    * Fix some bugs with npm executable packaging
+    * Add support for extra rulesets in CLI
+
+0.7.1 /2017-10-12
+    * Updates and cleanup for package.json
+
+0.7.2 /2017-10-12
+    * Add command line flags to filter by issue type, default is to only expose `error` issues
+
+0.7.3 /2017-10-12
+    * Fix a bug in log-level filtering,
+
+0.8.0 /2017-10-12
+    * Add flag `--reporter` to control CLI output type
+    * add `junit` and `console` to available reporters
+    * Refactor schema testing and docs generation

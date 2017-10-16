@@ -111,6 +111,10 @@ Options:
                   [string] [choices: "info", "warn", "error"] [default: "error"]
   --extraRules, -e  Path to file containing JSON definitions for additional yaml
                     rules. Can be specified multiple times.[array] [default: []]
+  --reporter, -r    Output Format to use
+                     [string] [choices: "console", "junit"] [default: "console"]
+  --outputDir, -o   junit reporter only -- path to directory to output junit xml
+                    reports                   [string] [default: "test-results"]
 ```
 
 ## Developing

@@ -325,7 +325,7 @@ config:
     title: Use SSL
     type: bool
     default: ""
-    when: null
+    when: ""
 
   - name: database_use_ssl_2
     title: Use SSL

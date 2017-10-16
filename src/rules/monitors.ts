@@ -145,7 +145,7 @@ monitors:
 monitors:
   custom:
     - name: whatever
-      target:
+      target: ""
     `,
       },
       {
@@ -303,14 +303,6 @@ export const statsdPortValid: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "`statsd.port` is not an integer",
-        yaml: `
----
-statsd:
-  port: foo
-    `,
-      },
-      {
         description: "`statsd.port` is negative",
         yaml: `
 ---
@@ -373,14 +365,6 @@ export const graphitePortValid: YAMLRule = {
   },
   examples: {
     wrong: [
-      {
-        description: "`graphite.port` is not an integer",
-        yaml: `
----
-graphite:
-  port: foo
-    `,
-      },
       {
         description: "`graphite.port` is negative",
         yaml: `

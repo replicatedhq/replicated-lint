@@ -419,30 +419,12 @@ export const containerClusterHostCountMinUint: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "cluster_host_count.min must be an unsigned integer, and this is a float",
-        yaml: `
----
-components:
-- cluster_host_count:
-    min: 3.5
-      `,
-      },
-      {
         description: "cluster_host_count.min must be an unsigned integer, and this parses as a negative integer",
         yaml: `
 ---
 components:
 - cluster_host_count:
     min: "-2"
-      `,
-      },
-      {
-        description: "cluster_host_count.min must be an unsigned integer, and this is a boolean",
-        yaml: `
----
-components:
-- cluster_host_count:
-    min: false
       `,
       },
     ],

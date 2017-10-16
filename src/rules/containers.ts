@@ -38,7 +38,8 @@ components:
   containers:
   - source: public
     cluster: true
-    cluster_instance_count: 2
+    cluster_instance_count:
+      initial: 2
     image_name: redis
     name: database
       `,
@@ -59,7 +60,8 @@ components:
     max: 4
   containers:
   - source: public
-    cluster_instance_count: 2
+    cluster_instance_count:
+     initial: 2
     image_name: redis
     version: latest
       `,
@@ -572,7 +574,7 @@ components:
     - source: public
       image_name: mongo
       name: mongo
-      version: 3.2
+      version: "3.2"
     `,
       },
     ],
@@ -979,26 +981,6 @@ components:
     - is_ephemeral: "yes"
       `,
       },
-      {
-        description: "`2` is not a valid value for `is_ephemeral`",
-        yaml: `
----
-components:
-- containers:
-  - volumes:
-    - is_ephemeral: 2
-      `,
-      },
-      {
-        description: "`1` is not a valid value for `is_ephemeral`, though `\"1\"` is",
-        yaml: `
----
-components:
-- containers:
-  - volumes:
-    - is_ephemeral: 1
-      `,
-      },
     ],
     right: [
       {
@@ -1065,26 +1047,6 @@ components:
 - containers:
   - volumes:
     - is_excluded_from_backup: "yes"
-      `,
-      },
-      {
-        description: "`2` is not a valid value for `is_excluded_from_backup`",
-        yaml: `
----
-components:
-- containers:
-  - volumes:
-    - is_excluded_from_backup: 2
-      `,
-      },
-      {
-        description: "`1` is not a valid value for `is_excluded_from_backup`, though `\"1\"` is",
-        yaml: `
----
-components:
-- containers:
-  - volumes:
-    - is_excluded_from_backup: 1
       `,
       },
     ],
@@ -1174,7 +1136,8 @@ components:
 ---
 components:
 - containers:
-  - volumes:
+  - name: first
+    env_vars:
     - value: "blah"
       `,
       },

@@ -1,5 +1,6 @@
 dist/
 test-results.xml
+test-results/
 
 *.DS_Store
 .AppleDouble

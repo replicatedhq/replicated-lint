@@ -161,7 +161,7 @@ admin_commands:
 - alias: aliasecho
   command: [echo]
   selector:
-    - tier: database
+    tier: database
       
 ```
 
@@ -363,8 +363,7 @@ admin_commands:
 - alias: echo
   command: [echo]
   component: alpha
-  image:
-    number: 5
+  image: {}
       
 ```
 
@@ -977,17 +976,6 @@ Container's cluster_host_count property `min` must be an unsigned integer
 
 #### Examples:
 
-*Incorrect*: cluster_host_count.min must be an unsigned integer, and this is a float
-
-```yaml
----
-components:
-- cluster_host_count:
-    min: 3.5
-      
-```
-
-
 *Incorrect*: cluster_host_count.min must be an unsigned integer, and this parses as a negative integer
 
 ```yaml
@@ -995,17 +983,6 @@ components:
 components:
 - cluster_host_count:
     min: "-2"
-      
-```
-
-
-*Incorrect*: cluster_host_count.min must be an unsigned integer, and this is a boolean
-
-```yaml
----
-components:
-- cluster_host_count:
-    min: false
       
 ```
 
@@ -1551,7 +1528,7 @@ config:
     title: Use SSL
     type: bool
     default: ""
-    when: null
+    when: ""
 
   - name: database_use_ssl_2
     title: Use SSL
@@ -1712,7 +1689,8 @@ components:
   containers:
   - source: public
     cluster: true
-    cluster_instance_count: 2
+    cluster_instance_count:
+      initial: 2
     image_name: redis
     name: database
       
@@ -1734,7 +1712,8 @@ components:
     max: 4
   containers:
   - source: public
-    cluster_instance_count: 2
+    cluster_instance_count:
+     initial: 2
     image_name: redis
     version: latest
       
@@ -2211,7 +2190,7 @@ components:
     - source: public
       image_name: mongo
       name: mongo
-      version: 3.2
+      version: "3.2"
     
 ```
 
@@ -2565,30 +2544,6 @@ components:
 ```
 
 
-*Incorrect*: `2` is not a valid value for `is_ephemeral`
-
-```yaml
----
-components:
-- containers:
-  - volumes:
-    - is_ephemeral: 2
-      
-```
-
-
-*Incorrect*: `1` is not a valid value for `is_ephemeral`, though `"1"` is
-
-```yaml
----
-components:
-- containers:
-  - volumes:
-    - is_ephemeral: 1
-      
-```
-
-
 
 *Correct*: `"true"`, `true`, `"false"` and `false` are all valid values for `is_ephemeral`
 
@@ -2637,30 +2592,6 @@ components:
 - containers:
   - volumes:
     - is_excluded_from_backup: "yes"
-      
-```
-
-
-*Incorrect*: `2` is not a valid value for `is_excluded_from_backup`
-
-```yaml
----
-components:
-- containers:
-  - volumes:
-    - is_excluded_from_backup: 2
-      
-```
-
-
-*Incorrect*: `1` is not a valid value for `is_excluded_from_backup`, though `"1"` is
-
-```yaml
----
-components:
-- containers:
-  - volumes:
-    - is_excluded_from_backup: 1
       
 ```
 
@@ -2738,7 +2669,8 @@ components:
 ---
 components:
 - containers:
-  - volumes:
+  - name: first
+    env_vars:
     - value: "blah"
       
 ```
@@ -2947,7 +2879,7 @@ host_requirements:
 ```yaml
 ---
 host_requirements:
-  memory: 128
+  memory: "128"
       
 ```
 
@@ -3000,7 +2932,7 @@ host_requirements:
 ```yaml
 ---
 host_requirements:
-  disk_space: 128
+  disk_space: "128"
       
 ```
 
@@ -3256,7 +3188,7 @@ kubernetes:
 ```yaml
 ---
 kubernetes:
-  persistent_volume_claims:
+  persistent_volume_claims: []
       
 ```
 
@@ -3418,7 +3350,7 @@ monitors:
 monitors:
   custom:
     - name: whatever
-      target:
+      target: ""
     
 ```
 
@@ -3533,16 +3465,6 @@ If specified, `statsd.port` must be a valid TCP port
 
 #### Examples:
 
-*Incorrect*: `statsd.port` is not an integer
-
-```yaml
----
-statsd:
-  port: foo
-    
-```
-
-
 *Incorrect*: `statsd.port` is negative
 
 ```yaml
@@ -3594,16 +3516,6 @@ If specified, `graphite.port` must be a valid TCP port
 
 
 #### Examples:
-
-*Incorrect*: `graphite.port` is not an integer
-
-```yaml
----
-graphite:
-  port: foo
-    
-```
-
 
 *Incorrect*: `graphite.port` is negative
 
@@ -4188,6 +4100,167 @@ properties:
 
     
 
+## `mesg-yaml-valid`
+
+Document must be valid YAML. This could occur for many reasons, consult individual error details for more info.
+
+
+
+#### More Info:
+
+- http://yaml.org/spec/
+- http://docs.ansible.com/ansible/latest/YAMLSyntax.html
+
+#### Examples:
+
+*Incorrect*: Document must have valid syntax
+
+```yaml
+---
+}}{{}}{{
+            
+```
+
+
+
+
+    
+
+## `mesg-yaml-not-empty`
+
+Document must not be empty
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Document may not be empty
+
+```yaml
+---
+            
+```
+
+
+
+
+    
+
+## `prop-schema-valid`
+
+Document must conform to the Replicated YAML document schema
+
+
+
+#### More Info:
+
+- https://help.replicated.com/api/yaml#Schema
+
+#### Examples:
+
+*Incorrect*: Property `deploy_this_great_app` is not present in the schema
+
+```yaml
+---
+deploy_this_great_app: plz&thx
+            
+```
+
+
+*Incorrect*: Property `replicated_api_version` is not of correct type, should be `string`, but `2.11` is parsed as type `float`
+
+```yaml
+---
+replicated_api_version: 2.11
+            
+```
+
+
+*Incorrect*: `2` is not a valid value for `is_ephemeral`
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: 2
+      
+```
+
+
+*Incorrect*: `1` is not a valid value for `is_ephemeral`, though `"1"` is
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_ephemeral: 1
+      
+```
+
+
+*Incorrect*: `2` is not a valid value for `is_excluded_from_backup`
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: 2
+      
+```
+
+
+*Incorrect*: `1` is not a valid value for `is_excluded_from_backup`, though `"1"` is
+
+```yaml
+---
+components:
+- containers:
+  - volumes:
+    - is_excluded_from_backup: 1
+      
+```
+
+
+*Incorrect*: `statsd.port` is not an integer
+
+```yaml
+---
+statsd:
+  port: foo
+    
+```
+
+
+*Incorrect*: `graphite.port` is not an integer
+
+```yaml
+---
+graphite:
+  port: foo
+    
+```
+
+
+*Incorrect*: cluster_host_count.min must be an unsigned integer, and this is a boolean
+
+```yaml
+---
+components:
+- cluster_host_count:
+    min: false
+      
+```
+
+
+
+
+    
+
 ## `prop-swarm-secret-name-value`
 
 Swarm secrets require both a `name` and a `value` to function.
@@ -4217,7 +4290,7 @@ swarm:
 replicated_api_version: "2.7.0"
 swarm:
   secrets:
-  - name:
+  - name: ""
     value: bar
         
 ```
@@ -4230,7 +4303,7 @@ swarm:
 replicated_api_version: "2.7.0"
 swarm:
   secrets:
-  - name:
+  - name: ""
     value: bar
     labels:
       alpha: beta
@@ -4328,7 +4401,7 @@ swarm:
 replicated_api_version: "2.7.0"
 swarm:
   configs:
-  - name:
+  - name: ""
     value: bar
         
 ```
@@ -4341,7 +4414,7 @@ swarm:
 replicated_api_version: "2.7.0"
 swarm:
   configs:
-  - name:
+  - name: ""
     value: bar
     labels:
       alpha: beta
@@ -4398,7 +4471,7 @@ swarm:
 ---
 replicated_api_version: "2.7.0"
 swarm:
-configs:
+  configs:
   - name: foo
     value: bar
     labels:
@@ -4606,82 +4679,8 @@ config:
 
     
 
-## `mesg-yaml-valid`
-
-Document must be valid YAML. This could occur for many reasons, consult individual error details for more info.
-
-
-
-#### More Info:
-
-- http://yaml.org/spec/
-- http://docs.ansible.com/ansible/latest/YAMLSyntax.html
-
-
-
-
-
-    
-
-## `mesg-yaml-not-empty`
-
-Document must not be empty
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: Document may not be empty
-
-```yaml
----
-            
-```
-
-
-
-
-    
-
-## `prop-schema-valid`
-
-Document must conform to the Replicated YAML document schema
-
-
-
-#### More Info:
-
-- https://help.replicated.com/api/yaml#Schema
-
-#### Examples:
-
-*Incorrect*: Property `deploy_this_great_app` is not present in the schema
-
-```yaml
----
-replicated_api_version: "2.10.1"
-deploy_this_great_app: plz&thx
-            
-```
-
-
-*Incorrect*: Property `replicated_api_version` is not of correct type, should be `string`, but `2.11` is parsed as type `float`
-
-```yaml
----
-replicated_api_version: 2.11
-            
-```
-
-
-
-
-    
-
 
 
 Autogenerated reference documentation for [Replicated YAML Linter](https://github.com/replicatedhq/replicated-lint)
-*Generated at Thu Oct 12 2017 19:13:46 GMT-0700 (PDT)*
+*Generated at Mon Oct 16 2017 10:44:44 GMT-0700 (PDT)*
 

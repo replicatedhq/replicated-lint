@@ -171,7 +171,10 @@
 0.7.3 /2017-10-12
     * Fix a bug in log-level filtering,
 
-0.8.0 /2017-10-12
+0.8.0 /2017-10-16
     * Add flag `--reporter` to control CLI output type
     * add `junit` and `console` to available reporters
     * Refactor schema testing and docs generation
+
+0.8.1 /2017-10-16
+    * Add extra_hosts to schema defintion

@@ -387,7 +387,7 @@ export default {
                 "hostname": {
                   "type": "string",
                 },
-                "hosts": {
+                "extra_hosts": {
                   "type": "array",
                   "items": {
                     "type": "object",

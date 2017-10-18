@@ -32,7 +32,7 @@ export default {
                 "type": "string",
               },
               "version": {
-                "type": "string",
+                "type": ["nubmer", "string"],
               },
             },
           },
@@ -580,7 +580,7 @@ export default {
                   },
                 },
                 "version": {
-                  "type": "string",
+                    "type": ["number", "string"],
                 },
                 "volumes": {
                   "type": "array",

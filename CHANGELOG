@@ -178,3 +178,6 @@
 
 0.8.1 /2017-10-16
     * Add extra_hosts to schema defintion
+
+0.8.2 /2017-10-16
+    * Allow `container.version` to be specified as either `number` or `string`, previously was only `string`

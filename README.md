@@ -6,8 +6,6 @@
 
 YAML linting tools for Replicated applications.
 
-This feature is in *beta*, APIs and behaviors are subject to change.
-
 ## Usage
 
 Install the CLI executable with

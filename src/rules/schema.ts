@@ -134,7 +134,21 @@ components:
       `,
         },
       ],
-      right: [],
+      right: [
+          {
+              description: "container.version can be a string or a number",
+              yaml: `
+---
+components:
+- containers:
+    - image_name: kfbr
+      version: 392
+    - image_name: redis
+      version: latest
+      `,
+          },
+
+      ],
     },
   },
 ];

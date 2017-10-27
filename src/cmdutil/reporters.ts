@@ -7,6 +7,13 @@ import * as pad from "pad";
 import * as path from "path";
 import * as util from "util";
 
+export type Reporter = ((
+  yaml: string,
+  rulesUsed: linter.YAMLRule[],
+  results: linter.RuleTrigger[],
+  outputPath?: string,
+) => any);
+
 export const getInvalidYAMLError = (results: any[]) => {
   return _.find(results, r =>
       r.rule === "mesg-yaml-valid" ||
@@ -38,8 +45,8 @@ export function junitReporter(__: string, rulesUsed: linter.YAMLRule[], results:
 
   const reportPath = path.join(outputDir || ".", "replicated-lint-results.xml");
   reportBuilder.writeTo(reportPath);
-  outro(results.length, rulesUsed.length);
   console.log(`Results written to ${reportPath}`);
+  outro(results.length, rulesUsed.length);
 }
 
 export function consoleReporter(inYaml: string, rulesUsed: linter.YAMLRule[], results: linter.RuleTrigger[]) {
@@ -63,7 +70,7 @@ export function consoleReporter(inYaml: string, rulesUsed: linter.YAMLRule[], re
       const block = inYaml.slice(start, end);
       const trimmed = block.slice(block.indexOf("\n"), block.lastIndexOf("\n"));
       console.log();
-      console.log(`# ${result.rule} continued from line ${startline}`);
+      console.log(`# ${result.rule} continued from line ${Math.max(startline, 0)}`);
       let lineno = startline;
       for (const line of trimmed.split("\n")) {
         lineno += 1;
@@ -92,11 +99,9 @@ export function outro(numResults: number, numRules: number) {
     console.log();
     console.log();
     console.log(chalk.yellow(`Found ${numResults} issues.`));
-    process.exit(1);
   } else {
     console.log(`${numRules}/${numRules} checks passed.`);
     console.log(chalk.green(`✓ All clear!`));
-    process.exit(0);
   }
 
 }

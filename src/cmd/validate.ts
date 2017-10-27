@@ -3,10 +3,10 @@
 import * as _ from "lodash";
 import * as linter from "../";
 import * as fs from "fs";
-import { ruleTypeLT } from "../lint";
-import { consoleReporter, junitReporter } from "../cmdutil/reporters";
-import { readFromStdin } from "../cmdutil/stdin";
-import { parsed as schema } from "../schemas";
+import {ruleTypeLT} from "../lint";
+import {consoleReporter, junitReporter, Reporter} from "../cmdutil/reporters";
+import {readFromStdin} from "../cmdutil/stdin";
+import {parsed as replicatedSchema} from "../schemas";
 
 exports.describe = "validate";
 exports.describe = "Lint a yaml document from a file or stdin";
@@ -43,36 +43,63 @@ exports.builder = {
     type: "string",
     "default": "test-results",
   },
+  excludeDefaults: {
+    alias: "x",
+    describe: "Exclude default rulesets + schema for replicated yaml, only use rules specified by --extraRules",
+    type: "boolean",
+    "default": false,
+  },
 };
 
 exports.handler = main;
 
-export const reporters: { [key: string]: ((yaml: string, rulesUsed: linter.YAMLRule[], results: linter.RuleTrigger[], outputPath?: string) => any) } = {
+export const reporters: { [key: string]: Reporter } = {
   "console": consoleReporter,
   "junit": junitReporter,
 };
 
 function main(argv) {
-  let extraRules = argv.extraRules;
+  let {extraRules} = argv;
   if (_.isEmpty(extraRules)) {
     extraRules = [];
   } else if (_.isString(extraRules)) {
     extraRules = [extraRules];
   }
 
+  argv.extraRules = extraRules;
+
   if (argv.infile !== "-") {
-    lint(fs.readFileSync(argv.infile).toString(), extraRules, argv.threshold, argv.reporter, argv.outputDir);
+    lint(fs.readFileSync(argv.infile).toString(), argv);
   } else {
-    readFromStdin().then(d => lint(d, extraRules, argv.threshold, argv.reporter, argv.outputDir));
+    readFromStdin().then(d => lint(d, argv));
   }
 }
 
-function lint(inYaml: string, extraRules: string[], threshold: linter.RuleType, reporter: string, output: string) {
+const readExtraRules = filePath => JSON.parse(fs.readFileSync(filePath).toString());
+const ruleNotifiesAt = threshold => rule => !ruleTypeLT(rule.type, threshold);
 
-  const extra = (extraRules).map(filePath => JSON.parse(fs.readFileSync(filePath).toString()));
-  const rules = linter.rules.all.concat(...extra).filter(rule => !ruleTypeLT(rule.type, threshold));
-  const opts: linter.LintOpts = { rules, schema };
+function lint(inYaml: string, argv: any) {
+  const {extraRules, threshold, reporter, outputDir, excludeDefaults} = argv;
+
+  const justSyntaxChecks: linter.YAMLRule[] = [
+    linter.rules.schema.yamlValid,
+    linter.rules.schema.yamlNotEmpty,
+  ];
+
+  const baseRules: linter.YAMLRule[] =
+    excludeDefaults ? justSyntaxChecks : linter.rules.all;
+
+  const extra = extraRules.map(readExtraRules);
+  const rules = baseRules.concat(...extra).filter(ruleNotifiesAt(threshold));
+
+  const schema: any = excludeDefaults ? undefined : replicatedSchema;
+
+  const opts: linter.LintOpts = {rules, schema};
   const results: linter.RuleTrigger[] = linter.lint(inYaml, opts);
 
-  reporters[reporter](inYaml, rules, results, output);
+  reporters[reporter](inYaml, rules, results, outputDir);
+
+  if (!_.isEmpty(results)) {
+    process.exit(1);
+  }
 }

@@ -181,3 +181,8 @@
 
 0.8.2 /2017-10-16
     * Allow `container.version` to be specified as either `number` or `string`, previously was only `string`
+
+0.8.3 /2017-10-28
+    * Add option `--excludeDefaults`, `-x` to exclude the default rules+schema and only use rulesets specificed in `--extraRules`
+    * Don't process.exit in reporters
+    * Some minor refactoring around `validate` command and reporters

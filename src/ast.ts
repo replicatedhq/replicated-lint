@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import { YAMLSequence, Kind, YAMLNode } from "yaml-ast-parser";
-import { Range } from "./lint";
+import {Kind, YAMLNode, YAMLSequence} from "yaml-ast-parser";
+import {Range} from "./lint";
 
 /**
  * Find the first `YAMLNode` matching `path`.
@@ -185,6 +185,7 @@ function tokenize(path: string): string[] {
 function isMap(node: YAMLNode) {
   return node.kind === Kind.MAP;
 }
+
 function isSeq(node: YAMLNode) {
   return node.kind === Kind.SEQ;
 }

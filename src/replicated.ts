@@ -15,6 +15,7 @@ export interface MinMax {
   min: number;
   max: number;
 }
+
 export interface ConfigOption {
   name: string;
   type: string;

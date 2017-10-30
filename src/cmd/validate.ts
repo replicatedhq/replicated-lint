@@ -3,8 +3,13 @@
 import * as _ from "lodash";
 import * as linter from "../";
 import * as fs from "fs";
-import {ruleTypeLT} from "../lint";
-import {consoleReporter, junitReporter, Reporter} from "../cmdutil/reporters";
+import {
+  consoleReporter,
+  junitReporter,
+  readExtraRules,
+  Reporter,
+  ruleNotifiesAt,
+} from "../cmdutil/reporters";
 import {readFromStdin} from "../cmdutil/stdin";
 import {parsed as replicatedSchema} from "../schemas";
 
@@ -74,9 +79,6 @@ function main(argv) {
     readFromStdin().then(d => lint(d, argv));
   }
 }
-
-const readExtraRules = filePath => JSON.parse(fs.readFileSync(filePath).toString());
-const ruleNotifiesAt = threshold => rule => !ruleTypeLT(rule.type, threshold);
 
 function lint(inYaml: string, argv: any) {
   const {extraRules, threshold, reporter, outputDir, excludeDefaults} = argv;

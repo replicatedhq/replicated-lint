@@ -6,19 +6,22 @@ import * as linter from "../";
 import * as pad from "pad";
 import * as path from "path";
 import * as util from "util";
+import * as fs from "fs";
+import {ruleTypeLT} from "../lint";
 
-export type Reporter = ((
-  yaml: string,
-  rulesUsed: linter.YAMLRule[],
-  results: linter.RuleTrigger[],
-  outputPath?: string,
-) => any);
+export const readExtraRules = filePath => JSON.parse(fs.readFileSync(filePath).toString());
+export const ruleNotifiesAt = threshold => rule => !ruleTypeLT(rule.type, threshold);
+
+export type Reporter = ((yaml: string,
+                         rulesUsed: linter.YAMLRule[],
+                         results: linter.RuleTrigger[],
+                         outputPath?: string) => any);
 
 export const getInvalidYAMLError = (results: any[]) => {
   return _.find(results, r =>
-      r.rule === "mesg-yaml-valid" ||
-      r.rule === "mesg-yaml-not-empty" ||
-      r.rule === "prop-schema-valid",
+    r.rule === "mesg-yaml-valid" ||
+    r.rule === "mesg-yaml-not-empty" ||
+    r.rule === "prop-schema-valid",
   );
 };
 

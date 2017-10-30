@@ -4,18 +4,21 @@ machine:
   pre:
     - mkdir ~/.yarn-cache
   node:
-    version: 7.8.0
+    version: 8.7.0
 
 dependencies:
   pre:
-    - npm i -g yarn
+    - npm i -g yarn@0.27.5
+    - which yarn
+    - npm -g bin
+    - $(npm -g bin)/yarn --version
   override:
-    - yarn
+    - $(npm -g bin)/yarn
 
 test:
   override:
-    - yarn cover-xml
-    - yarn report-coverage
+    - $(npm -g bin)/yarn cover-xml
+    - $(npm -g bin)/yarn report-coverage
 
 deployment:
   npm:

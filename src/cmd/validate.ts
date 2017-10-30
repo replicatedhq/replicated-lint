@@ -13,7 +13,7 @@ import {
 import {readFromStdin} from "../cmdutil/stdin";
 import {parsed as replicatedSchema} from "../schemas";
 
-exports.describe = "validate";
+exports.name = "validate";
 exports.describe = "Lint a yaml document from a file or stdin";
 exports.builder = {
   infile: {
@@ -31,7 +31,7 @@ exports.builder = {
   },
   extraRules: {
     alias: "e",
-    describe: "Path to file containing JSON definitions for additional yaml rules. Can be specified multiple times.",
+    describe: "Path to file containing YAML definitions for additional validation rules. Can be specified multiple times.",
     type: "array",
     "default": [],
   },

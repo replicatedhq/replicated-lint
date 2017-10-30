@@ -1,0 +1,25 @@
+---
+- name: use-ready-state
+  type: warn
+  message: |
+    No ready state command found, consider specifying a ready state
+  test:
+    Falsey:
+      path: state.ready
+  links:
+    - https://mycompany.example.com/replicated-ready-state
+
+- name: no-latest
+  type: error
+  message: "Don't use `latest` for container versions."
+  test:
+    AnyOf:
+      path: components
+      pred:
+        AnyOf:
+          path: containers
+          pred:
+            Eq:
+              path: version
+              value: latest
+

@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+Kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+    - name: redis
+      # correct -- uses a specific version
+      image: redis:3.2

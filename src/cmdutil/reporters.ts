@@ -4,12 +4,13 @@ import * as junitReports from "junit-report-builder";
 import * as lineColumn from "line-column";
 import * as linter from "../";
 import * as pad from "pad";
+import * as yaml from "js-yaml";
 import * as path from "path";
 import * as util from "util";
 import * as fs from "fs";
 import {ruleTypeLT} from "../lint";
 
-export const readExtraRules = filePath => JSON.parse(fs.readFileSync(filePath).toString());
+export const readExtraRules = filePath => yaml.safeLoad(fs.readFileSync(filePath).toString());
 export const ruleNotifiesAt = threshold => rule => !ruleTypeLT(rule.type, threshold);
 
 export type Reporter = ((yaml: string,

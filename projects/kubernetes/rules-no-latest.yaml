@@ -1,0 +1,86 @@
+---
+- name: pod-no-latest
+  type: warn
+  message: Don't use `latest` for container versions
+  test:
+    And:
+      preds:
+        - Eq: { path: Kind, value: Pod }
+        - AnyOf:
+            path: spec.containers
+            pred:
+              Match:
+                path: image
+                pattern: :latest$
+  examples:
+    wrong:
+      - description: Pod uses `latest` for container version
+        yaml: |
+          ---
+          apiVersion: v1
+          Kind: Pod
+          metadata:
+            name: my-pod
+          spec:
+            containers:
+              - name: redis
+                image: redis:latest
+    right:
+      - description: Pod uses a specific version
+        yaml: |
+          ---
+          apiVersion: v1
+          Kind: Pod
+          metadata:
+            name: my-pod
+          spec:
+            containers:
+              - name: redis
+                image: redis:3.2
+
+- name: deployment-no-latest
+  type: warn
+  message: Don't use `latest` for container versions
+  test:
+    And:
+      preds:
+        - Eq: { path: Kind, value: Deployment }
+        - AnyOf:
+            path: spec.template.spec.containers
+            pred:
+              Match:
+                path: image
+                pattern: :latest$
+  examples:
+    wrong:
+      - description: Deployment uses `latest` for container version
+        yaml: |
+          ---
+          apiVersion: v1
+          Kind: Deployment
+          metadata:
+            name: my-pod
+          spec:
+            template:
+              spec:
+                containers:
+                  - name: redis
+                    image: redis:latest
+    right:
+      - description: Deployment uses a specific version
+        yaml: |
+          ---
+          apiVersion: v1
+          Kind: Deployment
+          metadata:
+            name: my-pod
+          spec:
+            template:
+              spec:
+                containers:
+                  - name: redis
+                    image: redis:3.2
+
+
+
+

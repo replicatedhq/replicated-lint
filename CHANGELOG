@@ -196,3 +196,6 @@
     * Update `replicated-lint docs gen` to allow generating documentation for custom rule sets via `--extraRules` and `--excludeDefaults`
     * Add projects/ folder, which will be a home for rule definitions for validation of non-replicated YAML documents
     * Add a minimal projects/kubernetes/ example
+
+0.9.1 /2017-12-14
+    * Add `container.shm_size`, a string

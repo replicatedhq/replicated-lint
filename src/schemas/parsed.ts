@@ -525,6 +525,9 @@ export default {
                     "type": "string",
                   },
                 },
+                "shm_size": {
+                  "type": "string",
+                },
                 "source": {
                   "type": "string",
                 },

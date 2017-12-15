@@ -199,3 +199,6 @@
 
 0.9.1 /2017-12-14
     * Add `container.shm_size`, a string
+
+0.9.2 /2017-12-14
+    * `container.shm_size` should be an unsigned integer

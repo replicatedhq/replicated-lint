@@ -1145,6 +1145,54 @@ components:
   },
 };
 
+export const container: YAMLRule = {
+  name: "prop-component-container-instance-count-max-uint",
+  type: "error",
+  message: "Container's property shm_size must be an unsigned integer",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            And: {
+              preds: [
+                {IsNotUint: {path: "shm_size"}},
+                {Exists: {path: "shm_size"}},
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "shm_size must be an unsigned integer, and this is a negative integer",
+        yaml: `
+---
+components:
+- containers:
+  - shm_size: -10
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "shm_size is an unsigned integer",
+        yaml: `
+---
+components:
+- containers:
+  - shm_size: 10
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   notClusteredIfNamedContainer,
   eventSubscriptionContainerExists,

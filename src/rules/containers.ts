@@ -1145,8 +1145,8 @@ components:
   },
 };
 
-export const container: YAMLRule = {
-  name: "prop-component-container-instance-count-max-uint",
+export const containerShmSizeUInt: YAMLRule = {
+  name: "prop-component-container-shm-size-uint",
   type: "error",
   message: "Container's property shm_size must be an unsigned integer",
   test: {
@@ -1209,4 +1209,5 @@ export const all: YAMLRule[] = [
   containerVolumeEphemeralTypeCheck,
   containerVolumeExcludedTypeCheck,
   containerEnvvarsStaticvalDeprecated,
+  containerShmSizeUInt,
 ];

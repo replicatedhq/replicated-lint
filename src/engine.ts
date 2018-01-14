@@ -3,7 +3,7 @@ import { Predicate, Test } from "./lint";
 import {
   AdminCommandContainerMissing,
   And,
-  AnyOf,
+  AnyOf, ArrayMemberFieldsNotUnique,
   ConfigOptionExists,
   ConfigOptionIsCircular,
   ContainerNamesNotUnique,
@@ -94,6 +94,7 @@ const defaultPredicates: PredicateRegistry = {
   ContainerNamesNotUnique,
   CustomRequirementsNotUnique,
   ContainerVolumesFromSubscription,
+  ArrayMemberFieldsNotUnique,
 };
 
 export class MutableRegistry implements Registry {

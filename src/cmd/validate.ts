@@ -2,6 +2,7 @@
 
 import * as _ from "lodash";
 import * as linter from "../";
+import * as yaml from "js-yaml";
 import * as fs from "fs";
 import {
   consoleReporter,
@@ -34,6 +35,11 @@ exports.builder = {
     describe: "Path to file containing YAML definitions for additional validation rules. Can be specified multiple times.",
     type: "array",
     "default": [],
+  },
+  schema: {
+    alias: "s",
+    describe: "Path to file containing JSONSchema for the document",
+    type: "string",
   },
   reporter: {
     alias: "r",
@@ -81,7 +87,7 @@ function main(argv) {
 }
 
 function lint(inYaml: string, argv: any) {
-  const {extraRules, threshold, reporter, outputDir, excludeDefaults} = argv;
+  const {extraRules, threshold, reporter, outputDir, excludeDefaults, schema} = argv;
 
   const justSyntaxChecks: linter.YAMLRule[] = [
     linter.rules.schema.yamlValid,
@@ -94,9 +100,12 @@ function lint(inYaml: string, argv: any) {
   const extra = extraRules.map(readExtraRules);
   const rules = baseRules.concat(...extra).filter(ruleNotifiesAt(threshold));
 
-  const schema: any = excludeDefaults ? undefined : replicatedSchema;
+  let resolvedSchema: any = excludeDefaults ? undefined : replicatedSchema;
+  if (schema) {
+    resolvedSchema = yaml.safeLoad(fs.readFileSync(schema).toString());
+  }
 
-  const opts: linter.LintOpts = {rules, schema};
+  const opts: linter.LintOpts = {rules, schema: resolvedSchema};
   const results: linter.RuleTrigger[] = linter.lint(inYaml, opts);
 
   reporters[reporter](inYaml, rules, results, outputDir);

@@ -83,6 +83,9 @@ export interface Test {
   IsNotKubernetesQuantity?: {
     path: string;
   };
+  ArrayMemberFieldsNotUnique?: {
+    path: string;
+  };
   IsNotUint?: {
     path: string;
   };

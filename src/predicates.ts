@@ -919,6 +919,47 @@ export class ContainerVolumesFromMissing implements Predicate<any> {
 
 }
 
+export class ArrayMemberFieldsNotUnique implements Predicate<any> {
+  public static fromJson(self: any): ArrayMemberFieldsNotUnique {
+    return new ArrayMemberFieldsNotUnique(self.path);
+  }
+
+  constructor(
+    private readonly path: string,
+  ) {
+
+  }
+
+  public test(root: any): RuleMatchedAt {
+    if (!_.isArray(root)) {
+      throw new Error(`input to ${ArrayMemberFieldsNotUnique.constructor.name} must be an array`);
+    }
+
+    const seenValues: any = {};
+    const matches = _.map(root, (item: any, index) => {
+      const value: any = _.get(item, this.path);
+
+      if (_.isEmpty(value)) {
+        return { matched: false };
+      }
+
+      if (_.isUndefined(seenValues[value])) {
+        seenValues[value] = `${index}.${this.path}`;
+        return { matched: false };
+      }
+
+      return {
+        matched: true,
+        paths: [
+          `${index}.${this.path}`,
+          seenValues[value],
+        ],
+      };
+    });
+    return collapseMatches(matches);
+  }
+}
+
 export class ContainerNamesNotUnique implements Predicate<any> {
   public static fromJson(): ContainerNamesNotUnique {
     return new ContainerNamesNotUnique();

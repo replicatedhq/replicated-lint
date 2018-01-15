@@ -1,0 +1,15 @@
+--- 
+- name: My Field
+  key: my_field
+  description: My cool field
+  type: string
+  default: "The default"
+  labels: 
+    - owner=somePerson
+- name: My Other Field
+  key: my_other_field
+  description: some other field
+  type: number
+  default: 1
+  labels:
+    - owner=somePerson

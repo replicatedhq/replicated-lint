@@ -206,6 +206,9 @@
 0.9.3 /2017-12-14
     * Added `container.shm_size` tests and docs
 
-0.9.3 /2017-12-14
+0.9.4 /2017-01-15
     * CLI allows passing `--schema` to set the path to an alternate JSONSchema document for validation
     * Add `projects/replicated-entitlements` with a passing and failing example
+
+0.9.5 /2017-01-15
+    * Fix bug in interface definition for `Test`

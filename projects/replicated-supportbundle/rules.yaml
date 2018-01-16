@@ -1,0 +1,29 @@
+---
+- name: spec-lifecycle-required
+  type: warn
+  message: No Lifecyle specified. Without a lifecycle, you will be unable to customize messaging for your end customer.
+  test:
+    Falsey:
+      path: lifecycle
+  examples:
+    wrong:
+      - description: Spec has no `lifecycle`
+        yaml: |
+          ---
+          specs: []
+          lifecycle:
+      - description: Spec `lifecycle` is empty
+        yaml: |
+          ---
+          specs: []
+          lifecycle: []
+    right:
+      - description: Spec has a `lifecycle` specified
+        yaml: |
+          ---
+          specs: []
+          lifecycle:
+            - message:
+                contents: generating bundle...
+            - generate: {}
+

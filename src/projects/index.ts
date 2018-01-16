@@ -1,4 +1,4 @@
 import * as replicatedEntitlements from "./replicated-entitlements";
-import * as kubernetes from "./kubernetes";
+import * as replicatedSupportBundle from "./replicated-supportbundle";
 
-export { replicatedEntitlements, kubernetes };
+export { replicatedEntitlements, replicatedSupportBundle };

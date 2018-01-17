@@ -1,0 +1,19 @@
+---
+specs:
+ - docker.ps:
+     all: true
+   description: "the containers"
+   output_dir: /docker/ps
+   timeout_seconds: 100
+lifecycle:
+  - message:
+      contents: generating bundle...
+  - generate: {}
+  - upload:
+      prompt:
+        message: Do you want to upload directly?
+        default: true
+        accept: Thanks! Superbigtool will get back to you within 24 hours.
+        decline: Send your support bundle located at {{.BundlePath}} to Superbigtool
+
+

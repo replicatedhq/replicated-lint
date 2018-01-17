@@ -212,3 +212,6 @@
 
 0.9.5 /2017-01-15
     * Fix bug in interface definition for `Test`
+
+0.9.6 /2017-01-15
+    * Add projects/replicated-supportbundle

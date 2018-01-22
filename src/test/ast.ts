@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { Range } from "../lint";
 import * as ast from "yaml-ast-parser";
 import * as lineColumn from "line-column";
-import { astPosition, findNode, findNodes } from "../ast";
+import { astPosition, findNode, findNodes, serialize, tokenize } from "../ast";
 
 describe("findNode(s)", () => {
   it("handles an empty object", () => {
@@ -98,7 +98,7 @@ foo:
   - bar: baz
   - bar: boz
   `, null);
-    const nodes = findNodes(loaded, "foo.*.bar");
+    const nodes = findNodes(loaded, ["foo", "*", "bar"]);
     expect(nodes[0]).to.have.deep.property("kind", 1);
     expect(nodes[0]).to.have.deep.property("key.value", "bar");
     expect(nodes[0]).to.have.deep.property("value.value", "baz");
@@ -117,7 +117,7 @@ foo:
   - baz
   - boz
   `, null);
-    const nodes = findNodes(loaded, "foo");
+    const nodes = findNodes(loaded, ["foo"]);
     expect(nodes[0]).to.have.deep.property("value.kind", 3);
     expect(nodes[0]).to.have.deep.property("value.items[0].value", "baz");
     expect(nodes[0]).to.have.deep.property("value.items[1].value", "boz");
@@ -131,7 +131,7 @@ foo:
   - baz
   - boz
   `, null);
-    const nodes = findNodes(loaded, "foo.*");
+    const nodes = findNodes(loaded, ["foo", "*"]);
     expect(nodes[0]).to.have.deep.property("kind", 0);
     expect(nodes[0]).to.have.deep.property("value", "baz");
     expect(nodes[1]).to.have.deep.property("kind", 0);
@@ -146,7 +146,7 @@ foo:
   - baz
   - boz
   `, null);
-    const nodes = findNodes(loaded, "foo.1");
+    const nodes = findNodes(loaded, ["foo", "1"]);
     expect(nodes.length).to.equal(1);
     expect(nodes[0]).to.have.deep.property("kind", 0);
     expect(nodes[0]).to.have.deep.property("value", "boz");
@@ -160,7 +160,7 @@ foo:
   - baz
   - bar: eggs
   `, null);
-    const nodes = findNodes(loaded, "foo.1.bar");
+    const nodes = findNodes(loaded, ["foo", "1", "bar"]);
     expect(nodes.length).to.equal(1);
     expect(nodes[0]).to.have.deep.property("value.kind", 0);
     expect(nodes[0]).to.have.deep.property("value.value", "eggs");
@@ -186,7 +186,7 @@ configItems:
   folks:
     - name: whatever
   `, null);
-    const nodes = findNodes(loaded, "app.containers.*.env.REDIS_HOST");
+    const nodes = findNodes(loaded, ["app", "containers", "*", "env", "REDIS_HOST"]);
     expect(nodes[0]).to.have.deep.property("kind", 1);
     expect(nodes[0]).to.have.deep.property("key.value", "REDIS_HOST");
     expect(nodes[0]).to.have.deep.property("value.value", "something");
@@ -201,7 +201,7 @@ configItems:
 
 describe("astPositions", () => {
   it("gets AST positions", () => {
-    let doc = `
+    const doc = `
 ---
 foo: bar
 app:
@@ -224,17 +224,55 @@ configItems:
   `;
     const astDoc: any = ast.safeLoad(doc, null);
     const lineCol: any = lineColumn(doc);
-    let pos: Range[] = astPosition(astDoc, "foo", lineCol);
+    let pos: Range[] = astPosition(astDoc, ["foo"], lineCol);
     expect(pos.length).to.equal(1);
     expect(pos[0].path).to.equal("foo");
     expect(pos[0].start.position).to.equal(5);
     expect(pos[0].start.line).to.equal(2);
 
-    pos = astPosition(astDoc, "app.config.method", lineCol);
+    pos = astPosition(astDoc, ["app", "config", "method"], lineCol);
     expect(pos.length).to.equal(1);
     expect(pos[0].path).to.equal("app.config.method");
     expect(pos[0].start.position).to.equal(214);
     expect(pos[0].start.line).to.equal(14);
     expect(pos[0].start.column).to.equal(4);
+  });
+});
+
+describe("tokenize()", () => {
+  it("handles an empty path", () => {
+    expect(tokenize("")).to.be.empty;
+  });
+  it("handles a single path", () => {
+    expect(tokenize("foo")).to.deep.equal(["foo"]);
+  });
+  it("handles several paths", () => {
+    expect(tokenize("foo.bar.baz")).to.deep.equal(["foo", "bar", "baz"]);
+  });
+  it("handles stars and numbers", () => {
+    expect(tokenize("foo.*.baz")).to.deep.equal(["foo", "*", "baz"]);
+    expect(tokenize("foo.1.baz")).to.deep.equal(["foo", "1", "baz"]);
+  });
+  it("handles [\\\"qouted_subscripts\\\"]", () => {
+    expect(tokenize("foo[\"baz\"]")).to.deep.equal(["foo", "baz"]);
+  });
+});
+
+describe("serialize()", () => {
+  it("handles an empty path", () => {
+    expect(serialize([])).to.be.empty;
+  });
+  it("handles a single path", () => {
+    expect(serialize(["foo"])).to.deep.equal("foo");
+  });
+  it("handles several paths", () => {
+    expect(serialize(["foo", "bar", "baz"])).to.deep.equal("foo.bar.baz");
+  });
+  it("handles stars and numbers", () => {
+    expect(serialize(["foo", "*", "baz"])).to.deep.equal("foo.*.baz");
+    expect(serialize(["foo", "1", "baz"])).to.deep.equal("foo.1.baz");
+  });
+  it("handles [\\\"qouted.subscripts\\\"] when a key has a dot in it", () => {
+    expect(serialize(["foo", "bar.baz"])).to.deep.equal("foo[\"bar.baz\"]");
   });
 });

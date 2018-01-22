@@ -16,11 +16,11 @@ export function findNode(root: YAMLNode, path: string): YAMLNode {
  *
  * Convenience function to be used instead of invoking findNodeRec directly
  */
-export function findNodes(root: YAMLNode, path: string): YAMLNode[] {
-  return findNodeRec([root], tokenize(path));
+export function findNodes(root: YAMLNode, path: string[]): YAMLNode[] {
+  return findNodeRec([root], path);
 }
 
-export function nodePosition(node: YAMLNode, path, lineColumnFinder: any, offset?: number): Range {
+export function nodePosition(node: YAMLNode, path: string[], lineColumnFinder: any, offset?: number): Range {
   offset = offset || 0;
   const start = lineColumnFinder.fromIndex(node.startPosition + offset);
   if (!start) {
@@ -32,7 +32,7 @@ export function nodePosition(node: YAMLNode, path, lineColumnFinder: any, offset
     col: 0,
   };
   return {
-    path,
+    path: serialize(path),
     start: {
       position: node.startPosition,
       line: start.line - 1, // sigh
@@ -50,7 +50,7 @@ export function nodePosition(node: YAMLNode, path, lineColumnFinder: any, offset
  * Get the position of the node in AST `root` at `path`. Use a caching lineColumnFinder
  * from `line-column` package to convert positions to 0-indexed line/column values
  */
-export function astPosition(root: YAMLNode, path: string, lineColumnFinder: any, offset?: number): Range[] {
+export function astPosition(root: YAMLNode, path: string[], lineColumnFinder: any, offset?: number): Range[] {
   if (_.isEmpty(path)) {
     return [];
   }
@@ -177,9 +177,30 @@ function findNodeRec(current: YAMLNode[], pathParts: string[]): YAMLNode[] {
   );
 }
 
-function tokenize(path: string): string[] {
-  path = path.replace(/\.$/, "");
-  return path.split(".");
+export function tokenize(path: string): string[] {
+  return _.toPath(path);
+}
+
+// bringing the jank. There may be a lodash version of this,
+// but I can't find it. Basically inverse of _.toPath(string)
+//
+// ["foo", "bar"]     => 'foo.bar'
+// ["foo", "bar.baz"] => 'foo["bar.baz"]'
+//
+export function serialize(path: string[]): string {
+  let acc = "";
+  let first = true;
+  for (const part of path) {
+    if (part.indexOf(".") === -1) {
+      acc += first ? "" : ".";
+      acc += part;
+    } else {
+      acc += `["${part}"]`;
+    }
+    first = false;
+  }
+
+  return acc;
 }
 
 function isMap(node: YAMLNode) {

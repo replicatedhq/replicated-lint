@@ -63,7 +63,8 @@ describe("integration", () => {
 
     describe(example.name, () => {
       it("should pass linting", () => {
-        expect(defaultLint(example.yaml)).to.deep.equal([]);
+        const result = defaultLint(example.yaml);
+        expect(result).to.deep.equal([]);
       });
     });
   }
@@ -72,10 +73,11 @@ describe("integration", () => {
 
     describe(example.name, () => {
       it("should fail linting", () => {
-        expect(defaultLint(example.yaml)).to.have.deep.property("[0].rule", "prop-schema-valid");
-        expect(defaultLint(example.yaml)).to.have.deep.property("[0].type", "error");
+        const result = defaultLint(example.yaml);
+        expect(result).to.have.deep.property("[0].rule", "prop-schema-valid");
+        expect(result).to.have.deep.property("[0].type", "error");
         if (example.errPath) {
-          expect(defaultLint(example.yaml)).to.have.deep.property("[0].positions.0.path", example.errPath);
+          expect(result).to.have.deep.property("[0].positions.0.path", example.errPath);
         }
       });
     });

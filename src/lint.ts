@@ -6,7 +6,7 @@ import * as rules from "./rules";
 import * as lineColumn from "line-column";
 import { parsed as schema } from "./schemas";
 import { YAMLNode } from "yaml-ast-parser";
-import { astPosition } from "./ast";
+import { astPosition, tokenize } from "./ast";
 import { defaultRegistry, Registry } from "./engine";
 
 export type RuleType =
@@ -364,13 +364,13 @@ export class Linter {
 
       if (result.matched) {
         let positions = _.flatMap(result.paths!,
-          path => astPosition(yamlAST, path, this.lineColumnFinder, this.offset),
+          path => astPosition(yamlAST, tokenize(path), this.lineColumnFinder, this.offset),
         );
 
         if (_.isEmpty(positions)) {
           const shorterPaths = _.map(result.paths!, p => p.split(".").slice(0, -1).join("."));
           positions = _.flatMap(shorterPaths,
-            path => astPosition(yamlAST, path, this.lineColumnFinder, this.offset),
+            path => astPosition(yamlAST, tokenize(path), this.lineColumnFinder, this.offset),
           );
         }
 
@@ -396,7 +396,7 @@ export class Linter {
       let positions: Range[] = [];
 
       if (err.dataPath) {
-        positions = astPosition(yamlAST, err.dataPath.slice(1).replace(/\//g, "."), lineColumnFinder, offset);
+        positions = astPosition(yamlAST, err.dataPath.slice(1).split("/"), lineColumnFinder, offset);
       }
 
       const message = _.isEmpty(positions) ?

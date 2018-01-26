@@ -14,9 +14,9 @@ import {
 import {readFromStdin} from "../cmdutil/stdin";
 import {parsed as replicatedSchema} from "../schemas";
 
-exports.name = "validate";
-exports.describe = "Lint a yaml document from a file or stdin";
-exports.builder = {
+export const name = "validate";
+export const describe = "Lint a yaml document from a file or stdin";
+export const builder = {
   infile: {
     alias: "f",
     describe: "Input file to validate. Use \"-\" for stdin",
@@ -60,16 +60,26 @@ exports.builder = {
     type: "boolean",
     "default": false,
   },
+  _waitForDebugger: {
+    describe: "Internal -- sleep 5000ms at command start, helpful for attaching a debugger",
+    type: "boolean",
+    "default": false,
+  },
 };
 
-exports.handler = main;
+export const handler = argv => main(argv);
 
 export const reporters: { [key: string]: Reporter } = {
   "console": consoleReporter,
   "junit": junitReporter,
 };
 
-function main(argv) {
+async function main(argv) {
+
+  if (argv._waitForDebugger) {
+    await new Promise<void>((resolve) => setTimeout(resolve, 5000));
+  }
+
   let {extraRules} = argv;
   if (_.isEmpty(extraRules)) {
     extraRules = [];
@@ -114,3 +124,9 @@ function lint(inYaml: string, argv: any) {
     process.exit(1);
   }
 }
+
+// but also
+exports.handler = handler;
+exports.name = name;
+exports.describe = describe;
+exports.builder = builder;

@@ -86,23 +86,13 @@
             "type": "string"
           },
           "docker.container-cp": {
-            "required": [
-              "container",
-              "src_path"
-            ],
             "description": "Collect a file by copying from a running docker container",
             "examples": [
               {
-                "specs": [
-                  {
-                    "description": "the supergoodtool www site access logs",
-                    "docker.container-cp": {
-                      "container": "supergoodtool-www",
-                      "src_path": "/var/log/nginx/access.log"
-                    },
-                    "output_dir": "/www/access/"
-                  }
-                ]
+                "description": "the supergoodtool www site access logs",
+                "container": "supergoodtool-www",
+                "src_path": "/var/log/nginx/access.log",
+                "output_dir": "/www/access/"
               }
             ],
             "outputs": [
@@ -118,6 +108,43 @@
                 ],
                 "type": "string"
               },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
               "src_path": {
                 "description": "The path of the target file in the container's filesystem",
                 "example": "/var/log/supergoodtool/access.log",
@@ -125,29 +152,30 @@
                   "/var/log/supergoodtool/access.log"
                 ],
                 "type": "string"
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
-            }
+            },
+            "required": [
+              "container",
+              "src_path",
+              "output_dir"
+            ]
           },
           "docker.container-exec": {
             "description": "Collect the stdout and stderr of `exec`-ing a command on a running docker container",
             "examples": [
               {
-                "specs": [
-                  {
-                    "description": "the supergoodtool debug output",
-                    "docker.container-exec": {
-                      "container": "supergoodtool-www",
-                      "exec_config": {
-                        "Cmd": [
-                          "toolctl",
-                          "info",
-                          "--verbose"
-                        ]
-                      }
-                    },
-                    "output_dir": "/www/debug/"
-                  }
-                ]
+                "container": "supergoodtool-www",
+                "output_dir": "/www/debug/",
+                "exec_config": {
+                  "Cmd": [
+                    "toolctl",
+                    "info",
+                    "--verbose"
+                  ]
+                }
               }
             ],
             "type": "object",
@@ -157,6 +185,9 @@
                 "examples": [
                   "supergoodtool-www"
                 ],
+                "type": "string"
+              },
+              "description": {
                 "type": "string"
               },
               "exec_config": {
@@ -215,15 +246,68 @@
                 "required": [
                   "Cmd"
                 ]
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "container",
               "exec_config"
             ]
           },
           "docker.container-inspect": {
             "description": "Collect the `docker inspect` output for one or more running or stopped containers",
+            "examples": [
+              {
+                "output_dir": "/containers/cooltool/www-stack",
+                "container_list_options": {
+                  "All": true,
+                  "Filters": {
+                    "name": [
+                      "www",
+                      "nginx",
+                      "dnsmasq"
+                    ]
+                  }
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "container": {
@@ -275,11 +359,68 @@
                   }
                 },
                 "required": []
+              },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
-            }
+            },
+            "required": [
+              "output_dir"
+            ]
           },
           "docker.container-logs": {
-            "description": "Collect the logs from one or more docker containers",
+            "description": "Collect the stdout/stderr logs from one or more docker containers",
+            "examples": [
+              {
+                "output_dir": "/docker/cooltool/logs/www",
+                "container_list_options": {
+                  "All": true,
+                  "Filters": {
+                    "name": [
+                      "www",
+                      "haproxy"
+                    ]
+                  }
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "container": {
@@ -370,11 +511,66 @@
                   }
                 },
                 "required": []
+              },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
-            }
+            },
+            "required": [
+              "output_dir"
+            ]
           },
           "docker.container-ls": {
             "description": "Collect information about one or more containers",
+            "examples": [
+              {
+                "output_dir": "/docker/cooltool/containers/",
+                "All": true,
+                "Filters": {
+                  "name": [
+                    "www",
+                    "haproxy"
+                  ]
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "All": {
@@ -415,21 +611,72 @@
               "Size": {
                 "description": "Same as would be passed to `docker ps`",
                 "type": "boolean"
+              },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
-            "required": [
-              "Quiet",
-              "Size",
-              "All",
-              "Latest",
-              "Since",
-              "Before",
-              "Limit",
-              "Filters"
-            ]
+            "required": []
           },
           "docker.container-run": {
             "description": "Collect the stderr/stdout of running a single docker container",
+            "examples": [
+              {
+                "description": "Listing of host's network interfaces",
+                "output_dir": "/host/network",
+                "container_create_config": {
+                  "Config": {
+                    "Cmd": [
+                      "ip",
+                      "addr",
+                      "show"
+                    ],
+                    "Image": "debian:latest"
+                  },
+                  "HostConfig": {
+                    "AutoRemove": true,
+                    "NetworkMode": "host"
+                  }
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "container_create_config": {
@@ -610,23 +857,7 @@
                       }
                     },
                     "required": [
-                      "Hostname",
-                      "Domainname",
-                      "User",
-                      "AttachStdin",
-                      "AttachStdout",
-                      "AttachStderr",
-                      "Tty",
-                      "OpenStdin",
-                      "StdinOnce",
-                      "Env",
-                      "Cmd",
-                      "Image",
-                      "Volumes",
-                      "WorkingDir",
-                      "Entrypoint",
-                      "OnBuild",
-                      "Labels"
+                      "Image"
                     ]
                   },
                   "HostConfig": {
@@ -1116,68 +1347,7 @@
                         }
                       }
                     },
-                    "required": [
-                      "Binds",
-                      "ContainerIDFile",
-                      "LogConfig",
-                      "NetworkMode",
-                      "PortBindings",
-                      "RestartPolicy",
-                      "AutoRemove",
-                      "VolumeDriver",
-                      "VolumesFrom",
-                      "CapAdd",
-                      "CapDrop",
-                      "Dns",
-                      "DnsOptions",
-                      "DnsSearch",
-                      "ExtraHosts",
-                      "GroupAdd",
-                      "IpcMode",
-                      "Cgroup",
-                      "Links",
-                      "OomScoreAdj",
-                      "PidMode",
-                      "Privileged",
-                      "PublishAllPorts",
-                      "ReadonlyRootfs",
-                      "SecurityOpt",
-                      "UTSMode",
-                      "UsernsMode",
-                      "ShmSize",
-                      "ConsoleSize",
-                      "Isolation",
-                      "CpuShares",
-                      "Memory",
-                      "NanoCpus",
-                      "CgroupParent",
-                      "BlkioWeight",
-                      "BlkioWeightDevice",
-                      "BlkioDeviceReadBps",
-                      "BlkioDeviceWriteBps",
-                      "BlkioDeviceReadIOps",
-                      "BlkioDeviceWriteIOps",
-                      "CpuPeriod",
-                      "CpuQuota",
-                      "CpuRealtimePeriod",
-                      "CpuRealtimeRuntime",
-                      "CpusetCpus",
-                      "CpusetMems",
-                      "Devices",
-                      "DeviceCgroupRules",
-                      "DiskQuota",
-                      "KernelMemory",
-                      "MemoryReservation",
-                      "MemorySwap",
-                      "MemorySwappiness",
-                      "OomKillDisable",
-                      "PidsLimit",
-                      "Ulimits",
-                      "CpuCount",
-                      "CpuPercent",
-                      "IOMaximumIOps",
-                      "IOMaximumBandwidth"
-                    ]
+                    "required": []
                   },
                   "Name": {
                     "description": "Container create options as would be passed to `docker run`",
@@ -1199,28 +1369,81 @@
                   }
                 },
                 "required": [
-                  "Name",
-                  "Config",
-                  "HostConfig",
-                  "NetworkingConfig",
-                  "AdjustCPUShares"
+                  "Config"
                 ]
+              },
+              "description": {
+                "type": "string"
               },
               "enable_pull": {
                 "description": "If `true`, allow this container to be pulled if not present",
                 "type": "boolean"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "container_create_config"
             ]
           },
           "docker.exec": {
             "description": "Collect the stdout/stderr of executing a command in an already running docker container",
+            "examples": [
+              {
+                "container": "supergoodtool-www",
+                "output_dir": "/www/debug/",
+                "exec_config": {
+                  "Cmd": [
+                    "toolctl",
+                    "info",
+                    "--verbose"
+                  ]
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "container": {
                 "description": "The container name",
+                "type": "string"
+              },
+              "description": {
                 "type": "string"
               },
               "exec_config": {
@@ -1279,15 +1502,64 @@
                 "required": [
                   "Cmd"
                 ]
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "container",
               "exec_config"
             ]
           },
           "docker.image-ls": {
             "description": "Collect a list of docker images present on the server",
+            "examples": [
+              {
+                "output_dir": "/cooltool/images/",
+                "All": true,
+                "Filters": {
+                  "labels": [
+                    "com.supercooltool.app=supercooltool-enterprise"
+                  ]
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "All": {
@@ -1304,15 +1576,67 @@
                     "type": "array"
                   }
                 }
+              },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "All",
               "Filters"
             ]
           },
           "docker.images": {
             "description": "Collect a list of docker images present on the server",
+            "examples": [
+              {
+                "output_dir": "/cooltool/images/",
+                "All": true,
+                "Filters": {
+                  "labels": [
+                    "com.supercooltool.app=supercooltool-enterprise"
+                  ]
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "All": {
@@ -1329,19 +1653,142 @@
                     "type": "array"
                   }
                 }
+              },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "All",
               "Filters"
             ]
           },
           "docker.info": {
             "description": "Collect info about the Docker daemon",
-            "type": "object"
+            "examples": [
+              {
+                "output_dir": "/docker/daemon/",
+                "timeout_seconds": 10,
+                "description": "Info about the docker daemon"
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "docker_info.raw",
+                "description": "The raw JSON from the docker daemon"
+              },
+              {
+                "path": "docker_info.json",
+                "description": "A pretty-printed JSON representation"
+              },
+              {
+                "path": "docker_info.human",
+                "description": "A human-readable representation."
+              }
+            ],
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "output_dir"
+            ]
           },
           "docker.logs": {
             "description": "Collect info about the Docker daemon",
+            "examples": [
+              {
+                "description": "The docker logs for all the containers labeled with com.supercooltool.onprem",
+                "output_dir": "/docker/logs",
+                "timeout_seconds": 100,
+                "container_list_options": {
+                  "All": true,
+                  "Filters": {
+                    "com.supercooltool.onprem": true
+                  }
+                },
+                "container_logs_options": {
+                  "Timestamps": true
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "container": {
@@ -1432,11 +1879,65 @@
                   }
                 },
                 "required": []
+              },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
-            }
+            },
+            "required": [
+              "output_dir"
+            ]
           },
           "docker.node-ls": {
             "description": "Collect information about the nodes in a Docker Swarm installation",
+            "examples": [
+              {
+                "description": "List of swarm nodes",
+                "output_dir": "/swarm/nodes",
+                "Filters": {
+                  "name": [
+                    "cooltool-docker-swarm-"
+                  ]
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "Filters": {
@@ -1449,14 +1950,58 @@
                     "type": "array"
                   }
                 }
+              },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
-            "required": [
-              "Filters"
-            ]
+            "required": []
           },
           "docker.ps": {
             "description": "Collect information about containers",
+            "examples": [
+              {
+                "output_dir": "/docker/ps",
+                "All": true
+              }
+            ],
             "type": "object",
             "properties": {
               "All": {
@@ -1497,12 +2042,72 @@
               "Size": {
                 "description": "Same as would be passed to `docker ps`",
                 "type": "boolean"
+              },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": []
           },
           "docker.run": {
             "description": "Collect the stderr/stdout of running a single docker container",
+            "examples": [
+              {
+                "description": "Listing of host's network interfaces",
+                "output_dir": "/host/network",
+                "container_create_config": {
+                  "Config": {
+                    "Cmd": [
+                      "ip",
+                      "addr",
+                      "show"
+                    ],
+                    "Image": "debian:latest"
+                  },
+                  "HostConfig": {
+                    "AutoRemove": true,
+                    "NetworkMode": "host"
+                  }
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "container_create_config": {
@@ -2196,17 +2801,76 @@
                   "Config"
                 ]
               },
+              "description": {
+                "type": "string"
+              },
               "enable_pull": {
                 "description": "If `true`, allow this container to be pulled if not present",
                 "type": "boolean"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "container_create_config"
             ]
           },
           "docker.service-logs": {
             "description": "Collect logs from a docker swarm service",
+            "examples": [
+              {
+                "output_dir": "/swarm/services/www",
+                "service": "www"
+              },
+              {
+                "output_dir": "/swarm/services/core-stack",
+                "service_list_options": {
+                  "Filters": {
+                    "name": [
+                      "www",
+                      "api",
+                      "worker"
+                    ]
+                  }
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "container_logs_options": {
@@ -2255,6 +2919,43 @@
                   "Follow",
                   "Tail",
                   "Details"
+                ]
+              },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
                 ]
               },
               "service": {
@@ -2280,11 +2981,38 @@
                 "required": [
                   "Filters"
                 ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
-            }
+            },
+            "required": [],
+            "oneOf": [
+              {
+                "required": [
+                  "service"
+                ]
+              },
+              {
+                "required": [
+                  "service_list_options"
+                ]
+              }
+            ]
           },
           "docker.service-ls": {
             "description": "Collect a list of docker swarm services",
+            "examples": [
+              {
+                "output_dir": "/swarm/services/list",
+                "description": "List of all services starting with `cooltool-`",
+                "Filters": {
+                  "name": [
+                    "cooltool-"
+                  ]
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "Filters": {
@@ -2297,14 +3025,63 @@
                     "type": "array"
                   }
                 }
+              },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
-            "required": [
-              "Filters"
-            ]
+            "required": []
           },
           "docker.service-ps": {
             "description": "Collect information about the tasks run by one or more services",
+            "examples": [
+              {
+                "output_dir": "/swarm/services/www/tasks",
+                "description": "List of all services starting with `cooltool-`",
+                "Filters": {
+                  "name": [
+                    "cooltool-"
+                  ]
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "Filters": {
@@ -2317,14 +3094,63 @@
                     "type": "array"
                   }
                 }
+              },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
+              "output_dir",
               "Filters"
             ]
           },
           "docker.stack-service-logs": {
             "description": "Collect logs from one or more services in a stack",
+            "examples": [
+              {
+                "output_dir": "/swarm/stacks/cooltool/service-logs",
+                "description": "Logs from services in the cooltool stack",
+                "namespace": "cooltool-core"
+              }
+            ],
             "type": "object",
             "properties": {
               "container_logs_options": {
@@ -2375,9 +3201,46 @@
                   "Details"
                 ]
               },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
               "namespace": {
                 "description": "The stack's namespace",
                 "type": "string"
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
               },
               "service_list_options": {
                 "description": "Options as would be passed to `docker stack services",
@@ -2390,24 +3253,113 @@
                         "type": "array"
                       }
                     }
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "meta": {
+                    "type": "object",
+                    "properties": {
+                      "labels": {
+                        "type": "object",
+                        "properties": {
+                          ".*": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "output_dir": {
+                    "type": "string"
+                  },
+                  "scrub": {
+                    "type": "object",
+                    "properties": {
+                      "regex": {
+                        "type": "string"
+                      },
+                      "replace": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "regex",
+                      "replace"
+                    ]
+                  },
+                  "timeout_seconds": {
+                    "type": "integer"
                   }
                 },
                 "required": [
+                  "output_dir",
                   "Filters"
                 ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "namespace"
             ]
           },
           "docker.stack-service-ls": {
             "description": "Collect information about services in a swarm stack",
+            "examples": [
+              {
+                "output_dir": "/swarm/stacks/cooltool/services",
+                "description": "Logs from services in the cooltool stack",
+                "namespace": "cooltool-core"
+              }
+            ],
             "type": "object",
             "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
               "namespace": {
                 "description": "The stack's namespace",
                 "type": "string"
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
               },
               "service_list_options": {
                 "description": "Options as would be passed to `docker stack services",
@@ -2420,49 +3372,160 @@
                         "type": "array"
                       }
                     }
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "meta": {
+                    "type": "object",
+                    "properties": {
+                      "labels": {
+                        "type": "object",
+                        "properties": {
+                          ".*": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "output_dir": {
+                    "type": "string"
+                  },
+                  "scrub": {
+                    "type": "object",
+                    "properties": {
+                      "regex": {
+                        "type": "string"
+                      },
+                      "replace": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "regex",
+                      "replace"
+                    ]
+                  },
+                  "timeout_seconds": {
+                    "type": "integer"
                   }
                 },
-                "required": [
-                  "Filters"
-                ]
+                "required": []
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "namespace"
             ]
           },
           "docker.stack-service-ps": {
             "description": "Collect information about the tasks running in a service",
+            "examples": [
+              {
+                "output_dir": "/swarm/stacks/cooltool/service-tasks",
+                "description": "Tasks owned by services in the cooltool stack",
+                "namespace": "cooltool-core",
+                "task_list_options": {
+                  "Filters": {
+                    "labels": [
+                      "com.cooltool.tier=www",
+                      "com.cooltool.tier=api"
+                    ]
+                  }
+                }
+              }
+            ],
             "type": "object",
             "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
               "namespace": {
                 "description": "The stack's namespace",
                 "type": "string"
               },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
               "task_list_options": {
-                "description": "Options as would be passed to `docker stack services`",
+                "description": "Options as would be passed to `docker stack ps`",
                 "type": "object",
                 "properties": {
                   "Filters": {
                     "type": "object",
-                    "properties": {
+                    "patternProperties": {
                       ".*": {
                         "type": "array"
                       }
                     }
                   }
                 },
-                "required": [
-                  "Filters"
-                ]
+                "required": []
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "namespace"
             ]
           },
           "docker.stack-task-logs": {
             "description": "Collect logs from a docker swarm task",
+            "examples": [
+              {
+                "output_dir": "/swarm/stacks/cooltool/service-logs",
+                "description": "Logs from services in the cooltool stack",
+                "namespace": "cooltool-core",
+                "task_list_options": {
+                  "Filters": {
+                    "labels": [
+                      "com.cooltool.tier=www",
+                      "com.cooltool.tier=api"
+                    ]
+                  }
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "container_logs_options": {
@@ -2505,9 +3568,46 @@
                   "Details"
                 ]
               },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
               "namespace": {
                 "description": "The stack namespace",
                 "type": "string"
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
               },
               "task_list_options": {
                 "description": "Options for filtering stack tasks",
@@ -2515,27 +3615,49 @@
                 "properties": {
                   "Filters": {
                     "type": "object",
-                    "properties": {
+                    "patternProperties": {
                       ".*": {
                         "type": "array"
                       }
                     }
                   }
                 },
-                "required": [
-                  "Filters"
-                ]
+                "required": []
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "namespace"
             ]
           },
           "docker.task-logs": {
             "description": "Collect logs from a docker swarm task",
+            "examples": [
+              {
+                "output_dir": "/swarm/tasks/logs/kfbr392",
+                "description": "Logs from cooltool tasks kfbr392",
+                "id": "kfbr392"
+              },
+              {
+                "output_dir": "/swarm/tasks/logs",
+                "description": "Logs from cooltool tasks in the www and api tiers",
+                "task_list_options": {
+                  "Filters": {
+                    "labels": [
+                      "com.cooltool.tier=www",
+                      "com.cooltool.tier=api"
+                    ]
+                  }
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "container_logs_options": {
+                "description": "Options for task logs, as would be passed to `docker logs`",
                 "type": "object",
                 "properties": {
                   "Details": {
@@ -2574,76 +3696,422 @@
                   "Details"
                 ]
               },
-              "id": {
+              "description": {
                 "type": "string"
               },
+              "id": {
+                "description": "The task id",
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
               "task_list_options": {
+                "description": "Options for filtering stack tasks",
                 "type": "object",
                 "properties": {
                   "Filters": {
                     "type": "object",
-                    "properties": {
+                    "patternProperties": {
                       ".*": {
                         "type": "array"
                       }
                     }
                   }
                 },
-                "required": [
-                  "Filters"
-                ]
+                "required": []
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
-            }
+            },
+            "required": [
+              "output_dir"
+            ]
           },
           "docker.task-ls": {
+            "description": "List docker swarm tasks",
+            "examples": [
+              {
+                "output_dir": "/swarm/tasklist",
+                "Filters": {
+                  "name": [
+                    "cooltool-api-",
+                    "cooltool-backend-"
+                  ]
+                }
+              }
+            ],
             "type": "object",
             "properties": {
               "Filters": {
+                "description": "Filters for tasks",
                 "type": "object",
+                "patternProperties": {
+                  ".*": {
+                    "type": "array"
+                  }
+                },
                 "properties": {
                   ".*": {
                     "type": "array"
                   }
                 }
+              },
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
+              }
+            },
+            "required": []
+          },
+          "docker.version": {
+            "description": "Get the version of the docker server",
+            "examples": [
+              {
+                "output_dir": "/docker/version"
+              }
+            ],
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
-              "Filters"
+              "output_dir"
             ]
           },
-          "docker.version": {
-            "type": "object"
-          },
           "journald.logs": {
+            "description": "Get the version of the docker server",
+            "examples": [
+              {
+                "output_dir": "/system/journald/cooltool-api",
+                "reverse": true,
+                "unit": "cooltool-api",
+                "since": "2018-01-01"
+              }
+            ],
             "type": "object",
             "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
               "reverse": {
+                "description": "Collect and store logs in reverse order",
                 "type": "boolean"
               },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
               "since": {
+                "description": "Since date for log collection",
                 "type": "string"
               },
+              "timeout_seconds": {
+                "type": "integer"
+              },
               "unit": {
+                "description": "Systemd unit from which to collect logs",
                 "type": "string"
               }
-            }
+            },
+            "required": [
+              "output_dir"
+            ]
           },
           "kubernetes.api-versions": {
-            "type": "object"
-          },
-          "kubernetes.cluster-info": {
-            "type": "object"
-          },
-          "kubernetes.logs": {
+            "description": "Get the kubernetes API versions",
+            "examples": [
+              {
+                "output_dir": "/kubernetes/version"
+              }
+            ],
             "type": "object",
             "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "output_dir"
+            ]
+          },
+          "kubernetes.cluster-info": {
+            "description": "Get the kubernetes cluster info",
+            "examples": [
+              {
+                "output_dir": "/kubernetes/cluster-info"
+              }
+            ],
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "output_dir"
+            ]
+          },
+          "kubernetes.logs": {
+            "description": "Collect the logs for one or more kubernetes pods",
+            "examples": [
+              {
+                "output_dir": "/kubernetes/api-pod-logs",
+                "pod": "cooltool-api-110212121-ab123ef",
+                "namespace": "default",
+                "pod_log_options": {
+                  "timestamps": true,
+                  "sinceSeconds": 1000000,
+                  "limitBytes": 1000000000
+                },
+                "timeout_seconds": 30
+              }
+            ],
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
               "namespace": {
+                "description": "The Kubernetes namespace",
+                "type": "string"
+              },
+              "output_dir": {
                 "type": "string"
               },
               "pod": {
+                "description": "The Kubernetes pod",
                 "type": "string"
               },
               "pod_log_options": {
+                "description": "The Kubernetes pod log options",
                 "type": "object",
                 "properties": {
                   "apiVersion": {
@@ -2677,22 +4145,84 @@
                     "type": "boolean"
                   }
                 }
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "pod"
             ]
           },
           "kubernetes.resource-list": {
+            "description": "Collect a list of resources managed by the cluster",
+            "examples": [
+              {
+                "output_dir": "/kubernetes/default/deployments",
+                "namespace": "default",
+                "kind": "deployments"
+              },
+              {
+                "output_dir": "/kubernetes/default/services",
+                "namespace": "default",
+                "kind": "svc"
+              }
+            ],
             "type": "object",
             "properties": {
-              "kind": {
+              "description": {
                 "type": "string"
               },
+              "kind": {
+                "description": "The Kubernetes resource kind, as would be passed to `kubectl get`",
+                "examples": [
+                  "deployments",
+                  "replicasets"
+                ],
+                "pattern": "^(componentstatuses|cs|configmaps|cm|daemonsets|ds|deployments|deploy|endpoints|ep|events|ev|horizontalpodautoscalers|hpa|ingresses|ing|jobs|limitranges|limits|namespaces|ns|networkpolicies|netpol|nodes|no|persistentvolumeclaims|pvc|persistentvolumes|pv|pods|po|podsecuritypolicies|psp|podtemplates|replicasets|rs|replicationcontrollers|rc|resourcequotas|quota|storageclasses|statefulsets|serviceaccounts|sa|services|svc|secrets)$",
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
               "namespace": {
+                "description": "The Kubernetes namespace",
+                "type": "string"
+              },
+              "output_dir": {
                 "type": "string"
               },
               "resource_list_options": {
+                "description": "An instance of metav1.ListOptions",
                 "type": "object",
                 "properties": {
                   "apiVersion": {
@@ -2726,14 +4256,78 @@
                     "type": "boolean"
                   }
                 }
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "kind"
             ]
           },
           "kubernetes.version": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "output_dir"
+            ]
           },
           "meta": {
             "type": "object",
@@ -2760,18 +4354,109 @@
               "customer_name": {
                 "type": "string"
               },
+              "description": {
+                "type": "string"
+              },
               "installation_id": {
                 "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
-            }
+            },
+            "required": [
+              "output_dir"
+            ]
           },
           "os.hostname": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "output_dir"
+            ]
           },
           "os.http-request": {
             "type": "object",
             "properties": {
               "body": {
+                "type": "string"
+              },
+              "description": {
                 "type": "string"
               },
               "header": {
@@ -2785,36 +4470,156 @@
               "insecure": {
                 "type": "boolean"
               },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
               "method": {
                 "type": "string"
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               },
               "url": {
                 "type": "string"
               }
             },
             "required": [
+              "output_dir",
               "url"
             ]
           },
           "os.loadavg": {
             "type": "object",
             "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
               "template": {
                 "type": "string"
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "template"
             ]
           },
           "os.read-file": {
             "type": "object",
             "properties": {
+              "description": {
+                "type": "string"
+              },
               "filepath": {
                 "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "filepath"
             ]
           },
@@ -2827,6 +4632,9 @@
                   "type": "string"
                 }
               },
+              "description": {
+                "type": "string"
+              },
               "dir": {
                 "type": "string"
               },
@@ -2836,22 +4644,101 @@
                   "type": "string"
                 }
               },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
               "name": {
                 "type": "string"
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "name"
             ]
           },
           "os.uptime": {
             "type": "object",
             "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
               "template": {
                 "type": "string"
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
               "template"
             ]
           },
@@ -2865,6 +4752,9 @@
                 "type": "string"
               },
               "api_token": {
+                "type": "string"
+              },
+              "description": {
                 "type": "string"
               },
               "insecure": {
@@ -2993,6 +4883,25 @@
                   "DisplayMarkdown"
                 ]
               },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
               "project_id": {
                 "type": "string"
               },
@@ -3046,9 +4955,29 @@
                   "Description",
                   "Location"
                 ]
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
               }
             },
             "required": [
+              "output_dir",
+              "output_dir",
               "api_endpoint"
             ]
           },
@@ -3071,12 +5000,55 @@
             "type": "integer"
           },
           "version": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "labels": {
+                    "type": "object",
+                    "properties": {
+                      ".*": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "output_dir": {
+                "type": "string"
+              },
+              "scrub": {
+                "type": "object",
+                "properties": {
+                  "regex": {
+                    "type": "string"
+                  },
+                  "replace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regex",
+                  "replace"
+                ]
+              },
+              "timeout_seconds": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "output_dir"
+            ]
           }
         },
-        "required": [
-          "output_dir"
-        ]
+        "required": []
       }
     }
   }

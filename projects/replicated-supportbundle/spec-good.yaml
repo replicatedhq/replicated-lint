@@ -5,17 +5,17 @@ specs:
  - docker.container-cp:
      src_path: /etc/pki/secrets/ca.crt
      container: "sgt-pki-manager"
-   description: "The local CA Certificate"
-   output_dir: /pki/ca-cert
+     description: "The local CA Certificate"
+     output_dir: /pki/ca-cert
 
 # also grab the public key, capturing the stdout from `openssl`
  - docker.exec:
      container: "sgt-pki-manager"
      exec_config:
        Cmd: ["openssl", "x509", "-pubkey", "-noout", "-in", "/etc/pki/secrets/ca.crt"]
-   description: "The RSA public Key of the X509 cert"
-   output_dir: /pki/ca-pubkey
-   timeout_seconds: 100
+     description: "The RSA public Key of the X509 cert"
+     output_dir: /pki/ca-pubkey
+     timeout_seconds: 100
 
 
 # do a docker inspect for all the containers we care about
@@ -24,8 +24,8 @@ specs:
        All: true
        Filters:
          com.superbigtool.onprem: true
-   description: "The docker inspect for all the containers labeled with com.superbigtool.onprem"
-   output_dir: /docker/inspect
+     description: "The docker inspect for all the containers labeled with com.superbigtool.onprem"
+     output_dir: /docker/inspect
 
 # collect the docker logs for all the containers we care about
  - docker.logs:
@@ -35,15 +35,15 @@ specs:
          com.superbigtool.onprem: true
      container_logs_options:
        Timestamps: true
-   description: "The docker logs for all the containers labeled with com.superbigtool.onprem"
-   output_dir: /docker/logs
-   timeout_seconds: 100
+     description: "The docker logs for all the containers labeled with com.superbigtool.onprem"
+     output_dir: /docker/logs
+     timeout_seconds: 100
 
 # get the `docker ps` for containers we care about
  - docker.ps:
      All: true
-   description: "The docker ps for all the containers labeled with com.superbigtool.onprem"
-   output_dir: /docker/ps
+     description: "The docker ps for all the containers labeled with com.superbigtool.onprem"
+     output_dir: /docker/ps
 
 # run a container with `--net host` to get info about the host network
  - docker.run:
@@ -54,24 +54,24 @@ specs:
        HostConfig:
          NetworkMode: "host"
          AutoRemove: true
-   description: "The `ip addr show` for the host network"
-   output_dir: /docker/run/hostnet
+     description: "The `ip addr show` for the host network"
+     output_dir: /docker/run/hostnet
 
 # grab /proc/meminfo
  - os.read-file:
      filepath: /proc/meminfo
-   description: "meminfo"
-   output_dir: /os/proc/meminfo
+     description: "meminfo"
+     output_dir: /os/proc/meminfo
 
 # grab /proc/meminfo
  - os.read-file:
      filepath: /proc/cpuinfo
-   description: "cpuinfo"
-   output_dir: /os/proc/cpuinfo
+     description: "cpuinfo"
+     output_dir: /os/proc/cpuinfo
 
-# get the logs for a swarm service
-- docker.service-logs: {}
-  output_dir: /swarm/service-logs/myservice
+ - docker.service-logs:
+     service: "my_service"
+     output_dir: /swarm/service-logs/myservice
 
 
 lifecycle:

@@ -186,20 +186,25 @@ export function tokenize(path: string): string[] {
 //
 // ["foo", "bar"]     => 'foo.bar'
 // ["foo", "bar.baz"] => 'foo["bar.baz"]'
-//
 export function serialize(path: string[]): string {
   let acc = "";
   let first = true;
   for (const part of path) {
-    if (part.indexOf(".") === -1) {
-      acc += first ? "" : ".";
-      acc += part;
-    } else {
-      acc += `["${part}"]`;
-    }
+    acc = appendPathPart(part, acc, first);
     first = false;
   }
 
+  return acc;
+}
+
+function appendPathPart(part, acc: string, first: boolean) {
+  const hasDot = part.indexOf(".") === -1;
+  if (hasDot) {
+    acc += first ? "" : ".";
+    acc += part;
+  } else {
+    acc += `["${part}"]`;
+  }
   return acc;
 }
 

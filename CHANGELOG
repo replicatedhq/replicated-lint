@@ -219,3 +219,6 @@
 0.10.0 /2017-01-22
     * Fix a bug where objects with a `.` in property paths would not have `positions` returned when errors were found
     * Expand Support bundle schema with examples and full property set
+
+0.10.1 /2017-01-22
+    * Finalize support bundle schema

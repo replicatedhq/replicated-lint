@@ -220,5 +220,8 @@
     * Fix a bug where objects with a `.` in property paths would not have `positions` returned when errors were found
     * Expand Support bundle schema with examples and full property set
 
-0.10.1 /2017-01-22
+0.10.1 /2017-01-30
     * Finalize support bundle schema
+
+0.10.2 /2017-01-30
+    * Changes to Support Bundle custom rules

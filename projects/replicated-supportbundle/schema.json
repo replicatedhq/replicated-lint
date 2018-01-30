@@ -3,10 +3,10 @@
   "type": "object",
   "properties": {
     "lifecycle": {
-      "description": "`lifecycle` can be used to customize the end-customer's experience when generating/uploading support bundles.",
+      "description": "`lifecycle` can be used to customize the end-customer's experience when generating/uploading support bundles",
       "type": "array",
       "items": {
-        "description": "`lifecycle` can be used to customize the end-customer's experience when generating/uploading support bundles.",
+        "description": "`lifecycle` can be used to customize the end-customer's experience when generating/uploading support bundles",
         "type": "object",
         "properties": {
           "generate": {
@@ -14,7 +14,7 @@
             "type": "object"
           },
           "message": {
-            "description": "`message` can be used to print a message to the end customer.",
+            "description": "`message` can be used to print a message to the end customer",
             "type": "object",
             "properties": {
               "contents": {
@@ -28,7 +28,7 @@
             }
           },
           "upload": {
-            "description": "Adds a step in which the end customer can upload a bundle to https://console.replicated.com for review by the vendor.",
+            "description": "Adds a step in which the end customer can upload a bundle to https://console.replicated.com for review by the vendor",
             "type": "object",
             "properties": {
               "prompt": {
@@ -45,7 +45,7 @@
                   "decline": {
                     "description": "A message to display if the user declines the upload prompt",
                     "examples": [
-                      "Bundle was not uploaded, please send your bundle to SuperGoodTool support."
+                      "Bundle was not uploaded, please send your bundle to SuperGoodTool support"
                     ],
                     "type": "string"
                   },
@@ -71,10 +71,10 @@
       }
     },
     "specs": {
-      "description": "A list of items to include in the support bundle.",
+      "description": "A list of items to include in the support bundle",
       "type": "array",
       "items": {
-        "description": "A list of items to include in the support bundle.",
+        "description": "A list of items to include in the support bundle",
         "type": "object",
         "properties": {
           "description": {
@@ -95,8 +95,11 @@
                 "output_dir": "/www/access/"
               }
             ],
-            "outputs": [
-              "contents"
+            "_ext_outputs": [
+              {
+                "path": "{{.Name}}",
+                "description": "Output will match the name of the file. If `src_path` is `/var/log/nginx/access.log`, then `output_dir` will contain a file `access.log`"
+              }
             ],
             "type": "object",
             "properties": {
@@ -171,11 +174,20 @@
                 "output_dir": "/www/debug/",
                 "exec_config": {
                   "Cmd": [
-                    "toolctl",
-                    "info",
-                    "--verbose"
+                    "nginx",
+                    "-t"
                   ]
                 }
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "stdout.raw",
+                "description": "The standard output of the command"
+              },
+              {
+                "path": "stderr.raw",
+                "description": "The standard error of the command"
               }
             ],
             "type": "object",
@@ -191,7 +203,7 @@
                 "type": "string"
               },
               "exec_config": {
-                "description": "Same as would be passed to `docker exec`",
+                "description": "Same as would be passed to `docker exec`, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/configs.go#L43)",
                 "type": "object",
                 "properties": {
                   "AttachStderr": {
@@ -292,7 +304,7 @@
             ]
           },
           "docker.container-inspect": {
-            "description": "Collect the `docker inspect` output for one or more running or stopped containers",
+            "description": "Collect the `docker inspect` output for one or more running or stopped containers. One of `container` or `container_list_options` is required.",
             "examples": [
               {
                 "output_dir": "/containers/cooltool/www-stack",
@@ -308,6 +320,20 @@
                 }
               }
             ],
+            "_ext_outputs": [
+              {
+                "path": "{{.Name}}.raw",
+                "description": "The raw output of the inspect call. Will generate this file for each matched container"
+              },
+              {
+                "path": "{{.Name}}.json",
+                "description": "The json output of the inspect call. Will generate this file for each matched container"
+              },
+              {
+                "path": "{{.Name}}.human",
+                "description": "The human-readable output of the inspect call. Will generate this file for each matched container"
+              }
+            ],
             "type": "object",
             "properties": {
               "container": {
@@ -315,11 +341,11 @@
                 "type": "string"
               },
               "container_list_options": {
-                "description": "Options to be used to filter the list of containers",
+                "description": "Options to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "object",
                 "properties": {
                   "All": {
-                    "description": "Same as `-a` option to `docker ps` ",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "boolean"
                   },
                   "Before": {
@@ -327,7 +353,7 @@
                     "type": "string"
                   },
                   "Filters": {
-                    "description": "Same as `--filter` option to `docker ps` ",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "additionalProperties": true,
                     "type": "object",
                     "properties": {
@@ -338,23 +364,23 @@
                     }
                   },
                   "Latest": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "boolean"
                   },
                   "Limit": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "integer"
                   },
                   "Quiet": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "boolean"
                   },
                   "Since": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "string"
                   },
                   "Size": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "boolean"
                   }
                 },
@@ -406,7 +432,7 @@
             ]
           },
           "docker.container-logs": {
-            "description": "Collect the stdout/stderr logs from one or more docker containers",
+            "description": "Collect the stdout/stderr logs from one or more docker containers. One of `container` or `container_list_options` is required.",
             "examples": [
               {
                 "output_dir": "/docker/cooltool/logs/www",
@@ -421,6 +447,12 @@
                 }
               }
             ],
+            "_ext_outputs": [
+              {
+                "path": "{{.Name}}.raw",
+                "description": "The stdout/stderr multiplexed logs. Will generate this file for each matched container"
+              }
+            ],
             "type": "object",
             "properties": {
               "container": {
@@ -428,11 +460,11 @@
                 "type": "string"
               },
               "container_list_options": {
-                "description": "Options to be used to filter the list of containers",
+                "description": "Options to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "object",
                 "properties": {
                   "All": {
-                    "description": "Same as `-a` option to `docker ps` ",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "boolean"
                   },
                   "Before": {
@@ -440,7 +472,7 @@
                     "type": "string"
                   },
                   "Filters": {
-                    "description": "Same as `--filter` option to `docker ps` ",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "additionalProperties": true,
                     "type": "object",
                     "properties": {
@@ -451,30 +483,30 @@
                     }
                   },
                   "Latest": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "boolean"
                   },
                   "Limit": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "integer"
                   },
                   "Quiet": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "boolean"
                   },
                   "Since": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "string"
                   },
                   "Size": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "boolean"
                   }
                 },
                 "required": []
               },
               "container_logs_options": {
-                "description": "Args as would be given to `docker logs`",
+                "description": "Args as would be given to `docker logs`, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L73)",
                 "type": "object",
                 "properties": {
                   "Details": {
@@ -571,45 +603,59 @@
                 }
               }
             ],
+            "_ext_outputs": [
+              {
+                "path": "container_ls.raw",
+                "description": "Raw output"
+              },
+              {
+                "path": "container_ls.json",
+                "description": "JSON output"
+              },
+              {
+                "path": "container_ls.human",
+                "description": "Human-readable output"
+              }
+            ],
             "type": "object",
             "properties": {
               "All": {
-                "description": "Same as `-a` option to `docker ps` ",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "boolean"
               },
               "Before": {
-                "description": "Same as `--before` option to `docker logs` ",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "string"
               },
               "Filters": {
-                "description": "Same as `--filter` option to `docker ps` ",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "additionalProperties": true,
                 "type": "object",
                 "properties": {
                   ".*": {
-                    "description": "Map of key-value pairs to filter on",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "array"
                   }
                 }
               },
               "Latest": {
-                "description": "Same as would be passed to `docker ps`",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "boolean"
               },
               "Limit": {
-                "description": "Same as would be passed to `docker ps`",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "integer"
               },
               "Quiet": {
-                "description": "Same as would be passed to `docker ps`",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "boolean"
               },
               "Since": {
-                "description": "Same as would be passed to `docker ps`",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "string"
               },
               "Size": {
-                "description": "Same as would be passed to `docker ps`",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "boolean"
               },
               "description": {
@@ -675,6 +721,16 @@
                     "NetworkMode": "host"
                   }
                 }
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "stdout.raw",
+                "description": "The standard output of the container"
+              },
+              {
+                "path": "stderr.raw",
+                "description": "The standard error of the container"
               }
             ],
             "type": "object",
@@ -1437,6 +1493,16 @@
                 }
               }
             ],
+            "_ext_outputs": [
+              {
+                "path": "stdout.raw",
+                "description": "The standard output of the command"
+              },
+              {
+                "path": "stderr.raw",
+                "description": "The standard error of the command"
+              }
+            ],
             "type": "object",
             "properties": {
               "container": {
@@ -1447,7 +1513,7 @@
                 "type": "string"
               },
               "exec_config": {
-                "description": "Config options as would be passed to `docker exec` ",
+                "description": "Config options as would be passed to `docker exec`, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/configs.go)",
                 "type": "object",
                 "properties": {
                   "AttachStderr": {
@@ -1554,10 +1620,24 @@
                 "output_dir": "/cooltool/images/",
                 "All": true,
                 "Filters": {
-                  "labels": [
+                  "label": [
                     "com.supercooltool.app=supercooltool-enterprise"
                   ]
                 }
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "image_ls.raw",
+                "description": "Raw output"
+              },
+              {
+                "path": "image_ls.json",
+                "description": "JSON output"
+              },
+              {
+                "path": "image_ls.human",
+                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -1618,11 +1698,7 @@
                 "type": "integer"
               }
             },
-            "required": [
-              "output_dir",
-              "All",
-              "Filters"
-            ]
+            "required": []
           },
           "docker.images": {
             "description": "Collect a list of docker images present on the server",
@@ -1631,10 +1707,24 @@
                 "output_dir": "/cooltool/images/",
                 "All": true,
                 "Filters": {
-                  "labels": [
+                  "label": [
                     "com.supercooltool.app=supercooltool-enterprise"
                   ]
                 }
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "image_ls.raw",
+                "description": "Raw output"
+              },
+              {
+                "path": "image_ls.json",
+                "description": "JSON output"
+              },
+              {
+                "path": "image_ls.human",
+                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -1695,11 +1785,7 @@
                 "type": "integer"
               }
             },
-            "required": [
-              "output_dir",
-              "All",
-              "Filters"
-            ]
+            "required": []
           },
           "docker.info": {
             "description": "Collect info about the Docker daemon",
@@ -1721,7 +1807,7 @@
               },
               {
                 "path": "docker_info.human",
-                "description": "A human-readable representation."
+                "description": "A human-readable representation"
               }
             ],
             "type": "object",
@@ -1772,7 +1858,7 @@
             ]
           },
           "docker.logs": {
-            "description": "Collect info about the Docker daemon",
+            "description": "Collect the stdout/stderr logs from one or more docker containers. One of `container` or `container_list_options` is required.",
             "examples": [
               {
                 "description": "The docker logs for all the containers labeled with com.supercooltool.onprem",
@@ -1781,12 +1867,20 @@
                 "container_list_options": {
                   "All": true,
                   "Filters": {
-                    "com.supercooltool.onprem": true
+                    "label": [
+                      "com.supercooltool.onprem=true"
+                    ]
                   }
                 },
                 "container_logs_options": {
                   "Timestamps": true
                 }
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "{{.Name}}.raw",
+                "description": "The stdout/stderr multiplexed logs. Will generate this file for each matched container"
               }
             ],
             "type": "object",
@@ -1796,11 +1890,11 @@
                 "type": "string"
               },
               "container_list_options": {
-                "description": "Options to be used to filter the list of containers",
+                "description": "Options to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "object",
                 "properties": {
                   "All": {
-                    "description": "Same as `-a` option to `docker ps` ",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "boolean"
                   },
                   "Before": {
@@ -1808,7 +1902,7 @@
                     "type": "string"
                   },
                   "Filters": {
-                    "description": "Same as `--filter` option to `docker ps` ",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "additionalProperties": true,
                     "type": "object",
                     "properties": {
@@ -1819,30 +1913,30 @@
                     }
                   },
                   "Latest": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "boolean"
                   },
                   "Limit": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "integer"
                   },
                   "Quiet": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "boolean"
                   },
                   "Since": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "string"
                   },
                   "Size": {
-                    "description": "Same as would be passed to `docker ps`",
+                    "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                     "type": "boolean"
                   }
                 },
                 "required": []
               },
               "container_logs_options": {
-                "description": "Args as would be given to `docker logs`",
+                "description": "Args as would be given to `docker logs`, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L73)",
                 "type": "object",
                 "properties": {
                   "Details": {
@@ -1930,12 +2024,26 @@
             "examples": [
               {
                 "description": "List of swarm nodes",
-                "output_dir": "/swarm/nodes",
+                "output_dir": "/swarm/nodes/",
                 "Filters": {
                   "name": [
                     "cooltool-docker-swarm-"
                   ]
                 }
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "node_ls.raw",
+                "description": "Raw output"
+              },
+              {
+                "path": "node_ls.json",
+                "description": "JSON output"
+              },
+              {
+                "path": "node_ls.human",
+                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -1998,22 +2106,36 @@
             "description": "Collect information about containers",
             "examples": [
               {
-                "output_dir": "/docker/ps",
+                "output_dir": "/docker/ps/",
                 "All": true
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "container_ls.raw",
+                "description": "Raw output"
+              },
+              {
+                "path": "container_ls.json",
+                "description": "JSON output"
+              },
+              {
+                "path": "container_ls.human",
+                "description": "Human-readable output"
               }
             ],
             "type": "object",
             "properties": {
               "All": {
-                "description": "Same as `-a` option to `docker ps` ",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "boolean"
               },
               "Before": {
-                "description": "Same as `--before` option to `docker logs` ",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "string"
               },
               "Filters": {
-                "description": "Same as `--filter` option to `docker ps` ",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "additionalProperties": true,
                 "type": "object",
                 "properties": {
@@ -2024,23 +2146,23 @@
                 }
               },
               "Latest": {
-                "description": "Same as would be passed to `docker ps`",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "boolean"
               },
               "Limit": {
-                "description": "Same as would be passed to `docker ps`",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "integer"
               },
               "Quiet": {
-                "description": "Same as would be passed to `docker ps`",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "boolean"
               },
               "Since": {
-                "description": "Same as would be passed to `docker ps`",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "string"
               },
               "Size": {
-                "description": "Same as would be passed to `docker ps`",
+                "description": "Option to be used to filter the list of containers, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L61)",
                 "type": "boolean"
               },
               "description": {
@@ -2108,10 +2230,20 @@
                 }
               }
             ],
+            "_ext_outputs": [
+              {
+                "path": "stdout.raw",
+                "description": "The standard output of the container"
+              },
+              {
+                "path": "stderr.raw",
+                "description": "The standard error of the container"
+              }
+            ],
             "type": "object",
             "properties": {
               "container_create_config": {
-                "description": "Container create options as would be passed to `docker run`",
+                "description": "Same as would be passed to `docker run`, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/configs.go#L13)",
                 "type": "object",
                 "properties": {
                   "AdjustCPUShares": {
@@ -2852,29 +2984,35 @@
             ]
           },
           "docker.service-logs": {
-            "description": "Collect logs from a docker swarm service",
+            "description": "Collect logs from a docker swarm service. One of `service` or `service_list_options` is required.",
             "examples": [
               {
                 "output_dir": "/swarm/services/www",
-                "service": "www"
+                "service": "cooltool-www"
               },
               {
                 "output_dir": "/swarm/services/core-stack",
                 "service_list_options": {
                   "Filters": {
                     "name": [
-                      "www",
-                      "api",
-                      "worker"
+                      "cooltool-www",
+                      "cooltool-api",
+                      "cooltool-worker"
                     ]
                   }
                 }
               }
             ],
+            "_ext_outputs": [
+              {
+                "path": "{{.Name}}.raw",
+                "description": "The raw output of the logs call. Will generate this file for each matched service"
+              }
+            ],
             "type": "object",
             "properties": {
               "container_logs_options": {
-                "description": "Args as would be given to `docker logs`",
+                "description": "Args as would be given to `docker logs`, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L73)",
                 "type": "object",
                 "properties": {
                   "Details": {
@@ -3004,13 +3142,27 @@
             "description": "Collect a list of docker swarm services",
             "examples": [
               {
-                "output_dir": "/swarm/services/list",
+                "output_dir": "/swarm/services/list/",
                 "description": "List of all services starting with `cooltool-`",
                 "Filters": {
                   "name": [
                     "cooltool-"
                   ]
                 }
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "service_ls.raw",
+                "description": "Raw output"
+              },
+              {
+                "path": "service_ls.json",
+                "description": "JSON output"
+              },
+              {
+                "path": "service_ls.human",
+                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -3073,13 +3225,27 @@
             "description": "Collect information about the tasks run by one or more services",
             "examples": [
               {
-                "output_dir": "/swarm/services/www/tasks",
+                "output_dir": "/swarm/services/www/tasks/",
                 "description": "List of all services starting with `cooltool-`",
                 "Filters": {
                   "name": [
                     "cooltool-"
                   ]
                 }
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "service_ps.raw",
+                "description": "Raw output"
+              },
+              {
+                "path": "service_ps.json",
+                "description": "JSON output"
+              },
+              {
+                "path": "service_ps.human",
+                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -3151,10 +3317,16 @@
                 "namespace": "cooltool-core"
               }
             ],
+            "_ext_outputs": [
+              {
+                "path": "{{.StackName}}_{{.ServiceName}}.raw",
+                "description": "The raw output. Will generate this file for each matched service"
+              }
+            ],
             "type": "object",
             "properties": {
               "container_logs_options": {
-                "description": "Args as would be given to `docker logs`",
+                "description": "Args as would be given to `docker logs`, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L73)",
                 "type": "object",
                 "properties": {
                   "Details": {
@@ -3318,6 +3490,20 @@
                 "namespace": "cooltool-core"
               }
             ],
+            "_ext_outputs": [
+              {
+                "path": "service_ls.raw",
+                "description": "Raw output"
+              },
+              {
+                "path": "service_ls.json",
+                "description": "JSON output"
+              },
+              {
+                "path": "service_ls.human",
+                "description": "Human-readable output"
+              }
+            ],
             "type": "object",
             "properties": {
               "description": {
@@ -3434,12 +3620,26 @@
                 "namespace": "cooltool-core",
                 "task_list_options": {
                   "Filters": {
-                    "labels": [
+                    "label": [
                       "com.cooltool.tier=www",
                       "com.cooltool.tier=api"
                     ]
                   }
                 }
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "service_ps.raw",
+                "description": "Raw output"
+              },
+              {
+                "path": "service_ps.json",
+                "description": "JSON output"
+              },
+              {
+                "path": "service_ps.human",
+                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -3518,7 +3718,7 @@
                 "namespace": "cooltool-core",
                 "task_list_options": {
                   "Filters": {
-                    "labels": [
+                    "label": [
                       "com.cooltool.tier=www",
                       "com.cooltool.tier=api"
                     ]
@@ -3526,10 +3726,16 @@
                 }
               }
             ],
+            "_ext_outputs": [
+              {
+                "path": "{{.TaskId}}.raw",
+                "description": "The raw output. Will generate this file for each matched service task"
+              }
+            ],
             "type": "object",
             "properties": {
               "container_logs_options": {
-                "description": "Options as would be passed to `docker logs`",
+                "description": "Args as would be given to `docker logs`, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L73)",
                 "type": "object",
                 "properties": {
                   "Details": {
@@ -3637,16 +3843,11 @@
             "description": "Collect logs from a docker swarm task",
             "examples": [
               {
-                "output_dir": "/swarm/tasks/logs/kfbr392",
-                "description": "Logs from cooltool tasks kfbr392",
-                "id": "kfbr392"
-              },
-              {
                 "output_dir": "/swarm/tasks/logs",
                 "description": "Logs from cooltool tasks in the www and api tiers",
                 "task_list_options": {
                   "Filters": {
-                    "labels": [
+                    "label": [
                       "com.cooltool.tier=www",
                       "com.cooltool.tier=api"
                     ]
@@ -3654,10 +3855,16 @@
                 }
               }
             ],
+            "_ext_outputs": [
+              {
+                "path": "{{.TaskId}}.raw",
+                "description": "The raw output. Will generate this file for each matched service task"
+              }
+            ],
             "type": "object",
             "properties": {
               "container_logs_options": {
-                "description": "Options for task logs, as would be passed to `docker logs`",
+                "description": "Args as would be given to `docker logs`, as in [The Docker API](https://github.com/moby/moby/blob/master/api/types/client.go#L73)",
                 "type": "object",
                 "properties": {
                   "Details": {
@@ -3700,7 +3907,7 @@
                 "type": "string"
               },
               "id": {
-                "description": "The task id",
+                "description": "The id of a single task",
                 "type": "string"
               },
               "meta": {
@@ -3773,6 +3980,20 @@
                 }
               }
             ],
+            "_ext_outputs": [
+              {
+                "path": "task_ls.raw",
+                "description": "Raw output"
+              },
+              {
+                "path": "task_ls.json",
+                "description": "JSON output"
+              },
+              {
+                "path": "task_ls.human",
+                "description": "Human-readable output"
+              }
+            ],
             "type": "object",
             "properties": {
               "Filters": {
@@ -3839,6 +4060,20 @@
                 "output_dir": "/docker/version"
               }
             ],
+            "_ext_outputs": [
+              {
+                "path": "docker_version.raw",
+                "description": "Raw output"
+              },
+              {
+                "path": "docker_version.json",
+                "description": "JSON output"
+              },
+              {
+                "path": "docker_version.human",
+                "description": "Human-readable output"
+              }
+            ],
             "type": "object",
             "properties": {
               "description": {
@@ -3887,13 +4122,19 @@
             ]
           },
           "journald.logs": {
-            "description": "Get the version of the docker server",
+            "description": "Collect logs from journald",
             "examples": [
               {
                 "output_dir": "/system/journald/cooltool-api",
                 "reverse": true,
                 "unit": "cooltool-api",
                 "since": "2018-01-01"
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "logs.raw",
+                "description": "The raw output the `journald` logs for the unit"
               }
             ],
             "type": "object",
@@ -3921,7 +4162,7 @@
                 "type": "string"
               },
               "reverse": {
-                "description": "Collect and store logs in reverse order",
+                "description": "Store logs in reverse chronological order",
                 "type": "boolean"
               },
               "scrub": {
@@ -3952,380 +4193,7 @@
               }
             },
             "required": [
-              "output_dir"
-            ]
-          },
-          "kubernetes.api-versions": {
-            "description": "Get the kubernetes API versions",
-            "examples": [
-              {
-                "output_dir": "/kubernetes/version"
-              }
-            ],
-            "type": "object",
-            "properties": {
-              "description": {
-                "type": "string"
-              },
-              "meta": {
-                "type": "object",
-                "properties": {
-                  "labels": {
-                    "type": "object",
-                    "properties": {
-                      ".*": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
-              },
-              "output_dir": {
-                "type": "string"
-              },
-              "scrub": {
-                "type": "object",
-                "properties": {
-                  "regex": {
-                    "type": "string"
-                  },
-                  "replace": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "regex",
-                  "replace"
-                ]
-              },
-              "timeout_seconds": {
-                "type": "integer"
-              }
-            },
-            "required": [
-              "output_dir"
-            ]
-          },
-          "kubernetes.cluster-info": {
-            "description": "Get the kubernetes cluster info",
-            "examples": [
-              {
-                "output_dir": "/kubernetes/cluster-info"
-              }
-            ],
-            "type": "object",
-            "properties": {
-              "description": {
-                "type": "string"
-              },
-              "meta": {
-                "type": "object",
-                "properties": {
-                  "labels": {
-                    "type": "object",
-                    "properties": {
-                      ".*": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
-              },
-              "output_dir": {
-                "type": "string"
-              },
-              "scrub": {
-                "type": "object",
-                "properties": {
-                  "regex": {
-                    "type": "string"
-                  },
-                  "replace": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "regex",
-                  "replace"
-                ]
-              },
-              "timeout_seconds": {
-                "type": "integer"
-              }
-            },
-            "required": [
-              "output_dir"
-            ]
-          },
-          "kubernetes.logs": {
-            "description": "Collect the logs for one or more kubernetes pods",
-            "examples": [
-              {
-                "output_dir": "/kubernetes/api-pod-logs",
-                "pod": "cooltool-api-110212121-ab123ef",
-                "namespace": "default",
-                "pod_log_options": {
-                  "timestamps": true,
-                  "sinceSeconds": 1000000,
-                  "limitBytes": 1000000000
-                },
-                "timeout_seconds": 30
-              }
-            ],
-            "type": "object",
-            "properties": {
-              "description": {
-                "type": "string"
-              },
-              "meta": {
-                "type": "object",
-                "properties": {
-                  "labels": {
-                    "type": "object",
-                    "properties": {
-                      ".*": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
-              },
-              "namespace": {
-                "description": "The Kubernetes namespace",
-                "type": "string"
-              },
-              "output_dir": {
-                "type": "string"
-              },
-              "pod": {
-                "description": "The Kubernetes pod",
-                "type": "string"
-              },
-              "pod_log_options": {
-                "description": "The Kubernetes pod log options",
-                "type": "object",
-                "properties": {
-                  "apiVersion": {
-                    "type": "string"
-                  },
-                  "container": {
-                    "type": "string"
-                  },
-                  "follow": {
-                    "type": "boolean"
-                  },
-                  "kind": {
-                    "type": "string"
-                  },
-                  "limitBytes": {
-                    "type": "integer"
-                  },
-                  "previous": {
-                    "type": "boolean"
-                  },
-                  "sinceSeconds": {
-                    "type": "integer"
-                  },
-                  "sinceTime": {
-                    "type": "object"
-                  },
-                  "tailLines": {
-                    "type": "integer"
-                  },
-                  "timestamps": {
-                    "type": "boolean"
-                  }
-                }
-              },
-              "scrub": {
-                "type": "object",
-                "properties": {
-                  "regex": {
-                    "type": "string"
-                  },
-                  "replace": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "regex",
-                  "replace"
-                ]
-              },
-              "timeout_seconds": {
-                "type": "integer"
-              }
-            },
-            "required": [
-              "output_dir",
-              "pod"
-            ]
-          },
-          "kubernetes.resource-list": {
-            "description": "Collect a list of resources managed by the cluster",
-            "examples": [
-              {
-                "output_dir": "/kubernetes/default/deployments",
-                "namespace": "default",
-                "kind": "deployments"
-              },
-              {
-                "output_dir": "/kubernetes/default/services",
-                "namespace": "default",
-                "kind": "svc"
-              }
-            ],
-            "type": "object",
-            "properties": {
-              "description": {
-                "type": "string"
-              },
-              "kind": {
-                "description": "The Kubernetes resource kind, as would be passed to `kubectl get`",
-                "examples": [
-                  "deployments",
-                  "replicasets"
-                ],
-                "pattern": "^(componentstatuses|cs|configmaps|cm|daemonsets|ds|deployments|deploy|endpoints|ep|events|ev|horizontalpodautoscalers|hpa|ingresses|ing|jobs|limitranges|limits|namespaces|ns|networkpolicies|netpol|nodes|no|persistentvolumeclaims|pvc|persistentvolumes|pv|pods|po|podsecuritypolicies|psp|podtemplates|replicasets|rs|replicationcontrollers|rc|resourcequotas|quota|storageclasses|statefulsets|serviceaccounts|sa|services|svc|secrets)$",
-                "type": "string"
-              },
-              "meta": {
-                "type": "object",
-                "properties": {
-                  "labels": {
-                    "type": "object",
-                    "properties": {
-                      ".*": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
-              },
-              "namespace": {
-                "description": "The Kubernetes namespace",
-                "type": "string"
-              },
-              "output_dir": {
-                "type": "string"
-              },
-              "resource_list_options": {
-                "description": "An instance of metav1.ListOptions",
-                "type": "object",
-                "properties": {
-                  "apiVersion": {
-                    "type": "string"
-                  },
-                  "continue": {
-                    "type": "string"
-                  },
-                  "fieldSelector": {
-                    "type": "string"
-                  },
-                  "includeUninitialized": {
-                    "type": "boolean"
-                  },
-                  "kind": {
-                    "type": "string"
-                  },
-                  "labelSelector": {
-                    "type": "string"
-                  },
-                  "limit": {
-                    "type": "integer"
-                  },
-                  "resourceVersion": {
-                    "type": "string"
-                  },
-                  "timeoutSeconds": {
-                    "type": "integer"
-                  },
-                  "watch": {
-                    "type": "boolean"
-                  }
-                }
-              },
-              "scrub": {
-                "type": "object",
-                "properties": {
-                  "regex": {
-                    "type": "string"
-                  },
-                  "replace": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "regex",
-                  "replace"
-                ]
-              },
-              "timeout_seconds": {
-                "type": "integer"
-              }
-            },
-            "required": [
-              "output_dir",
-              "kind"
-            ]
-          },
-          "kubernetes.version": {
-            "type": "object",
-            "properties": {
-              "description": {
-                "type": "string"
-              },
-              "meta": {
-                "type": "object",
-                "properties": {
-                  "labels": {
-                    "type": "object",
-                    "properties": {
-                      ".*": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
-              },
-              "output_dir": {
-                "type": "string"
-              },
-              "scrub": {
-                "type": "object",
-                "properties": {
-                  "regex": {
-                    "type": "string"
-                  },
-                  "replace": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "regex",
-                  "replace"
-                ]
-              },
-              "timeout_seconds": {
-                "type": "integer"
-              }
-            },
-            "required": [
+              "unit",
               "output_dir"
             ]
           },
@@ -4345,64 +4213,23 @@
               }
             }
           },
-          "meta.customer": {
-            "type": "object",
-            "properties": {
-              "customer_id": {
-                "type": "string"
-              },
-              "customer_name": {
-                "type": "string"
-              },
-              "description": {
-                "type": "string"
-              },
-              "installation_id": {
-                "type": "string"
-              },
-              "meta": {
-                "type": "object",
-                "properties": {
-                  "labels": {
-                    "type": "object",
-                    "properties": {
-                      ".*": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
-              },
-              "output_dir": {
-                "type": "string"
-              },
-              "scrub": {
-                "type": "object",
-                "properties": {
-                  "regex": {
-                    "type": "string"
-                  },
-                  "replace": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "regex",
-                  "replace"
-                ]
-              },
-              "timeout_seconds": {
-                "type": "integer"
-              }
-            },
-            "required": [
-              "output_dir"
-            ]
-          },
           "os.hostname": {
+            "description": "Get the hostname",
+            "examples": [
+              {
+                "output_dir": "/system/hostname"
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "stderr",
+                "description": "The stdout from the command"
+              },
+              {
+                "path": "stdout",
+                "description": "The stdin from the command"
+              }
+            ],
             "type": "object",
             "properties": {
               "description": {
@@ -4451,15 +4278,44 @@
             ]
           },
           "os.http-request": {
+            "description": "Collect information about the response from making an HTTP request",
+            "examples": [
+              {
+                "output_dir": "/system/ping-ip",
+                "url": "https://api.replicated.com/market/v1/echo/ip",
+                "method": "get",
+                "header": {
+                  "User-Agent": [
+                    "cooltool/supportbundle 0.11.1"
+                  ]
+                }
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "body",
+                "description": "The response body"
+              }
+            ],
             "type": "object",
             "properties": {
               "body": {
+                "description": "The request body",
                 "type": "string"
               },
               "description": {
                 "type": "string"
               },
               "header": {
+                "description": "One or more headers to send",
+                "patternProperties": {
+                  ".*": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
                 "type": "object",
                 "properties": {
                   ".*": {
@@ -4468,6 +4324,7 @@
                 }
               },
               "insecure": {
+                "description": "Set to `true` to skip TLS verification",
                 "type": "boolean"
               },
               "meta": {
@@ -4487,6 +4344,7 @@
                 }
               },
               "method": {
+                "description": "HTTP request method",
                 "type": "string"
               },
               "output_dir": {
@@ -4511,15 +4369,31 @@
                 "type": "integer"
               },
               "url": {
+                "description": "The HTTP request URL",
                 "type": "string"
               }
             },
             "required": [
-              "output_dir",
-              "url"
+              "url",
+              "method"
             ]
           },
           "os.loadavg": {
+            "description": "Collect information about CPU load",
+            "examples": [
+              {
+                "output_dir": "/system/load"
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "contents",
+                "description": "The raw loadavg info ",
+                "examples": [
+                  "0.77 0.93 0.90 10/947 12"
+                ]
+              }
+            ],
             "type": "object",
             "properties": {
               "description": {
@@ -4560,24 +4434,39 @@
                 ]
               },
               "template": {
+                "description": "(Optional) a template for the human-readable output",
                 "type": "string"
               },
               "timeout_seconds": {
                 "type": "integer"
               }
             },
-            "required": [
-              "output_dir",
-              "template"
-            ]
+            "required": []
           },
           "os.read-file": {
+            "description": "Read a file from the filesystem",
+            "examples": [
+              {
+                "output_dir": "/files/etc/bigtool-conf",
+                "filepath": "/etc/bigtool.conf"
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "contents",
+                "description": "The file contents",
+                "examples": [
+                  "{\"setting1\": true, \"setting2\": false}"
+                ]
+              }
+            ],
             "type": "object",
             "properties": {
               "description": {
                 "type": "string"
               },
               "filepath": {
+                "description": "The file path on the host. If running Support Bundle via docker, this will work, but symlinks are not supported",
                 "type": "string"
               },
               "meta": {
@@ -4624,9 +4513,40 @@
             ]
           },
           "os.run-command": {
+            "description": "Run a command. Will be run in the support bundle container if `docker run replicated/support-bundle` is used. To run in a custom container, use `docker.run` instead",
+            "examples": [
+              {
+                "output_dir": "/system/commands/ping-google",
+                "name": "date"
+              },
+              {
+                "output_dir": "/system/commands/ping-google",
+                "name": "cat",
+                "args": [
+                  "/etc/os-release"
+                ]
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "stderr",
+                "description": "The standard error of the comand",
+                "examples": [
+                  "Usage: ping [-aAbBdDfhLnOqrRUvV] [-c count] [-i interval] [-I interface]\n [-m mark] [-M pmtudisc_option] [-l preload] [-p pattern] [-Q tos]\n [-s packetsize] [-S sndbuf] [-t ttl] [-T timestamp_option]\n [-w deadline] [-W timeout] [hop1 ...] destination"
+                ]
+              },
+              {
+                "path": "stdout",
+                "description": "The standard output of the comand",
+                "examples": [
+                  "PING google.com (172.217.11.78) 56(84) bytes of data.\n 64 bytes from lax17s34-in-f14.1e100.net (172.217.11.78): icmp_seq=1 ttl=54 time=203 ms\n 64 bytes from lax17s34-in-f14.1e100.net (172.217.11.78): icmp_seq=2 ttl=54 time=28.0 ms\n 64 bytes from lax17s34-in-f14.1e100.net (172.217.11.78): icmp_seq=3 ttl=54 time=130 ms\n"
+                ]
+              }
+            ],
             "type": "object",
             "properties": {
               "args": {
+                "description": "The command arguments",
                 "type": "array",
                 "items": {
                   "type": "string"
@@ -4636,9 +4556,11 @@
                 "type": "string"
               },
               "dir": {
+                "description": "The working directory of the command",
                 "type": "string"
               },
               "env": {
+                "description": "Specifies additional environment variables",
                 "type": "array",
                 "items": {
                   "type": "string"
@@ -4661,6 +4583,7 @@
                 }
               },
               "name": {
+                "description": "The command to run",
                 "type": "string"
               },
               "output_dir": {
@@ -4691,6 +4614,18 @@
             ]
           },
           "os.uptime": {
+            "description": "Collect information about the system's uptime",
+            "examples": [
+              {
+                "output_dir": "/system/uptime"
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "contents",
+                "description": "The contents of the uptime file"
+              }
+            ],
             "type": "object",
             "properties": {
               "description": {
@@ -4731,6 +4666,7 @@
                 ]
               },
               "template": {
+                "description": "Template for the human-readable output",
                 "type": "string"
               },
               "timeout_seconds": {
@@ -4738,29 +4674,68 @@
               }
             },
             "required": [
-              "output_dir",
-              "template"
+              "output_dir"
             ]
           },
           "output_dir": {
             "type": "string"
           },
           "retraced.events": {
+            "description": "Collect Audit Log events from a running Retraced instance",
+            "examples": [
+              {
+                "output_dir": "/audit/events",
+                "api_endpoint": "https://auditlogs.mycorp.internal:8080",
+                "api_token": "aef342f32f22f3edf1f1f3f3ef",
+                "project_id": "f3edf1f1f3f3efaef342f32f22"
+              },
+              {
+                "output_dir": "/audit/events",
+                "api_endpoint": "https://auditlogs.mycorp.internal:8080",
+                "api_token": "aef342f32f22f3edf1f1f3f3ef",
+                "project_id": "f3edf1f1f3f3efaef342f32f22",
+                "insecure": true,
+                "timeout_seconds": 10,
+                "mask": {
+                  "Action": true,
+                  "Description": true,
+                  "ActorID": true,
+                  "ActorName": true,
+                  "CanonicalTime": true
+                },
+                "query": {
+                  "CRUD": "c,u,d"
+                }
+              }
+            ],
+            "_ext_outputs": [
+              {
+                "path": "audit_events.csv",
+                "description": "The audit events in CSV format"
+              }
+            ],
             "type": "object",
             "properties": {
               "api_endpoint": {
-                "type": "string"
+                "description": "The location of the Audit Logs API endpoint in the form `http(s)://<host>:<port>`",
+                "type": "string",
+                "required": []
               },
               "api_token": {
-                "type": "string"
+                "description": "An API token for communicating with the audit log instance",
+                "type": "string",
+                "required": []
               },
               "description": {
                 "type": "string"
               },
               "insecure": {
-                "type": "boolean"
+                "description": "Set to `true` to skip SSL verification on the endpoint",
+                "type": "boolean",
+                "required": []
               },
               "mask": {
+                "description": "A mask to determine what fields to include in the output file, as in https://github.com/retracedhq/retraced-go/blob/master/graphql.go#L160",
                 "type": "object",
                 "properties": {
                   "Action": {
@@ -4851,37 +4826,7 @@
                     "type": "boolean"
                   }
                 },
-                "required": [
-                  "ID",
-                  "Action",
-                  "CRUD",
-                  "Description",
-                  "IsFailure",
-                  "IsAnonymous",
-                  "SourceIP",
-                  "Country",
-                  "LocSubdiv1",
-                  "LocSubdiv2",
-                  "Received",
-                  "Created",
-                  "CanonicalTime",
-                  "Component",
-                  "Version",
-                  "Fields",
-                  "Raw",
-                  "GroupID",
-                  "GroupName",
-                  "ActorID",
-                  "ActorName",
-                  "ActorHref",
-                  "ActorFields",
-                  "TargetID",
-                  "TargetName",
-                  "TargetHref",
-                  "TargetType",
-                  "TargetFields",
-                  "DisplayMarkdown"
-                ]
+                "required": []
               },
               "meta": {
                 "type": "object",
@@ -4903,9 +4848,12 @@
                 "type": "string"
               },
               "project_id": {
-                "type": "string"
+                "description": "The Audit Log Project ID",
+                "type": "string",
+                "required": []
               },
               "query": {
+                "description": "A structured query for filtering events, as in https://github.com/retracedhq/retraced-go/blob/master/graphql.go#L16",
                 "type": "object",
                 "properties": {
                   "Action": {
@@ -4943,18 +4891,7 @@
                     "format": "date-time"
                   }
                 },
-                "required": [
-                  "Action",
-                  "CRUD",
-                  "ReceivedStart",
-                  "ReceivedEnd",
-                  "CreatedStart",
-                  "CreatedEnd",
-                  "ActorName",
-                  "ActorID",
-                  "Description",
-                  "Location"
-                ]
+                "required": []
               },
               "scrub": {
                 "type": "object",
@@ -4977,8 +4914,9 @@
             },
             "required": [
               "output_dir",
-              "output_dir",
-              "api_endpoint"
+              "api_token",
+              "api_endpoint",
+              "project_id"
             ]
           },
           "scrub": {
@@ -4998,54 +4936,6 @@
           },
           "timeout_seconds": {
             "type": "integer"
-          },
-          "version": {
-            "type": "object",
-            "properties": {
-              "description": {
-                "type": "string"
-              },
-              "meta": {
-                "type": "object",
-                "properties": {
-                  "labels": {
-                    "type": "object",
-                    "properties": {
-                      ".*": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                }
-              },
-              "output_dir": {
-                "type": "string"
-              },
-              "scrub": {
-                "type": "object",
-                "properties": {
-                  "regex": {
-                    "type": "string"
-                  },
-                  "replace": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "regex",
-                  "replace"
-                ]
-              },
-              "timeout_seconds": {
-                "type": "integer"
-              }
-            },
-            "required": [
-              "output_dir"
-            ]
           }
         },
         "required": []

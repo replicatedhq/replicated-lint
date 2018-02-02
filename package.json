@@ -1,7 +1,7 @@
 {
   "name": "replicated-lint",
   "author": "Replicated, Inc.",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "engines": {
     "node": ">=4.3.2"
   },
@@ -28,6 +28,7 @@
     "fmt": "tsfmt -r",
     "prepublish": "rm -rf ./dist && yarn run tslint && tsc -p .",
     "test": "rm -rf ./dist && yarn run tslint && tsc -p . && mocha -r ts-node/register ./src/test/*.ts",
+    "rules": "rm -rf ./dist && yarn run tslint && tsc -p . && mocha -r ts-node/register ./src/test/rules.ts",
     "cover": "rm -rf ./dist && yarn run tslint && tsc -p . && istanbul cover _mocha -- ./dist/test/*.js",
     "cover-xml": "rm -rf ./dist && yarn run tslint && tsc -p . && istanbul cover _mocha -- -R mocha-junit-reporter ./dist/test/*.js",
     "mintest": "yarn run tslint && mocha --recursive -R 'min'  -r ts-node/register src/test/*.ts",

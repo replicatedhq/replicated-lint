@@ -225,3 +225,6 @@
 
 0.10.2 /2017-01-30
     * Changes to Support Bundle custom rules
+
+0.10.3 /2017-02-02
+    * Allow default monitors on swarm scheduler

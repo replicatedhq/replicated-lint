@@ -3,8 +3,15 @@ import { YAMLRule } from "../lint";
 export const cpuMonitorContainerExists: YAMLRule = {
   name: "prop-monitors-cpuacct-container-exists",
   type: "error",
-  message: "Entries in `monitors.cpuacct` must have matching component+container",
-  test: { MonitorContainerMissing: { monitorPath: "monitors.cpuacct" } },
+  message: "Entries in `monitors.cpuacct` must have matching component+container or the scheduler must be swarm",
+  test: {
+    And: {
+      preds: [
+        { MonitorContainerMissing: { monitorPath: "monitors.cpuacct"} },
+        { Not: { pred: { Exists: { path: "swarm"} } } },
+      ],
+    },
+  },
   examples: {
     wrong: [
       {
@@ -35,8 +42,8 @@ monitors:
       },
     ],
     right: [{
-      description: "All `cpuacct` monitors reference existing containers",
-      yaml: `
+        description: "All `cpuacct` monitors reference existing containers",
+        yaml: `
 ---
 components:
   - name: Logstash
@@ -46,7 +53,18 @@ monitors:
   cpuacct:
     - Logstash,quay.io/getelk/logstash
       `,
-    },
+      },
+      {
+        description: "All `cpuacct` monitors are valid if the scheduler is swarm",
+        yaml: `
+---
+monitors:
+  cpuacct:
+    - swarmstash
+swarm:
+  minimum_node_count: "1"
+      `,
+      },
       {
         description: "No monitors, no containers",
         yaml: `
@@ -62,8 +80,15 @@ monitors:
 export const memMonitorContainerExists: YAMLRule = {
   name: "prop-monitors-memory-container-exists",
   type: "error",
-  message: "Entries in `monitors.memory` must have matching component+container",
-  test: { MonitorContainerMissing: { monitorPath: "monitors.memory" } },
+  message: "Entries in `monitors.memory` must have matching component+container or the scheduler must be swarm",
+  test: {
+    And: {
+      preds: [
+        { MonitorContainerMissing: { monitorPath: "monitors.memory"} },
+        { Not: { pred: { Exists: { path: "swarm"} } } },
+      ],
+    },
+  },
   examples: {
     wrong: [
       {
@@ -93,9 +118,10 @@ monitors:
     `,
       },
     ],
-    right: [{
-      description: "All `memacct` monitors reference existing containers",
-      yaml: `
+    right: [
+      {
+        description: "All `memacct` monitors reference existing containers",
+        yaml: `
 ---
 components:
   - name: Logstash
@@ -105,7 +131,19 @@ monitors:
   memory:
     - Logstash,quay.io/getelk/logstash
       `,
-    }],
+      },
+      {
+        description: "All `memacct` monitors are valid if the scheduler is swarm",
+        yaml: `
+---
+monitors:
+  memory:
+    - swarmstash
+swarm:
+  minimum_node_count: "1"
+      `,
+      },
+    ],
   },
 };
 

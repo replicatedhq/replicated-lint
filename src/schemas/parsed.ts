@@ -190,6 +190,17 @@ export default {
         "script": {
           "type": "string",
         },
+        "swarm": {
+          "type": "object",
+          "properties": {
+            "volumes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+              },
+            },
+          },
+        },
       },
     },
     "cmds": {

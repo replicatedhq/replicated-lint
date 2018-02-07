@@ -8,7 +8,7 @@ version: "1.0.3"
 release_notes: QA application meant for swarm scheduler installations.
 
 ###########################################################
-# Host Requirements and Properties
+# Host Requirements, Properties And Backup
 ###########################################################
 
 host_requirements:
@@ -25,6 +25,15 @@ properties:
   logo_url: http://www.clipartbest.com/cliparts/aTq/ogz/aTqogze8c.jpg
   shell_alias: charliecli
 
+backup:
+  enabled: true
+  script: |
+    #!/bin/sh
+    replicated admin backup-redis-to-rdb
+    replicated admin mv-backup-rdb-to-safe-place
+  swarm:
+    volumes:
+    - redis-data
 ###########################################################
 # Swarm specific configurations
 ###########################################################

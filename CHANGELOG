@@ -206,28 +206,31 @@
 0.9.3 /2017-12-14
     * Added `container.shm_size` tests and docs
 
-0.9.4 /2017-01-15
+0.9.4 /2018-01-15
     * CLI allows passing `--schema` to set the path to an alternate JSONSchema document for validation
     * Add `projects/replicated-entitlements` with a passing and failing example
 
-0.9.5 /2017-01-15
+0.9.5 /2018-01-15
     * Fix bug in interface definition for `Test`
 
-0.9.6 /2017-01-15
+0.9.6 /2018-01-15
     * Add projects/replicated-supportbundle
 
-0.10.0 /2017-01-22
+0.10.0 /2018-01-22
     * Fix a bug where objects with a `.` in property paths would not have `positions` returned when errors were found
     * Expand Support bundle schema with examples and full property set
 
-0.10.1 /2017-01-30
+0.10.1 /2018-01-30
     * Finalize support bundle schema
 
-0.10.2 /2017-01-30
+0.10.2 /2018-01-30
     * Changes to Support Bundle custom rules
 
-0.10.3 /2017-02-02
+0.10.3 /2018-02-02
     * Allow default monitors on swarm scheduler
 
 0.10.4 /2018-02-21
     * `components.*.containers.*.env_vars.*.is_excluded_from_support` can now be boolean literal, boolean string, or templates
+
+0.10.5 /2018-02-21
+    * Add `swarm/volumes` to `backup`

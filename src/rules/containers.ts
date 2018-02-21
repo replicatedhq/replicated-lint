@@ -1277,5 +1277,6 @@ export const all: YAMLRule[] = [
   containerVolumeEphemeralTypeCheck,
   containerVolumeExcludedTypeCheck,
   containerEnvvarsStaticvalDeprecated,
+  containerEnvvarsExcludedTypeCheck,
   containerShmSizeUInt,
 ];

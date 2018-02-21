@@ -6,12 +6,11 @@
 
 YAML linting tools for Replicated applications.
 
-
 ## Usage
 
 Install the CLI executable with
 
-```
+```sh
 npm install -g replicated-lint
 ```
 
@@ -29,7 +28,7 @@ cat my-app.yml | replicated-lint validate -f -
 
 Results that have issues will look something like:
 
-```
+```javascript
 { type: 'info',
   rule: 'prop-configitem-testproc-run-on-save',
   message: 'If a config item\'s test_proc.run_on_save is not set to \'true\', test_proc\'s will not be checked automatically. Consider setting your test_proc\'s run_on_save to automatically validate inputs',
@@ -113,7 +112,7 @@ Options:
 
 We compile to ES5 and test on nodejs 7.8.0, but earlier versions of node should work as well.
 
-```
+```sh
 npm install -g yarn
 yarn
 ```
@@ -122,13 +121,13 @@ yarn
 
 To run the tests once
 
-```
+```sh
 yarn test
 ```
 
 To watch files and re-run tests on changes, use the `tdd` script
 
-```
+```sh
 ./tdd
 ```
 
@@ -147,7 +146,7 @@ YAML and JSON linting and policy definition
 - CLI
 - Autogenerate unit tests and documentation from rule definitions
 
-```
+```sh
 npm install --save replicated-lint
 ```
 
@@ -167,7 +166,6 @@ const ruleViolations = linter.defaultLint(yaml);
 console.log(ruleViolations); // []
 
 ```
-
 
 ### Custom Rule Sets
 
@@ -226,7 +224,7 @@ console.log(ruleViolations);  /*
 Register new rules with `linter.enginer.register`. Rules should implement `JSONReadable<Predicate<any>>`, usually as a static method
 
 ```typescript
-import * as linter from "replicated-lint"; 
+import * as linter from "replicated-lint";
 
 
 // rule MyRule checks if root object has property "spam" equal to "eggs"

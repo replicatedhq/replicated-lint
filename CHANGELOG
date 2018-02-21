@@ -228,3 +228,6 @@
 
 0.10.3 /2017-02-02
     * Allow default monitors on swarm scheduler
+
+0.10.4 /2018-02-21
+    * `components.*.containers.*.env_vars.*.is_excluded_from_support` can now be boolean literal, boolean string, or templates

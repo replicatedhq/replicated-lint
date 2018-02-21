@@ -1145,6 +1145,74 @@ components:
   },
 };
 
+export const containerEnvvarsExcludedTypeCheck: YAMLRule = {
+  name: "prop-component-container-envvars-excluded-type-check",
+  type: "error",
+  message: "is_excluded_from_support must be a bool string, boolean literal, or template function",
+  test: {
+    AnyOf: {
+      path: "components",
+      pred: {
+        AnyOf: {
+          path: "containers",
+          pred: {
+            AnyOf: {
+              path: "env_vars",
+              pred: {
+                And: {
+                  preds: [
+                    { Exists: { path: "is_excluded_from_support" } },
+                    { NotBoolString: { path: "is_excluded_from_support" } },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "`yes` is not a valid value for `is_excluded_from_support`",
+        yaml: `
+---
+components:
+- containers:
+  - env_vars:
+    - is_excluded_from_support: "yes"
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "`\"true\"`, `true`, `\"false\"` and `false` are all valid values for `is_excluded_from_support`",
+        yaml: `
+---
+components:
+- containers:
+  - env_vars:
+    - is_excluded_from_support: "true"
+    - is_excluded_from_support: "false"
+    - is_excluded_from_support: true
+    - is_excluded_from_support: false
+      `,
+      },
+      {
+        description: "`{{repl AppID}}` is a valid template function and is thus a valid value for `is_excluded_from_support`",
+        yaml: `
+---
+components:
+- containers:
+  - env_vars:
+    - is_excluded_from_support: "{{repl AppID}}"
+      `,
+      },
+    ],
+  },
+};
+
 export const containerShmSizeUInt: YAMLRule = {
   name: "prop-component-container-shm-size-uint",
   type: "error",

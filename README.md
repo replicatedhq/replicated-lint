@@ -28,7 +28,7 @@ cat my-app.yml | replicated-lint validate -f -
 
 Results that have issues will look something like:
 
-```javascript
+```typescript
 { type: 'info',
   rule: 'prop-configitem-testproc-run-on-save',
   message: 'If a config item\'s test_proc.run_on_save is not set to \'true\', test_proc\'s will not be checked automatically. Consider setting your test_proc\'s run_on_save to automatically validate inputs',

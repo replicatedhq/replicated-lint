@@ -1,7 +1,7 @@
 {
   "name": "replicated-lint",
   "author": "Replicated, Inc.",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "engines": {
     "node": ">=4.3.2"
   },
@@ -39,7 +39,6 @@
     "lint": "yarn run prepublish && /usr/bin/env node ./dist/bin/stdin.js",
     "report-coverage": "codeclimate-test-reporter < ./coverage/lcov.info",
     "gen-schemas": "rm -rf ./dist && ./node_modules/.bin/typescript-json-schema ./tsconfig.json ReplicatedApp --ignoreErrors --out ./src/schemas/replicated.json --required true",
-    "schema-to-ts": "echo -n 'export default ' > ./src/schemas/parsed.ts && cat ./src/schemas/replicated.json >> ./src/schemas/parsed.ts && yarn run tslintfix",
     "publish-if-version-changed": "publish"
   },
   "bin": "bin/replicated-lint",

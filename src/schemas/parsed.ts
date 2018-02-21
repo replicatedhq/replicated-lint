@@ -364,7 +364,7 @@ export default {
                     "type": "object",
                     "properties": {
                       "is_excluded_from_support": {
-                        "type": "string",
+                        "type": ["string", "boolean"],
                       },
                       "name": {
                         "type": "string",

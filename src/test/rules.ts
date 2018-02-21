@@ -58,4 +58,3 @@ describe("linter.rules.all", () => {
     });
   }
 });
-

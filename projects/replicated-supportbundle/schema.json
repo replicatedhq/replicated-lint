@@ -449,8 +449,12 @@
             ],
             "_ext_outputs": [
               {
-                "path": "{{.Name}}.raw",
-                "description": "The stdout/stderr multiplexed logs. Will generate this file for each matched container"
+                "path": "{{.Name}}.stdout",
+                "description": "The stdout logs. Will generate this file for each matched container"
+              },
+              {
+                "path": "{{.Name}}.stderr",
+                "description": "The stderr logs. Will generate this file for each matched container"
               }
             ],
             "type": "object",
@@ -1879,8 +1883,12 @@
             ],
             "_ext_outputs": [
               {
-                "path": "{{.Name}}.raw",
-                "description": "The stdout/stderr multiplexed logs. Will generate this file for each matched container"
+                "path": "{{.Name}}.stdout",
+                "description": "The stdout logs. Will generate this file for each matched container"
+              },
+              {
+                "path": "{{.Name}}.stderr",
+                "description": "The stderr logs. Will generate this file for each matched container"
               }
             ],
             "type": "object",
@@ -3005,8 +3013,12 @@
             ],
             "_ext_outputs": [
               {
-                "path": "{{.Name}}.raw",
-                "description": "The raw output of the logs call. Will generate this file for each matched service"
+                "path": "{{.Name}}.stdout",
+                "description": "The stdout output of the logs call. Will generate this file for each matched service"
+              },
+              {
+                "path": "{{.Name}}.stderr",
+                "description": "The stderr output of the logs call. Will generate this file for each matched service"
               }
             ],
             "type": "object",
@@ -3319,8 +3331,12 @@
             ],
             "_ext_outputs": [
               {
-                "path": "{{.StackName}}_{{.ServiceName}}.raw",
-                "description": "The raw output. Will generate this file for each matched service"
+                "path": "{{.StackName}}_{{.ServiceName}}.stdout",
+                "description": "The stdout output. Will generate this file for each matched service"
+              },
+              {
+                "path": "{{.StackName}}_{{.ServiceName}}.stderr",
+                "description": "The stderr output. Will generate this file for each matched service"
               }
             ],
             "type": "object",
@@ -3728,8 +3744,12 @@
             ],
             "_ext_outputs": [
               {
-                "path": "{{.TaskId}}.raw",
-                "description": "The raw output. Will generate this file for each matched service task"
+                "path": "{{.TaskId}}.stdout",
+                "description": "The stdout output. Will generate this file for each matched service task"
+              },
+              {
+                "path": "{{.TaskId}}.stderr",
+                "description": "The stderr output. Will generate this file for each matched service task"
               }
             ],
             "type": "object",
@@ -3857,8 +3877,12 @@
             ],
             "_ext_outputs": [
               {
-                "path": "{{.TaskId}}.raw",
-                "description": "The raw output. Will generate this file for each matched service task"
+                "path": "{{.TaskId}}.stdout",
+                "description": "The stdout output. Will generate this file for each matched service task"
+              },
+              {
+                "path": "{{.TaskId}}.stderr",
+                "description": "The stderr output. Will generate this file for each matched service task"
               }
             ],
             "type": "object",

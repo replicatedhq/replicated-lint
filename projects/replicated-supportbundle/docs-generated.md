@@ -1724,7 +1724,7 @@ components:
 
 ## `prop-component-container-event-subscription-container-exists`
 
-Container event subscriptions must reference an existing component/conatiner
+Container event subscriptions must reference an existing component/container
 
 
 

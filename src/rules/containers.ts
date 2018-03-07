@@ -73,7 +73,7 @@ components:
 export const eventSubscriptionContainerExists: YAMLRule = {
   name: "prop-component-container-event-subscription-container-exists",
   type: "error",
-  message: "Container event subscriptions must reference an existing component/conatiner",
+  message: "Container event subscriptions must reference an existing component/container",
   test: { EventSubscriptionContainerMissing: {} },
   examples: {
     wrong: [
@@ -335,7 +335,7 @@ export const volumeContainerPathAbsoulte: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "container path is not absolue",
+        description: "container path is not absolute",
         yaml: `
 ---
 components:

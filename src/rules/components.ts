@@ -177,7 +177,7 @@ export const componentHostVolumePathAbsolute: YAMLRule = {
   examples: {
     wrong: [
       {
-        description: "host path is not absolue",
+        description: "host path is not absolute",
         yaml: `
 ---
 components:

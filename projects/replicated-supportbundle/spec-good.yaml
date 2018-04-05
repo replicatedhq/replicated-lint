@@ -77,7 +77,8 @@ specs:
 lifecycle:
   - message:
       contents: generating bundle...
-  - generate: {}
+  - generate:
+      use_defaults: true
   - upload:
       prompt:
         message: Do you want to upload directly?

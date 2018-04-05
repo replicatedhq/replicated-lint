@@ -235,5 +235,8 @@
 0.10.5 /2018-02-21
     * Add `swarm/volumes` to `backup`
 
-0.10.5 /2018-02-21
+0.10.6 /2018-02-21
     * `components.*.containers.*.env_vars.*.is_excluded_from_support` must be a boolean literal, boolean string, or template
+
+0.10.7 /2018-04-05
+    * Add `lifecycle.generate.use_defaults` to Support Bundle custom rules

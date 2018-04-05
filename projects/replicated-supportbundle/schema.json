@@ -10,8 +10,14 @@
         "type": "object",
         "properties": {
           "generate": {
-            "description": "Adds a step that will generate a support bundle. It has no arguments, but should be specified with an empty object `{}`",
-            "type": "object"
+            "description": "Adds a step that will generate a support bundle.",
+            "type": "object",
+            "properties": {
+              "use_defaults": {
+                "description": "Includes the default files in the generated support bundle.",
+                "type":"boolean"
+              }
+            }
           },
           "message": {
             "description": "`message` can be used to print a message to the end customer",

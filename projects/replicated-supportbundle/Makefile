@@ -1,4 +1,4 @@
-LINT ?= replicated-lint
+LINT = replicated-lint
 
 deps:
 	npm install -g replicated-lint
@@ -14,3 +14,5 @@ validate-spec-good:
 
 validate-spec-bad:
 	$(LINT) validate --infile spec-bad.yaml  --excludeDefaults --threshold warn --schema ./schema.json --extraRules rules.yaml
+
+all: verify-rules validate-spec-good validate-spec-bad

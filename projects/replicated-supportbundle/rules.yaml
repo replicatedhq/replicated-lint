@@ -6,7 +6,7 @@
     "https://help.replicated.com/api/support-bundle-yaml-lifecycle/root"
   ]
   test:
-    Falsey:
+    IsEmpty: 
       path: lifecycle
   examples:
     wrong:
@@ -29,6 +29,24 @@
             - message:
                 contents: generating bundle...
             - generate: {}
+      - description: Spec has a `lifecycle` specified and includes the default files
+        yaml: |
+          ---
+          specs: []
+          lifecycle:
+            - message:
+                contents: generating bundle...
+            - generate:
+                use_defaults: true
+      - description: Spec has a `lifecycle` specified and explicitly does not include the default files
+        yaml: |
+          ---
+          specs: []
+          lifecycle:
+            - message:
+                contents: generating bundle...
+            - generate:
+                use_defaults: false
 
 - name: spec-specs-tip
   type: info
@@ -37,7 +55,7 @@
     "https://help.replicated.com/api/support-bundle-yaml-specs/shared"
   ]
   test:
-    Falsey:
+    IsEmpty:
       path: specs
   examples:
     wrong:

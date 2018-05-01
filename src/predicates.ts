@@ -194,6 +194,35 @@ export class AnyOf<T_Root, T_El> implements Predicate<T_Root> {
   }
 }
 
+export class AllOf<T_Root, T_El> implements Predicate<T_Root> {
+  public static fromJson<R, E>(obj: any, registry: Registry): AllOf<R, E> {
+    return new AllOf<R, E>(obj.path, registry.compile(obj.pred));
+  }
+
+  constructor(
+    private readonly collectionPath: string,
+    private readonly pred: Predicate<T_El>,
+  ) {
+  }
+
+  public test(root: any): RuleMatchedAt {
+    const collection: T_El[] = _.get<T_Root, T_El[]>(root, this.collectionPath);
+    if (!_.isArray(collection)) {
+      return { matched: false };
+    }
+
+    const matchedPaths: string[] = _.flatMap(collection, (obj: T_El, index) => {
+      const matched: RuleMatchedAt = this.pred.test(obj);
+      if (matched.matched) {
+        return _.map(matched.paths || [], path => `${this.collectionPath}.${index}.${path}`);
+      }
+      return [];
+    });
+
+    return { matched: matchedPaths.length === collection.length, paths: matchedPaths };
+  }
+}
+
 // Traverse the tree to `path`, then apply the predicate
 export class Dot implements Predicate<any> {
   public static fromJson(obj: any, registry: Registry): Dot {

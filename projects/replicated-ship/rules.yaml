@@ -6,8 +6,10 @@
     AllOf:
       path: lifecycle
       pred:
-        Falsey:
-          path: "render"
+        Not:
+          pred:
+            Exists:
+              path: "render"
   examples:
     wrong:
       - description: lifecycle is empty
@@ -20,15 +22,21 @@
           lifecycle:
             - message:
                 contents: welcome to ship!
+            - message:
+                contents: still here
     right:
       - description: lifecycle has a render step
         yaml: |
           ---
           lifecycle:
-            render: {}
+            - message:
+                contents: welcome to ship!
+            - render: {}
       - description: lifecycle has a render step with customization
         yaml: |
           ---
           lifecycle:
-            render:
-              skip_plan: true
+            - message:
+                contents: welcome to ship!
+            - render:
+                skip_plan: true

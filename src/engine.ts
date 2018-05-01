@@ -1,9 +1,11 @@
 import * as _ from "lodash";
 import { Predicate, Test } from "./lint";
 import {
-  AdminCommandContainerMissing, AllOf,
+  AdminCommandContainerMissing,
+  AllOf,
   And,
-  AnyOf, ArrayMemberFieldsNotUnique,
+  AnyOf,
+  ArrayMemberFieldsNotUnique,
   ConfigOptionExists,
   ConfigOptionIsCircular,
   ContainerNamesNotUnique,
@@ -57,9 +59,9 @@ export interface Registry {
 
 const defaultPredicates: PredicateRegistry = {
   AdminCommandContainerMissing,
+  AllOf,
   And,
   AnyOf,
-  AllOf,
   ConfigOptionExists,
   ConfigOptionIsCircular,
   Eq,

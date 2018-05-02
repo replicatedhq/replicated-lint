@@ -1,0 +1,42 @@
+---
+- name: spec-require-render
+  type: error
+  message: lifecycle should include at least one `render` step
+  test:
+    AllOf:
+      path: lifecycle
+      pred:
+        Not:
+          pred:
+            Exists:
+              path: "render"
+  examples:
+    wrong:
+      - description: lifecycle is empty
+        yaml: |
+          ---
+          lifecycle: []
+      - description: lifecycle has no render step
+        yaml: |
+          ---
+          lifecycle:
+            - message:
+                contents: welcome to ship!
+            - message:
+                contents: still here
+    right:
+      - description: lifecycle has a render step
+        yaml: |
+          ---
+          lifecycle:
+            - message:
+                contents: welcome to ship!
+            - render: {}
+      - description: lifecycle has a render step with customization
+        yaml: |
+          ---
+          lifecycle:
+            - message:
+                contents: welcome to ship!
+            - render:
+                skip_plan: true

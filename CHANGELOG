@@ -253,3 +253,6 @@
 
 0.11.2 /2018-05-01
     * Import fix from `0.11.1`
+
+0.11.3 /2018-05-01
+    * Export `replicated-ship` project in module

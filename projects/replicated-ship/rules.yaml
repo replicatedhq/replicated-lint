@@ -4,7 +4,7 @@
   message: lifecycle should include at least one `render` step
   test:
     AllOf:
-      path: lifecycle
+      path: lifecycle.v1
       pred:
         Not:
           pred:
@@ -15,28 +15,32 @@
       - description: lifecycle is empty
         yaml: |
           ---
-          lifecycle: []
+          lifecycle:
+            v1: []
       - description: lifecycle has no render step
         yaml: |
           ---
           lifecycle:
-            - message:
-                contents: welcome to ship!
-            - message:
-                contents: still here
+            v1:
+              - message:
+                  contents: welcome to ship!
+              - message:
+                  contents: still here
     right:
       - description: lifecycle has a render step
         yaml: |
           ---
           lifecycle:
-            - message:
-                contents: welcome to ship!
-            - render: {}
+            v1:
+              - message:
+                  contents: welcome to ship!
+              - render: {}
       - description: lifecycle has a render step with customization
         yaml: |
           ---
           lifecycle:
-            - message:
-                contents: welcome to ship!
-            - render:
-                skip_plan: true
+            v1:
+              - message:
+                  contents: welcome to ship!
+              - render:
+                  skip_plan: true

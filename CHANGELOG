@@ -243,6 +243,10 @@
 
 0.10.8 /2018-04-06
     * Update .ts files to use updated Support Bundle rules
+
 0.11.0 /2018-05-01
     * Add project for Replicated Ship product
     * Add `AllOf` predicate to default registry
+
+0.11.1 /2018-05-01
+    * Fix bug in `spec-require-render` rule `projects/replicated-ship`

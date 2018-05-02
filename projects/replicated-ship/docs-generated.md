@@ -12,7 +12,8 @@ lifecycle should include at least one `render` step
 *Incorrect*: lifecycle is empty
 
 ```yaml---
-lifecycle: []
+lifecycle:
+  v1: []
 
 ```
 
@@ -21,10 +22,11 @@ lifecycle: []
 
 ```yaml---
 lifecycle:
-  - message:
-      contents: welcome to ship!
-  - message:
-      contents: still here
+  v1:
+    - message:
+        contents: welcome to ship!
+    - message:
+        contents: still here
 
 ```
 
@@ -34,9 +36,10 @@ lifecycle:
 
 ```yaml---
 lifecycle:
-  - message:
-      contents: welcome to ship!
-  - render: {}
+  v1:
+    - message:
+        contents: welcome to ship!
+    - render: {}
 
 ```
 
@@ -45,10 +48,11 @@ lifecycle:
 
 ```yaml---
 lifecycle:
-  - message:
-      contents: welcome to ship!
-  - render:
-      skip_plan: true
+  v1:
+    - message:
+        contents: welcome to ship!
+    - render:
+        skip_plan: true
 
 ```
 
@@ -57,5 +61,5 @@ lifecycle:
 
 
 
-*Generated at Tue May 01 2018 17:05:40 GMT-0700 (PDT)*
+*Generated at Tue May 01 2018 17:39:51 GMT-0700 (PDT)*
 

@@ -250,3 +250,6 @@
 
 0.11.1 /2018-05-01
     * Fix bug in `spec-require-render` rule `projects/replicated-ship`
+
+0.11.2 /2018-05-01
+    * Import fix from `0.11.1`

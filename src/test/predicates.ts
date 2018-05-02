@@ -50,7 +50,17 @@ describe("ArrayMemberFieldsNotUnique", () => {
 });
 
 describe("AllOf", () => {
-  it("should not match an empty list", () => {
+  it("should match an empty list", () => {
+    const obj = {
+      things: [],
+    };
+    const pred = new AllOf("things", new Eq("key", "bar"));
+
+    const result = pred.test(obj);
+    expect(result.matched).to.equal(true);
+  });
+
+  it("should not match a non empty list", () => {
     const obj = {
       things: [
         { key: "foo" },
@@ -63,20 +73,7 @@ describe("AllOf", () => {
     expect(result.matched).to.equal(false);
   });
 
-  it("should match a non empty list", () => {
-    const obj = {
-      things: [
-        { key: "foo" },
-        { key: "bar" },
-      ],
-    };
-    const pred = new AllOf("things", new Eq("key", "bar"));
-
-    const result = pred.test(obj);
-    expect(result.matched).to.equal(false);
-  });
-
-  it("should match all these things", () => {
+  it("should match if all the members match", () => {
     const obj = {
       things: [
         { key: "foo" },

@@ -23,6 +23,8 @@ lifecycle: []
 lifecycle:
   - message:
       contents: welcome to ship!
+  - message:
+      contents: still here
 
 ```
 
@@ -32,7 +34,9 @@ lifecycle:
 
 ```yaml---
 lifecycle:
-  render: {}
+  - message:
+      contents: welcome to ship!
+  - render: {}
 
 ```
 
@@ -41,8 +45,10 @@ lifecycle:
 
 ```yaml---
 lifecycle:
-  render:
-    skip_plan: true
+  - message:
+      contents: welcome to ship!
+  - render:
+      skip_plan: true
 
 ```
 
@@ -51,5 +57,5 @@ lifecycle:
 
 
 
-*Generated at Tue May 01 2018 16:07:55 GMT-0700 (PDT)*
+*Generated at Tue May 01 2018 17:05:40 GMT-0700 (PDT)*
 

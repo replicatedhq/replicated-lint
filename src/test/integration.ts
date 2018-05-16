@@ -14,6 +14,10 @@ interface BadExample extends GoodExample {
   errPath?: string;
 }
 
+interface WarningExample extends BadExample {
+  rule: string;
+}
+
 const good: GoodExample[] = [
   {
     name: "api version present",
@@ -27,14 +31,19 @@ replicated_api_version: "2.10.1"
     yaml: fs.readFileSync(path.join("docs", "yamls", "correct-native.yml"), "utf8"),
   },
   {
-    name: "big, correct yaml -- kubernetes",
-    yaml: fs.readFileSync(path.join("docs", "yamls", "correct-kubernetes.yml"), "utf8"),
-  },
-  {
     name: "big, correct yaml -- swarm",
     yaml: fs.readFileSync(path.join("docs", "yamls", "correct-swarm.yml"), "utf8"),
   },
 
+];
+
+const goodWithInfo: WarningExample[] = [
+  {
+    name: "big, correct yaml -- kubernetes",
+    yaml: fs.readFileSync(path.join("docs", "yamls", "correct-kubernetes.yml"), "utf8"),
+    rule: "prop-support-bundle",
+    errPath: "support",
+  },
 ];
 
 const bad: BadExample[] = [
@@ -65,6 +74,26 @@ describe("integration", () => {
       it("should pass linting", () => {
         const result = defaultLint(example.yaml);
         expect(result).to.deep.equal([]);
+      });
+    });
+  }
+
+  for (const example of goodWithInfo) {
+
+    const { name, yaml, errPath, rule: exampleRule } = example;
+
+    describe(name, () => {
+      it("should inform with info", () => {
+        const result = defaultLint(yaml);
+        expect(result).to.have.lengthOf(1);
+
+        const [{ rule, type, positions }] = result;
+        expect(rule).to.equal(exampleRule);
+        expect(type).to.equal("info");
+
+        if (errPath) {
+          expect(positions).to.have.deep.property("0.path", errPath);
+        }
       });
     });
   }

@@ -4,7 +4,10 @@ export const supportBundle: YAMLRule = {
   name: "prop-support-bundle",
   type: "info",
   message: "For customers using Version 2 of the support bundle, custom files and commands can be configured in Replicated Console.",
-  links: ["https://console.replicated.com/troubleshoot"],
+  links: [
+    "https://help.replicated.com/guides/troubleshoot/",
+    "https://console.replicated.com/troubleshoot",
+  ],
   test: {
     Exists: {
       path: "support",

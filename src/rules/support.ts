@@ -3,7 +3,7 @@ import { YAMLRule } from "../lint";
 export const supportBundle: YAMLRule = {
   name: "prop-support-bundle",
   type: "info",
-  message: "For your customers using Version 2 of the support bundle, custom files and commands can be configured in Replicated Console.",
+  message: "For customers using Version 2 of the support bundle, custom files and commands can be configured in Replicated Console.",
   links: ["https://console.replicated.com/troubleshoot"],
   test: {
     Exists: {

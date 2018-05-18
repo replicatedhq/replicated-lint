@@ -7,6 +7,7 @@ import * as kubernetes from "./kubernetes";
 import * as monitors from "./monitors";
 import * as root from "./root";
 import * as schema from "./schema";
+import * as support from "./support";
 import * as swarm from "./swarm";
 import * as testproc from "./testproc";
 import { YAMLRule } from "../lint";
@@ -21,6 +22,7 @@ export const all: YAMLRule[] = [
   ...monitors.all,
   ...root.all,
   ...schema.all,
+  ...support.all,
   ...swarm.all,
   ...testproc.all,
 ];
@@ -35,6 +37,7 @@ export {
   monitors,
   root,
   schema,
+  support,
   swarm,
   testproc,
 };

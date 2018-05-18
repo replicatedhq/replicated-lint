@@ -59,7 +59,81 @@ lifecycle:
 
     
 
+## `assets-require-test-script`
+
+assets require a `test` shell script
 
 
-*Generated at Tue May 01 2018 17:39:51 GMT-0700 (PDT)*
+
+
+
+#### Examples:
+
+*Incorrect*: Missing test script
+
+```yaml---
+assets:
+  v1:
+    - inline:
+        contents: echo "installing app"
+        dest: scripts/install.sh
+
+```
+
+
+
+*Correct*: Includes a test script
+
+```yaml---
+assets:
+  v1:
+    - inline:
+        contents: echo "running tests"
+        dest: scripts/test.sh
+
+```
+
+
+    
+
+## `assets-require-install-script`
+
+assets require a `install` shell script
+
+
+
+
+
+#### Examples:
+
+*Incorrect*: Missing install script
+
+```yaml---
+assets:
+  v1:
+    - inline:
+        contents: echo "running tests"
+        dest: scripts/test.sh
+
+```
+
+
+
+*Correct*: Includes a install script
+
+```yaml---
+assets:
+  v1:
+    - inline:
+        contents: echo "running installs"
+        dest: scripts/install.sh
+
+```
+
+
+    
+
+
+
+*Generated at Thu May 17 2018 18:11:13 GMT-0700 (PDT)*
 

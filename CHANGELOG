@@ -259,3 +259,6 @@
 
 0.11.4 /2018-05-16
     * Add info rule with additional help info for support sections
+
+0.11.5 /2018-05-21
+    * Add support for github in `replicated-ship` project

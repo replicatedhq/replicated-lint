@@ -61,7 +61,7 @@ lifecycle:
 
 ## `assets-require-test-script`
 
-assets require a test script named `test.sh`
+assets require a test script in `scripts/test.sh`
 
 
 
@@ -94,14 +94,14 @@ assets:
 ```
 
 
-*Correct*: Includes custom test script path
+*Correct*: Includes a test script
 
 ```yaml---
 assets:
   v1:
     - inline:
         contents: echo "running tests"
-        dest: ./a/b/c/test.sh
+        dest: ./scripts/test.sh
 
 ```
 
@@ -110,7 +110,7 @@ assets:
 
 ## `assets-require-install-script`
 
-assets require an install script named `install.sh`
+assets require an install script in `scripts/install.sh`
 
 
 
@@ -131,7 +131,7 @@ assets:
 
 
 
-*Correct*: Includes a install script
+*Correct*: Includes an install script
 
 ```yaml---
 assets:
@@ -143,14 +143,14 @@ assets:
 ```
 
 
-*Correct*: Includes custom install script path
+*Correct*: Includes an install script
 
 ```yaml---
 assets:
   v1:
     - inline:
         contents: echo "running installs"
-        dest: ./a/b/c/install.sh
+        dest: ./scripts/install.sh
 
 ```
 
@@ -159,5 +159,5 @@ assets:
 
 
 
-*Generated at Wed May 23 2018 13:38:21 GMT-0700 (PDT)*
+*Generated at Wed May 23 2018 15:05:16 GMT-0700 (PDT)*
 

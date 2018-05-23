@@ -47,16 +47,16 @@
 
 - name: assets-require-test-script
   type: warn
-  message: assets require a `test` shell script
+  message: assets require a test script named `test.sh`
   test:
     AllOf:
       path: assets.v1
       pred:
         Not:
           pred:
-            Eq:
+            Match:
               path: inline.dest
-              value: scripts/test.sh
+              pattern: test.sh$
   examples:
     wrong:
       - description: Missing test script
@@ -76,19 +76,27 @@
               - inline:
                   contents: echo "running tests"
                   dest: scripts/test.sh
+      - description: Includes custom test script path
+        yaml: |
+          ---
+          assets:
+            v1:
+              - inline:
+                  contents: echo "running tests"
+                  dest: ./a/b/c/test.sh
 
 - name: assets-require-install-script
   type: warn
-  message: assets require a `install` shell script
+  message: assets require an install script named `install.sh`
   test:
     AllOf:
       path: assets.v1
       pred:
         Not:
           pred:
-            Eq:
+            Match:
               path: inline.dest
-              value: scripts/install.sh
+              pattern: install.sh$
   examples:
     wrong:
       - description: Missing install script
@@ -108,5 +116,13 @@
               - inline:
                   contents: echo "running installs"
                   dest: scripts/install.sh
+      - description: Includes custom install script path
+        yaml: |
+          ---
+          assets:
+            v1:
+              - inline:
+                  contents: echo "running installs"
+                  dest: ./a/b/c/install.sh
 
 

@@ -47,16 +47,21 @@
 
 - name: assets-require-test-script
   type: warn
-  message: assets require a test script named `test.sh`
+  message: assets require a test script in `scripts/test.sh`
   test:
     AllOf:
       path: assets.v1
       pred:
         Not:
           pred:
-            Match:
-              path: inline.dest
-              pattern: test.sh$
+            Or:
+              preds:
+                - Eq:
+                    path: inline.dest
+                    value: scripts/test.sh
+                - Eq:
+                    path: inline.dest
+                    value: ./scripts/test.sh
   examples:
     wrong:
       - description: Missing test script
@@ -76,27 +81,32 @@
               - inline:
                   contents: echo "running tests"
                   dest: scripts/test.sh
-      - description: Includes custom test script path
+      - description: Includes a test script
         yaml: |
           ---
           assets:
             v1:
               - inline:
                   contents: echo "running tests"
-                  dest: ./a/b/c/test.sh
+                  dest: ./scripts/test.sh
 
 - name: assets-require-install-script
   type: warn
-  message: assets require an install script named `install.sh`
+  message: assets require an install script in `scripts/install.sh`
   test:
     AllOf:
       path: assets.v1
       pred:
         Not:
           pred:
-            Match:
-              path: inline.dest
-              pattern: install.sh$
+            Or:
+              preds:
+                - Eq:
+                    path: inline.dest
+                    value: scripts/install.sh
+                - Eq:
+                    path: inline.dest
+                    value: ./scripts/install.sh
   examples:
     wrong:
       - description: Missing install script
@@ -108,7 +118,7 @@
                   contents: echo "running tests"
                   dest: scripts/test.sh
     right:
-      - description: Includes a install script
+      - description: Includes an install script
         yaml: |
           ---
           assets:
@@ -116,13 +126,13 @@
               - inline:
                   contents: echo "running installs"
                   dest: scripts/install.sh
-      - description: Includes custom install script path
+      - description: Includes an install script
         yaml: |
           ---
           assets:
             v1:
               - inline:
                   contents: echo "running installs"
-                  dest: ./a/b/c/install.sh
+                  dest: ./scripts/install.sh
 
 

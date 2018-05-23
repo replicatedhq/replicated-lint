@@ -1,5 +1,5 @@
-LINT := replicated-lint
-PROJECT := replicated-entitlements
+LINT := ./bin/replicated-lint
+PROJECT ?= replicated-entitlements
 
 project-import:
 	rm -rf src/projects/$(PROJECT)

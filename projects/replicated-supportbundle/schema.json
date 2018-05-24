@@ -10,12 +10,11 @@
         "type": "object",
         "properties": {
           "generate": {
-            "description": "Adds a step that will generate a support bundle.",
+            "description": "Adds a step that will generate a support bundle. It has no arguments, but should be specified with an empty object `{}`",
             "type": "object",
             "properties": {
               "use_defaults": {
-                "description": "Includes the default files in the generated support bundle.",
-                "type":"boolean"
+                "type": "boolean"
               }
             }
           },
@@ -119,6 +118,9 @@
               },
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -265,6 +267,9 @@
                   "Cmd"
                 ]
               },
+              "include_empty": {
+                "type": "boolean"
+              },
               "meta": {
                 "type": "object",
                 "properties": {
@@ -304,7 +309,6 @@
               }
             },
             "required": [
-              "output_dir",
               "container",
               "exec_config"
             ]
@@ -328,16 +332,8 @@
             ],
             "_ext_outputs": [
               {
-                "path": "{{.Name}}.raw",
-                "description": "The raw output of the inspect call. Will generate this file for each matched container"
-              },
-              {
                 "path": "{{.Name}}.json",
                 "description": "The json output of the inspect call. Will generate this file for each matched container"
-              },
-              {
-                "path": "{{.Name}}.human",
-                "description": "The human-readable output of the inspect call. Will generate this file for each matched container"
               }
             ],
             "type": "object",
@@ -395,6 +391,9 @@
               "description": {
                 "type": "string"
               },
+              "include_empty": {
+                "type": "boolean"
+              },
               "meta": {
                 "type": "object",
                 "properties": {
@@ -432,10 +431,7 @@
               "timeout_seconds": {
                 "type": "integer"
               }
-            },
-            "required": [
-              "output_dir"
-            ]
+            }
           },
           "docker.container-logs": {
             "description": "Collect the stdout/stderr logs from one or more docker containers. One of `container` or `container_list_options` is required.",
@@ -557,6 +553,9 @@
               "description": {
                 "type": "string"
               },
+              "include_empty": {
+                "type": "boolean"
+              },
               "meta": {
                 "type": "object",
                 "properties": {
@@ -594,10 +593,7 @@
               "timeout_seconds": {
                 "type": "integer"
               }
-            },
-            "required": [
-              "output_dir"
-            ]
+            }
           },
           "docker.container-ls": {
             "description": "Collect information about one or more containers",
@@ -615,16 +611,8 @@
             ],
             "_ext_outputs": [
               {
-                "path": "container_ls.raw",
-                "description": "Raw output"
-              },
-              {
                 "path": "container_ls.json",
                 "description": "JSON output"
-              },
-              {
-                "path": "container_ls.human",
-                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -670,6 +658,9 @@
               },
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -1445,6 +1436,9 @@
                 "description": "If `true`, allow this container to be pulled if not present",
                 "type": "boolean"
               },
+              "include_empty": {
+                "type": "boolean"
+              },
               "meta": {
                 "type": "object",
                 "properties": {
@@ -1484,7 +1478,6 @@
               }
             },
             "required": [
-              "output_dir",
               "container_create_config"
             ]
           },
@@ -1579,6 +1572,9 @@
                   "Cmd"
                 ]
               },
+              "include_empty": {
+                "type": "boolean"
+              },
               "meta": {
                 "type": "object",
                 "properties": {
@@ -1618,7 +1614,6 @@
               }
             },
             "required": [
-              "output_dir",
               "container",
               "exec_config"
             ]
@@ -1638,16 +1633,8 @@
             ],
             "_ext_outputs": [
               {
-                "path": "image_ls.raw",
-                "description": "Raw output"
-              },
-              {
                 "path": "image_ls.json",
                 "description": "JSON output"
-              },
-              {
-                "path": "image_ls.human",
-                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -1669,6 +1656,9 @@
               },
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -1725,16 +1715,8 @@
             ],
             "_ext_outputs": [
               {
-                "path": "image_ls.raw",
-                "description": "Raw output"
-              },
-              {
                 "path": "image_ls.json",
                 "description": "JSON output"
-              },
-              {
-                "path": "image_ls.human",
-                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -1756,6 +1738,9 @@
               },
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -1808,22 +1793,17 @@
             ],
             "_ext_outputs": [
               {
-                "path": "docker_info.raw",
-                "description": "The raw JSON from the docker daemon"
-              },
-              {
                 "path": "docker_info.json",
                 "description": "A pretty-printed JSON representation"
-              },
-              {
-                "path": "docker_info.human",
-                "description": "A human-readable representation"
               }
             ],
             "type": "object",
             "properties": {
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -1862,10 +1842,7 @@
               "timeout_seconds": {
                 "type": "integer"
               }
-            },
-            "required": [
-              "output_dir"
-            ]
+            }
           },
           "docker.logs": {
             "description": "Collect the stdout/stderr logs from one or more docker containers. One of `container` or `container_list_options` is required.",
@@ -1991,6 +1968,9 @@
               "description": {
                 "type": "string"
               },
+              "include_empty": {
+                "type": "boolean"
+              },
               "meta": {
                 "type": "object",
                 "properties": {
@@ -2028,10 +2008,7 @@
               "timeout_seconds": {
                 "type": "integer"
               }
-            },
-            "required": [
-              "output_dir"
-            ]
+            }
           },
           "docker.node-ls": {
             "description": "Collect information about the nodes in a Docker Swarm installation",
@@ -2048,16 +2025,8 @@
             ],
             "_ext_outputs": [
               {
-                "path": "node_ls.raw",
-                "description": "Raw output"
-              },
-              {
                 "path": "node_ls.json",
                 "description": "JSON output"
-              },
-              {
-                "path": "node_ls.human",
-                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -2075,6 +2044,9 @@
               },
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -2126,16 +2098,8 @@
             ],
             "_ext_outputs": [
               {
-                "path": "container_ls.raw",
-                "description": "Raw output"
-              },
-              {
                 "path": "container_ls.json",
                 "description": "JSON output"
-              },
-              {
-                "path": "container_ls.human",
-                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -2181,6 +2145,9 @@
               },
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -2954,6 +2921,9 @@
                 "description": "If `true`, allow this container to be pulled if not present",
                 "type": "boolean"
               },
+              "include_empty": {
+                "type": "boolean"
+              },
               "meta": {
                 "type": "object",
                 "properties": {
@@ -2993,7 +2963,6 @@
               }
             },
             "required": [
-              "output_dir",
               "container_create_config"
             ]
           },
@@ -3079,6 +3048,9 @@
               },
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -3171,16 +3143,8 @@
             ],
             "_ext_outputs": [
               {
-                "path": "service_ls.raw",
-                "description": "Raw output"
-              },
-              {
                 "path": "service_ls.json",
                 "description": "JSON output"
-              },
-              {
-                "path": "service_ls.human",
-                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -3198,6 +3162,9 @@
               },
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -3254,16 +3221,8 @@
             ],
             "_ext_outputs": [
               {
-                "path": "service_ps.raw",
-                "description": "Raw output"
-              },
-              {
                 "path": "service_ps.json",
                 "description": "JSON output"
-              },
-              {
-                "path": "service_ps.human",
-                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -3281,6 +3240,9 @@
               },
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -3321,8 +3283,6 @@
               }
             },
             "required": [
-              "output_dir",
-              "output_dir",
               "Filters"
             ]
           },
@@ -3398,6 +3358,9 @@
               "description": {
                 "type": "string"
               },
+              "include_empty": {
+                "type": "boolean"
+              },
               "meta": {
                 "type": "object",
                 "properties": {
@@ -3450,6 +3413,9 @@
                   },
                   "description": {
                     "type": "string"
+                  },
+                  "include_empty": {
+                    "type": "boolean"
                   },
                   "meta": {
                     "type": "object",
@@ -3490,7 +3456,6 @@
                   }
                 },
                 "required": [
-                  "output_dir",
                   "Filters"
                 ]
               },
@@ -3499,7 +3464,6 @@
               }
             },
             "required": [
-              "output_dir",
               "namespace"
             ]
           },
@@ -3514,22 +3478,17 @@
             ],
             "_ext_outputs": [
               {
-                "path": "service_ls.raw",
-                "description": "Raw output"
-              },
-              {
                 "path": "service_ls.json",
                 "description": "JSON output"
-              },
-              {
-                "path": "service_ls.human",
-                "description": "Human-readable output"
               }
             ],
             "type": "object",
             "properties": {
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -3583,6 +3542,9 @@
                   },
                   "description": {
                     "type": "string"
+                  },
+                  "include_empty": {
+                    "type": "boolean"
                   },
                   "meta": {
                     "type": "object",
@@ -3629,7 +3591,6 @@
               }
             },
             "required": [
-              "output_dir",
               "namespace"
             ]
           },
@@ -3652,22 +3613,17 @@
             ],
             "_ext_outputs": [
               {
-                "path": "service_ps.raw",
-                "description": "Raw output"
-              },
-              {
                 "path": "service_ps.json",
                 "description": "JSON output"
-              },
-              {
-                "path": "service_ps.human",
-                "description": "Human-readable output"
               }
             ],
             "type": "object",
             "properties": {
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -3727,7 +3683,6 @@
               }
             },
             "required": [
-              "output_dir",
               "namespace"
             ]
           },
@@ -3803,6 +3758,9 @@
               "description": {
                 "type": "string"
               },
+              "include_empty": {
+                "type": "boolean"
+              },
               "meta": {
                 "type": "object",
                 "properties": {
@@ -3861,7 +3819,6 @@
               }
             },
             "required": [
-              "output_dir",
               "namespace"
             ]
           },
@@ -3940,6 +3897,9 @@
                 "description": "The id of a single task",
                 "type": "string"
               },
+              "include_empty": {
+                "type": "boolean"
+              },
               "meta": {
                 "type": "object",
                 "properties": {
@@ -3992,10 +3952,7 @@
               "timeout_seconds": {
                 "type": "integer"
               }
-            },
-            "required": [
-              "output_dir"
-            ]
+            }
           },
           "docker.task-ls": {
             "description": "List docker swarm tasks",
@@ -4012,16 +3969,8 @@
             ],
             "_ext_outputs": [
               {
-                "path": "task_ls.raw",
-                "description": "Raw output"
-              },
-              {
                 "path": "task_ls.json",
                 "description": "JSON output"
-              },
-              {
-                "path": "task_ls.human",
-                "description": "Human-readable output"
               }
             ],
             "type": "object",
@@ -4042,6 +3991,9 @@
               },
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -4092,22 +4044,17 @@
             ],
             "_ext_outputs": [
               {
-                "path": "docker_version.raw",
-                "description": "Raw output"
-              },
-              {
                 "path": "docker_version.json",
                 "description": "JSON output"
-              },
-              {
-                "path": "docker_version.human",
-                "description": "Human-readable output"
               }
             ],
             "type": "object",
             "properties": {
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -4146,10 +4093,10 @@
               "timeout_seconds": {
                 "type": "integer"
               }
-            },
-            "required": [
-              "output_dir"
-            ]
+            }
+          },
+          "include_empty": {
+            "type": "boolean"
           },
           "journald.logs": {
             "description": "Collect logs from journald",
@@ -4171,6 +4118,9 @@
             "properties": {
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -4265,6 +4215,9 @@
               "description": {
                 "type": "string"
               },
+              "include_empty": {
+                "type": "boolean"
+              },
               "meta": {
                 "type": "object",
                 "properties": {
@@ -4302,10 +4255,7 @@
               "timeout_seconds": {
                 "type": "integer"
               }
-            },
-            "required": [
-              "output_dir"
-            ]
+            }
           },
           "os.http-request": {
             "description": "Collect information about the response from making an HTTP request",
@@ -4352,6 +4302,9 @@
                     "type": "array"
                   }
                 }
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "insecure": {
                 "description": "Set to `true` to skip TLS verification",
@@ -4429,6 +4382,9 @@
               "description": {
                 "type": "string"
               },
+              "include_empty": {
+                "type": "boolean"
+              },
               "meta": {
                 "type": "object",
                 "properties": {
@@ -4483,7 +4439,7 @@
             ],
             "_ext_outputs": [
               {
-                "path": "contents",
+                "path": "bigtool.conf",
                 "description": "The file contents",
                 "examples": [
                   "{\"setting1\": true, \"setting2\": false}"
@@ -4498,6 +4454,9 @@
               "filepath": {
                 "description": "The file path on the host. If running Support Bundle via docker, this will work, but symlinks are not supported",
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -4538,7 +4497,6 @@
               }
             },
             "required": [
-              "output_dir",
               "filepath"
             ]
           },
@@ -4560,14 +4518,14 @@
             "_ext_outputs": [
               {
                 "path": "stderr",
-                "description": "The standard error of the comand",
+                "description": "The standard error of the command",
                 "examples": [
                   "Usage: ping [-aAbBdDfhLnOqrRUvV] [-c count] [-i interval] [-I interface]\n [-m mark] [-M pmtudisc_option] [-l preload] [-p pattern] [-Q tos]\n [-s packetsize] [-S sndbuf] [-t ttl] [-T timestamp_option]\n [-w deadline] [-W timeout] [hop1 ...] destination"
                 ]
               },
               {
                 "path": "stdout",
-                "description": "The standard output of the comand",
+                "description": "The standard output of the command",
                 "examples": [
                   "PING google.com (172.217.11.78) 56(84) bytes of data.\n 64 bytes from lax17s34-in-f14.1e100.net (172.217.11.78): icmp_seq=1 ttl=54 time=203 ms\n 64 bytes from lax17s34-in-f14.1e100.net (172.217.11.78): icmp_seq=2 ttl=54 time=28.0 ms\n 64 bytes from lax17s34-in-f14.1e100.net (172.217.11.78): icmp_seq=3 ttl=54 time=130 ms\n"
                 ]
@@ -4595,6 +4553,9 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -4639,7 +4600,6 @@
               }
             },
             "required": [
-              "output_dir",
               "name"
             ]
           },
@@ -4660,6 +4620,9 @@
             "properties": {
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "meta": {
                 "type": "object",
@@ -4758,6 +4721,9 @@
               },
               "description": {
                 "type": "string"
+              },
+              "include_empty": {
+                "type": "boolean"
               },
               "insecure": {
                 "description": "Set to `true` to skip SSL verification on the endpoint",

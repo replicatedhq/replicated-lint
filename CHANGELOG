@@ -265,3 +265,6 @@
 
 0.11.6 /2018-05-23
     * Fix Ship `spec-require-*-script` rules to enforce folder path structure
+
+0.11.7 /2018-05-24
+    * Add support for new include_empty shared spec in support bundle project

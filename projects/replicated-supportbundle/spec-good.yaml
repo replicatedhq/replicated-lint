@@ -68,6 +68,7 @@ specs:
      filepath: /proc/cpuinfo
      description: "cpuinfo"
      output_dir: /os/proc/cpuinfo
+     include_empty: true
 
  - docker.service-logs:
      service: "my_service"

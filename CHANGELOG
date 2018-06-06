@@ -272,3 +272,6 @@
 0.11.8 /2018-05-31
     * Add support for docker cp from containers identified by labels in support bundle project
 
+0.11.9 /2018-06-06
+    * Add labels property to component.container
+

@@ -418,6 +418,12 @@ export default {
                 "image_name": {
                   "type": "string",
                 },
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                  },
+                },
                 "logs": {
                   "type": "object",
                   "properties": {

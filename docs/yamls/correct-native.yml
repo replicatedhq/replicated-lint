@@ -186,6 +186,7 @@ components:
     ephemeral: true
     cmd: '["sleep", "10"]'
     name: "temp"
+    labels: ["com.replicated.excludelogs=true"]
     ports:
     - private_port: 80806
       public_port: 80805

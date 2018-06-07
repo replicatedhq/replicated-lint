@@ -275,3 +275,5 @@
 0.11.9 /2018-06-06
     * Add labels property to component.container
 
+0.11.10 /2018-06-07
+    * Add kubernetes.logs to supportbundle schema

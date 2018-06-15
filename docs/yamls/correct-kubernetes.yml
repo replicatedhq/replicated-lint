@@ -28,6 +28,23 @@ backup:
   kubernetes:
     pvc_names: [ "redis-pvc" ]
 
+###########################################################
+# Snapshots with multiple strategies
+###########################################################
+
+backup:
+  enabled: true
+  strategies:
+    - name: manual
+      manual: true
+      enabled: true
+      kubernetes:
+        pvc_names: [ "redis-pvc" ]
+    - name: scheduled
+      manual: false
+      enabled: true
+      kubernetes:
+        pvc_names: [ "postgres-pvc" ]
 
 ###########################################################
 # Config Settings
@@ -188,4 +205,3 @@ support:
             app: redis
             tier: backend
             role: master
-

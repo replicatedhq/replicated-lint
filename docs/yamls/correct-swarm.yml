@@ -34,13 +34,6 @@ backup:
   swarm:
     volumes:
     - redis-data
-
-###########################################################
-# Snapshots with multiple strategies
-###########################################################
-
-backup:
-  enabled: true
   strategies:
     - name: manual
       manual: true

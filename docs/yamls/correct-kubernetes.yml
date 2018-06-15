@@ -27,13 +27,6 @@ backup:
   hidden: "false"
   kubernetes:
     pvc_names: [ "redis-pvc" ]
-
-###########################################################
-# Snapshots with multiple strategies
-###########################################################
-
-backup:
-  enabled: true
   strategies:
     - name: manual
       manual: true

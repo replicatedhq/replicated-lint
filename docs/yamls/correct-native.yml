@@ -29,13 +29,6 @@ properties:
 backup:
   enabled: true
   hidden: false
-
-###########################################################
-# Snapshots with multiple strategies
-###########################################################
-
-backup:
-  enabled: true
   strategies:
     - name: full_manual
       manual: true

@@ -187,6 +187,12 @@ export default {
         "pause_containers": {
           "type": "string",
         },
+        "exclude_registry_data": {
+          "type": ["string", "boolean"],
+        },
+        "disable_deduplication": {
+          "type": ["string", "boolean"],
+        },
         "script": {
           "type": "string",
         },
@@ -197,6 +203,66 @@ export default {
               "type": "array",
               "items": {
                 "type": "string",
+              },
+            },
+          },
+        },
+        "strategies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+              },
+              "description": {
+                "type": "string",
+              },
+              "manual": {
+                "type": ["string", "boolean"],
+              },
+              "exclude_app_data": {
+                "type": ["string", "boolean"],
+              },
+              "exclude_replicated_data": {
+                "type": ["string", "boolean"],
+              },
+              "exclude_registry_data": {
+                "type": ["string", "boolean"],
+              },
+              "disable_deduplication": {
+                "type": ["string", "boolean"],
+              },
+              "enabled": {
+                "type": ["string", "boolean"],
+              },
+              "pause_containers": {
+                "type": ["string", "boolean"],
+              },
+              "script": {
+                "type": "string",
+              },
+              "kubernetes": {
+                "type": "object",
+                "properties": {
+                  "pvc_names": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                    },
+                  },
+                },
+              },
+              "swarm": {
+                "type": "object",
+                "properties": {
+                  "volumes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                    },
+                  },
+                },
               },
             },
           },

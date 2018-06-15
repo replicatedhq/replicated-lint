@@ -34,6 +34,31 @@ backup:
   swarm:
     volumes:
     - redis-data
+
+###########################################################
+# Snapshots with multiple strategies
+###########################################################
+
+backup:
+  enabled: true
+  strategies:
+    - name: manual
+      manual: true
+      enabled: true
+      swarm:
+        volumes:
+        - redis-data
+    - name: scheduled
+      manual: false
+      enabled: true
+      script: |
+        #!/bin/sh
+        replicated admin backup-redis-to-rdb
+        replicated admin mv-backup-rdb-to-safe-place
+      swarm:
+        volumes:
+        - postgres-data
+
 ###########################################################
 # Swarm specific configurations
 ###########################################################

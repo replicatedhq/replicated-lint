@@ -280,3 +280,6 @@
 
 0.11.11 /2018-06-15
     * Add strategies property to backup
+
+0.11.12 /2018-06-15
+    * Add `helm` and `dockerlayer` assets to replicated-ship project

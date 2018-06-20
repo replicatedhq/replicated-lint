@@ -283,3 +283,6 @@
 
 0.11.12 /2018-06-15
     * Add `helm` and `dockerlayer` assets to replicated-ship project
+
+0.11.13 /2018-06-20
+    * Fixed `validate_json` test proc name

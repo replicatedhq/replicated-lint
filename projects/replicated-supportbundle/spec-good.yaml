@@ -74,6 +74,16 @@ specs:
      service: "my_service"
      output_dir: /swarm/service-logs/myservice
 
+ - docker.stack-service-logs:
+     output_dir: /docker/my-stack
+     namespace: replicated
+     labels: {"abc":"xyz"}
+
+ - docker.stack-task-logs:
+     output_dir: /docker/my-stack
+     namespace: replicated
+     labels:
+       abc: xyz
 
 lifecycle:
   - message:
@@ -86,4 +96,6 @@ lifecycle:
         default: true
         accept: Thanks! Superbigtool will get back to you within 24 hours.
         decline: Send your support bundle located at {{.BundlePath}} to Superbigtool
+
+
 

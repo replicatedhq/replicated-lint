@@ -3441,6 +3441,22 @@
                 "output_dir": "/swarm/stacks/cooltool/service-logs",
                 "description": "Logs from services in the cooltool stack",
                 "namespace": "cooltool-core"
+              },
+              {
+                "output_dir": "/swarm/stacks/cooltool/service-logs",
+                "description": "Logs from services in the cooltool stack",
+                "namespace": "cooltool-core",
+                "labels": {}
+              },
+              {
+                "output_dir": "/swarm/stacks/cooltool/service-logs",
+                "description": "Logs from services in the cooltool stack",
+                "namespace": "cooltool-core",
+                "labels": {
+                  "com.replicated.excludelogs": "false",
+                  "abc": "xyz",
+                  "abc2": ""
+                }
               }
             ],
             "_ext_outputs": [
@@ -3514,6 +3530,20 @@
                   false
                 ],
                 "type": "boolean"
+              },
+              "labels": {
+                "description": "A set of labels that must be present for the logs to be included",
+                "type": "object",
+                "patternProperties": {
+                  ".*": {
+                    "type": "string"
+                  }
+                },
+                "properties": {
+                  ".*": {
+                    "type": "string"
+                  }
+                }
               },
               "meta": {
                 "type": "object",
@@ -3861,11 +3891,26 @@
                 "namespace": "cooltool-core",
                 "task_list_options": {
                   "Filters": {
-                    "label": [
-                      "com.cooltool.tier=www",
-                      "com.cooltool.tier=api"
+                    "name": [
+                      "redis.1"
                     ]
                   }
+                }
+              },
+              {
+                "output_dir": "/swarm/stacks/cooltool/service-logs",
+                "description": "Logs from services in the cooltool stack",
+                "namespace": "cooltool-core",
+                "labels": {}
+              },
+              {
+                "output_dir": "/swarm/stacks/cooltool/service-logs",
+                "description": "Logs from services in the cooltool stack",
+                "namespace": "cooltool-core",
+                "labels": {
+                  "com.replicated.excludelogs": "false",
+                  "abc": "xyz",
+                  "abc2": ""
                 }
               }
             ],
@@ -3932,6 +3977,20 @@
                   false
                 ],
                 "type": "boolean"
+              },
+              "labels": {
+                "description": "A set of labels that must be present for the logs to be included",
+                "type": "object",
+                "patternProperties": {
+                  ".*": {
+                    "type": "string"
+                  }
+                },
+                "properties": {
+                  ".*": {
+                    "type": "string"
+                  }
+                }
               },
               "meta": {
                 "type": "object",

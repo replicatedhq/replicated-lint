@@ -26,7 +26,7 @@
   ],
   "scripts": {
     "fmt": "tsfmt -r",
-    "prepublish": "rm -rf ./dist && yarn run tslint && tsc -p .",
+    "prepublish": "make import-projects && rm -rf ./dist && yarn run tslint && tsc -p .",
     "test": "rm -rf ./dist && yarn run tslint && tsc -p . && mocha -r ts-node/register ./src/test/*.ts",
     "rules": "rm -rf ./dist && yarn run tslint && tsc -p . && mocha -r ts-node/register ./src/test/rules.ts",
     "cover": "rm -rf ./dist && yarn run tslint && tsc -p . && istanbul cover _mocha -- ./dist/test/*.js",

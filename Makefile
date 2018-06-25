@@ -1,3 +1,4 @@
+THIS_FILE := $(lastword $(MAKEFILE_LIST))
 LINT := ./bin/replicated-lint
 PROJECT ?= replicated-entitlements
 
@@ -19,3 +20,10 @@ project-validate-spec-good:
 
 project-validate-spec-bad:
 	$(LINT) validate --infile projects/$(PROJECT)/spec-bad.yaml  --excludeDefaults --threshold warn --schema projects/$(PROJECT)/schema.json --extraRules projects/$(PROJECT)/rules.yaml
+
+project-all: project-verify-rules project-generate-docs project-validate-spec-good project-import
+
+import-projects:
+	$(MAKE) -f $(THIS_FILE) project-all PROJECT=replicated-entitlements
+	$(MAKE) -f $(THIS_FILE) project-all PROJECT=replicated-ship
+	$(MAKE) -f $(THIS_FILE) project-all PROJECT=replicated-supportbundle

@@ -294,3 +294,9 @@
     * Add Github asset validation to replicated-ship rules
     * Regenerate replicated-supportbundle schema
 
+0.12.0 /2018-06-27
+    * Type schema property in linter constructor to JSONSchema
+    * Add types to base schema
+    * Add typings to generated code
+    * Add newlines to generated files
+

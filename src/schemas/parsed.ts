@@ -1,4 +1,6 @@
-export default {
+import { JSONSchema4 } from "json-schema";
+
+export const schema: JSONSchema4 = {
   "$schema": "http://json-schema.org/schema#",
   "type": "object",
   "properties": {
@@ -32,7 +34,7 @@ export default {
                 "type": "string",
               },
               "version": {
-                "type": ["nubmer", "string"],
+                "type": ["number", "string"],
               },
             },
           },
@@ -1688,3 +1690,5 @@ export default {
     },
   },
 };
+
+export default schema;

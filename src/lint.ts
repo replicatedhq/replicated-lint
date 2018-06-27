@@ -8,6 +8,7 @@ import { parsed as schema } from "./schemas";
 import { YAMLNode } from "yaml-ast-parser";
 import { astPosition, tokenize } from "./ast";
 import { defaultRegistry, Registry } from "./engine";
+import { JSONSchema4 } from "json-schema";
 
 export type RuleType =
   "error" |
@@ -214,7 +215,7 @@ export interface Position {
 
 export interface MultidocLintOpts {
   rules?: YAMLRule[];
-  schema?: any;
+  schema?: JSONSchema4;
   registry?: Registry;
 }
 

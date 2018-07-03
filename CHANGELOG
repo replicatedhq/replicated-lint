@@ -300,3 +300,6 @@
     * Add typings to generated code
     * Add newlines to generated files
 
+0.12.1 /2018-06-27
+    * Add support for `assets.v1.helm.github` to `projects/replicated-ship`
+

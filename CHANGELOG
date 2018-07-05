@@ -306,4 +306,7 @@
 0.12.2 /2018-07-05
     * Fix bug in `assets.v1.helm.github` schema in `projects/replicated-ship`
 
+0.12.3 /2018-07-05
+    * Add `kubernetes.container-cp` schema in `projects/replicated-supportbundle`
+
 

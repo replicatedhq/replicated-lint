@@ -85,6 +85,26 @@ specs:
      labels:
        abc: xyz
 
+ - kubernetes.container-cp:
+    output_dir: /kubernetes/files
+    pod_list_options:
+      labelSelector: "run=my-run"
+    namespace: default
+    src_path: /etc/os-release
+    container: my-run
+
+ - kubernetes.container-cp:
+    output_dir: /kubernetes/otherfiles
+    pod_list_options:
+      labelSelector: "run=my-run"
+    src_path: /etc/
+
+ - kubernetes.container-cp:
+    output_dir: /kubernetes/moreotherfiles
+    pod: mypodname
+    container: mycontainername
+    src_path: /etc/
+
 lifecycle:
   - message:
       contents: generating bundle...

@@ -309,4 +309,7 @@
 0.12.3 /2018-07-05
     * Add `kubernetes.container-cp` schema in `projects/replicated-supportbundle`
 
+0.12.4 /2018-07-09
+    * Add `kubernetes.api-versions`, `kubernetes.cluster-info`, `kubernetes.resource-list` and `kubernetes.version` schemas in `projects/replicated-supportbundle`
+
 

@@ -105,6 +105,23 @@ specs:
     container: mycontainername
     src_path: /etc/
 
+ - kubernetes.api-versions:
+    output_dir: /kubernetes/
+ - kubernetes.cluster-info:
+    output_dir: /kubernetes/
+ - kubernetes.version:
+    output_dir: /kubernetes/
+ - kubernetes.logs:
+    output_dir: /kubernetes/logs
+    list_options:
+      labelSelector: "run=echosleep"
+    namespace: default
+ - kubernetes.resource-list:
+    output_dir: /kubernetes/resource-list/pods
+    kind: pods
+    namespace: default
+
+
 lifecycle:
   - message:
       contents: generating bundle...

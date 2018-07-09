@@ -315,3 +315,7 @@
 0.12.5 /2018-07-09
     * Add `assets.v1.web` schemas in `projects/replicated-ship`
 
+0.12.6 /2018-07-09
+    * Remove `include_empty` examples from specs in `projects/replicated-supportbundle`
+
+

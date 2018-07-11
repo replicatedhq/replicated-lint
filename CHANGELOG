@@ -318,4 +318,6 @@
 0.12.6 /2018-07-09
     * Remove `include_empty` examples from specs in `projects/replicated-supportbundle`
 
+0.12.7 /2018-07-11
+    * Change default behavior for omitted namespace param in kubernetes specs within `projects/replicated-supportbundle`
 

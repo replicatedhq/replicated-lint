@@ -4440,15 +4440,21 @@
                 "pod_list_options": {
                   "labelSelector": "run=api"
                 },
-                "namespace": "default",
-                "src_path": "/logs/",
-                "timeout_seconds": 30
+                "src_path": "/logs/"
               }
             ],
             "_ext_outputs": [
               {
+                "path": "{{.Namespace}}/{{.Pod}}/{{.Container}}/",
+                "description": "A directory holding files copied from the pod and containers specified. Each pod and container will have a directory. Used when neither a pod name or a namespace is provided."
+              },
+              {
                 "path": "{{.Pod}}/{{.Container}}/",
                 "description": "A directory holding files copied from the pod and containers specified. Each pod and container will have a directory. Used when a pod name is not provided."
+              },
+              {
+                "path": "{{.Namespace}}/{{.Container}}/",
+                "description": "A directory holding files copied from the pod and containers specified. Each container will have a directory. Used when a pod name is provided, but a namespace is not."
               },
               {
                 "path": "{{.Container}}/",
@@ -4488,9 +4494,10 @@
                 }
               },
               "namespace": {
-                "description": "The Kubernetes namespace",
+                "description": "The Kubernetes namespace. If no namespace is provided, results from all namespaces are included",
                 "example": "default",
                 "examples": [
+                  "",
                   "default",
                   "kube-system"
                 ],
@@ -4626,6 +4633,10 @@
             ],
             "_ext_outputs": [
               {
+                "path": "{{.Namespace}}/{{.Name}}.log",
+                "description": "Logs pulled from Kubernetes pod. Kubernetes pulls logs from stdout/stderr into one output file. If a label selector is provided, it will create multiple log files following the same format. Used when a namespace is not provided."
+              },
+              {
                 "path": "{{.Name}}.log",
                 "description": "Logs pulled from Kubernetes pod. Kubernetes pulls logs from stdout/stderr into one output file. If a label selector is provided, it will create multiple log files following the same format."
               }
@@ -4699,9 +4710,10 @@
                 }
               },
               "namespace": {
-                "description": "The Kubernetes namespace",
+                "description": "The Kubernetes namespace. If no namespace is provided, results from all namespaces are included",
                 "example": "default",
                 "examples": [
+                  "",
                   "default",
                   "kube-system"
                 ],
@@ -4850,7 +4862,7 @@
                 }
               },
               "namespace": {
-                "description": "The Kubernetes namespace",
+                "description": "The Kubernetes namespace. If no namespace is provided, results from all namespaces are included",
                 "type": "string"
               },
               "output_dir": {

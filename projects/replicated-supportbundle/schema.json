@@ -33,6 +33,21 @@
               }
             }
           },
+          "notes": {
+            "description": "`notes` can be used to prompt the end customer to enter a note to be uploaded with the support bundle",
+            "examples": [
+              {
+                "prompt": "Please enter a note for the support bundle: "
+              }
+            ],
+            "type": "object",
+            "properties": {
+              "prompt": {
+                "description": "`prompt` is the message prompt to display to the end customer for entering a note",
+                "type": "string"
+              }
+            }
+          },
           "upload": {
             "description": "Adds a step in which the end customer can upload a bundle to https://console.replicated.com for review by the vendor",
             "type": "object",

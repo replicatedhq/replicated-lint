@@ -321,5 +321,5 @@
 0.12.7 /2018-07-11
     * Change default behavior for omitted namespace param in kubernetes specs within `projects/replicated-supportbundle`
 
-0.12.8 /2018-07-11
+0.12.8 /2018-07-17
     * Add `lifecycle.notes` to enter note as part of upload

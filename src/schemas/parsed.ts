@@ -329,6 +329,10 @@ export const schema: JSONSchema4 = {
             "type": "array",
             "items": {
               "type": "object",
+              "required": [
+                "source",
+                "image_name",
+              ],
               "properties": {
                 "allocate_tty": {
                   "type": "string",

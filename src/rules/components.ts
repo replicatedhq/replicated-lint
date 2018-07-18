@@ -348,6 +348,8 @@ components:
     - source: public
       ports:
         - public_port: "10000"
+      image_name: redis
+      version: latest
 
       `,
       },
@@ -362,6 +364,8 @@ components:
     - source: public
       ports:
         - public_port: "10000"
+      image_name: redis
+      version: latest
 
       `,
       },
@@ -378,6 +382,8 @@ components:
     - source: public
       ports:
         - public_port: "10000"
+      image_name: redis
+      version: latest
 
       `,
       },
@@ -392,6 +398,8 @@ components:
     - source: public
       ports:
         - public_port: "10000"
+      image_name: redis
+      version: latest
 
       `,
       },
@@ -637,6 +645,9 @@ components:
     cluster: "true"
     ports:
     - public_port: "10000"
+    image_name: redis
+    source: public
+    version: latest
       `,
       },
       {
@@ -651,6 +662,9 @@ components:
     cluster: true
     ports:
     - public_port: "10000"
+    image_name: redis
+    source: public
+    version: latest
       `,
       },
     ],
@@ -667,6 +681,9 @@ components:
     cluster: true
     ports:
     - public_port: "10000"
+    image_name: redis
+    source: public
+    version: latest
       `,
       },
       {
@@ -681,6 +698,9 @@ components:
     cluster: true
     ports:
     - public_port: "10000"
+    image_name: redis
+    source: public
+    version: latest
       `,
       },
       {
@@ -693,6 +713,9 @@ components:
   - cluster: false
     ports:
     - public_port: "10000"
+    image_name: redis
+    source: public
+    version: latest
       `,
       },
       {
@@ -704,6 +727,9 @@ components:
   containers:
   - ports:
     - public_port: "10000"
+    image_name: redis
+    source: public
+    version: latest
       `,
       },
     ],

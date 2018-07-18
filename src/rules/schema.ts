@@ -53,6 +53,26 @@ export const schemaValid: YAMLRule = {
   examples: {
     wrong: [
       {
+        description: "container missing a source",
+        yaml: `
+---
+components:
+- containers:
+  - image_name: kfbr
+    version: 392
+    `,
+      },
+      {
+        description: "container missing an image_name",
+        yaml: `
+---
+components:
+- containers:
+  - source: public
+    version: 3.2
+    `,
+      },
+      {
         description: "Property `deploy_this_great_app` is not present in the schema",
         yaml: `
 ---
@@ -141,11 +161,12 @@ components:
 - containers:
   - image_name: kfbr
     version: 392
+    source: replicated
   - image_name: redis
     version: latest
+    source: replicated
     `,
       },
-
     ],
   },
 };

@@ -32,6 +32,8 @@ components:
 - name: DB
   containers:
   - image_name: postgres
+    source: public
+    version: latest
       `,
       },
       {
@@ -49,6 +51,8 @@ components:
 - name: DB
   containers:
   - image_name: postgres
+    source: public
+    version: latest
       `,
       },
       {
@@ -73,6 +77,8 @@ components:
 - name: DB
   containers:
   - image_name: postgres
+    source: public
+    version: latest
       `,
       },
       {
@@ -98,6 +104,8 @@ components:
 - name: DB
   containers:
   - image_name: postgres
+    source: public
+    version: latest
       `,
       },
     ],
@@ -125,6 +133,8 @@ components:
 - name: DB
   containers:
   - image_name: redis
+    source: public
+    version: latest
       `,
       },
       {
@@ -163,6 +173,8 @@ components:
 - name: DB
   containers:
   - image_name: redis
+    source: public
+    version: latest
       `,
       },
       {
@@ -187,6 +199,8 @@ components:
 - name: DB
   containers:
   - image_name: redis
+    source: public
+    version: latest
       `,
       },
       {
@@ -212,6 +226,8 @@ components:
 - name: DB
   containers:
   - image_name: redis
+    source: public
+    version: latest
       `,
       },
     ],

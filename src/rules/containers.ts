@@ -105,10 +105,13 @@ components:
   containers:
   - source: public
     image_name: mongo
+    version: latest
   - source: public
     image_name: logstash
+    version: latest
   - source: public
     image_name: redis
+    version: latest
     publish_events:
       - name: event
         subscriptions:
@@ -196,6 +199,7 @@ components:
   containers:
   - source: public
     image_name: mongo
+    version: latest
     volumes:
       - host_path: /tmp
         container_path: /tmp
@@ -213,6 +217,7 @@ components:
   containers:
   - source: public
     image_name: mongo
+    version: latest
     volumes:
       - host_path: /tmp
         container_path: /tmp
@@ -230,6 +235,7 @@ components:
   containers:
   - source: public
     image_name: mongo
+    version: latest
     volumes:
       - host_path: /tmp
         container_path: /tmp
@@ -247,6 +253,7 @@ components:
   containers:
   - source: public
     image_name: mongo
+    version: latest
     volumes:
       - host_path: /tmp
         container_path: /tmp
@@ -266,6 +273,7 @@ components:
   containers:
   - source: public
     image_name: redis
+    version: latest
       `,
       },
       {
@@ -277,6 +285,7 @@ components:
   containers:
   - source: public
     image_name: redis
+    version: latest
     volumes:
       - host_path: /tmp
         container_path: /tmp
@@ -291,6 +300,7 @@ components:
   containers:
   - source: public
     image_name: redis
+    version: latest
     volumes:
       - host_path: /tmp
         container_path: /tmp
@@ -343,6 +353,7 @@ components:
   containers:
   - source: public
     image_name: mongo
+    version: latest
     volumes:
       - host_path: /tmp
         container_path: ubuntu/workspace
@@ -359,6 +370,7 @@ components:
   containers:
   - source: public
     image_name: mongo
+    version: latest
     volumes:
       - host_path: /tmp
         container_path: /home/ubuntu/workspace
@@ -373,6 +385,7 @@ components:
   containers:
   - source: public
     image_name: redis
+    version: latest
     volumes:
       - host_path: /tmp
         container_path: '{{repl ConfigOption "mount_path"}}'
@@ -420,6 +433,7 @@ components:
     containers:
     - source: public
       name: redis
+      image_name: redis
       version: 3.2.1
       content_trust:
         public_key_fingerprint: flksdjflkds
@@ -435,11 +449,13 @@ components:
     containers:
     - source: public
       name: redis
+      image_name: redis
       version: 3.2.1
       content_trust:
         public_key_fingerprint: cb:69:19:cd:76:1f:17:54:92:a4:fc:a9:6f:a5:57:72
     - source: public
       name: redis
+      image_name: redis
       version: 3.2.1
       content_trust:
         public_key_fingerprint: aa:9c:75:89:de:46:3a:92:08:c7:ba:9a:29:fb:12:cc
@@ -613,6 +629,9 @@ components:
 - containers:
   - cluster_instance_count:
       initial: 3.5
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
       {
@@ -623,6 +642,9 @@ components:
 - containers:
   - cluster_instance_count:
       initial: "-2"
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -635,6 +657,9 @@ components:
 - containers:
   - cluster_instance_count:
       initial: 3
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -673,6 +698,9 @@ components:
 - containers:
   - cluster_instance_count:
       max: -10
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -685,6 +713,9 @@ components:
 - containers:
   - cluster_instance_count:
       max: 10
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -723,6 +754,9 @@ components:
 - containers:
   - cluster_instance_count:
       threshold_degraded: "2.8"
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -735,6 +769,9 @@ components:
 - containers:
   - cluster_instance_count:
       threshold_degraded: "2"
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -773,6 +810,9 @@ components:
 - containers:
   - cluster_instance_count:
       threshold_healthy: "all"
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -785,6 +825,9 @@ components:
 - containers:
   - cluster_instance_count:
       threshold_healthy: "5"
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -806,7 +849,9 @@ components:
 - name: DB
   containers:
   - name: notalpha
-    image_name: irrelevant
+    image_name: redis
+    version: latest
+    source: public
     publish_events:
     - subscriptions:
       - component: DB
@@ -814,6 +859,8 @@ components:
   - image_name: beta
     volumes_from:
     - alpha
+    version: latest
+    source: public
     `,
       },
       {
@@ -824,14 +871,18 @@ components:
 - name: DB
   containers:
   - name: alpha
-    image_name: irrelevant
     publish_events:
     - subscriptions:
       - component: DB
         container: notalpine
-  - image_name: alpine
-    volumes_from:
+    image_name: redis
+    version: latest
+    source: public
+  - volumes_from:
     - alpha
+    image_name: alpine
+    version: latest
+    source: public
     `,
       },
       {
@@ -842,7 +893,9 @@ components:
 - name: DB
   containers:
   - name: alpha
-    image_name: irrelevant
+    image_name: alpha
+    version: latest
+    source: public
     publish_events:
     - subscriptions:
       - component: DB
@@ -851,6 +904,8 @@ components:
     volumes_from:
     - alpha
     - gamma
+    version: latest
+    source: public
     `,
       },
       {
@@ -862,6 +917,8 @@ components:
   containers:
   - name: alphaname
     image_name: alpha
+    version: latest
+    source: public
     volumes_from:
     - alpha
     publish_events:
@@ -881,6 +938,8 @@ components:
   containers:
   - name: alpha
     image_name: irrelevant
+    version: latest
+    source: public
     publish_events:
     - subscriptions:
       - component: DB
@@ -888,6 +947,8 @@ components:
   - image_name: beta
     volumes_from:
     - alpha
+    version: latest
+    source: public
     `,
       },
       {
@@ -899,6 +960,8 @@ components:
   containers:
   - name: alpha
     image_name: irrelevant
+    version: latest
+    source: public
     publish_events:
     - subscriptions:
       - component: DB
@@ -908,9 +971,13 @@ components:
   - image_name: gamma
     volumes_from:
     - alpha
+    version: latest
+    source: public
   - image_name: beta
     volumes_from:
     - alpha
+    version: latest
+    source: public
     `,
       },
       {
@@ -922,6 +989,8 @@ components:
   containers:
   - name: alpha
     image_name: irrelevant
+    version: latest
+    source: public
     publish_events:
     - subscriptions:
       - component: DB2
@@ -929,9 +998,13 @@ components:
   - image_name: beta
     volumes_from:
     - alpha
+    version: latest
+    source: public
 - name: DB2
   containers:
   - image_name: gamma
+    version: latest
+    source: public
     publish_events:
     - subscriptions:
       - component: DB
@@ -979,6 +1052,9 @@ components:
 - containers:
   - volumes:
     - is_ephemeral: "yes"
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -994,6 +1070,9 @@ components:
     - is_ephemeral: "false"
     - is_ephemeral: true
     - is_ephemeral: false
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
       {
@@ -1004,6 +1083,9 @@ components:
 - containers:
   - volumes:
     - is_ephemeral: "{{repl AppID}}"
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -1047,6 +1129,9 @@ components:
 - containers:
   - volumes:
     - is_excluded_from_backup: "yes"
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -1062,6 +1147,9 @@ components:
     - is_excluded_from_backup: "false"
     - is_excluded_from_backup: true
     - is_excluded_from_backup: false
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
       {
@@ -1072,6 +1160,9 @@ components:
 - containers:
   - volumes:
     - is_excluded_from_backup: "{{repl AppID}}"
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -1115,6 +1206,9 @@ components:
   - env_vars:
     - static_val: blah
       value: blah
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
       {
@@ -1126,6 +1220,9 @@ components:
   - env_vars:
     - static_val: ""
       value: blah
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -1139,6 +1236,9 @@ components:
   - name: first
     env_vars:
     - value: "blah"
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -1182,6 +1282,9 @@ components:
 - containers:
   - env_vars:
     - is_excluded_from_support: "yes"
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -1197,6 +1300,9 @@ components:
     - is_excluded_from_support: "false"
     - is_excluded_from_support: true
     - is_excluded_from_support: false
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
       {
@@ -1207,6 +1313,9 @@ components:
 - containers:
   - env_vars:
     - is_excluded_from_support: "{{repl AppID}}"
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -1244,6 +1353,9 @@ export const containerShmSizeUInt: YAMLRule = {
 components:
 - containers:
   - shm_size: -10
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],
@@ -1255,6 +1367,9 @@ components:
 components:
 - containers:
   - shm_size: 10
+    image_name: redis
+    version: latest
+    source: public
       `,
       },
     ],

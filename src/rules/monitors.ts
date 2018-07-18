@@ -22,6 +22,8 @@ components:
   - name: Kibana
     containers:
       - image_name: quay.io/getelk/logstash
+        version: latest
+        source: public
 monitors:
   cpuacct:
     - Logstash,quay.io/getelk/logstash
@@ -35,6 +37,8 @@ components:
   - name: Logstash
     containers:
       - image_name: quay.io/getelk/elasticsearch
+        version: latest
+        source: public
 monitors:
   cpuacct:
     - Logstash,quay.io/getelk/logstash
@@ -49,6 +53,8 @@ components:
   - name: Logstash
     containers:
       - image_name: quay.io/getelk/logstash
+        version: latest
+        source: public
 monitors:
   cpuacct:
     - Logstash,quay.io/getelk/logstash
@@ -99,6 +105,8 @@ components:
   - name: Kibana
     containers:
       - image_name: quay.io/getelk/logstash
+        version: latest
+        source: public
 monitors:
   memory:
     - Logstash,quay.io/getelk/logstash
@@ -112,6 +120,8 @@ components:
   - name: Logstash
     containers:
       - image_name: quay.io/getelk/elasticsearch
+        version: latest
+        source: public
 monitors:
   memory:
     - Logstash,quay.io/getelk/logstash
@@ -127,6 +137,8 @@ components:
   - name: Logstash
     containers:
       - image_name: quay.io/getelk/logstash
+        version: latest
+        source: public
 monitors:
   memory:
     - Logstash,quay.io/getelk/logstash
@@ -204,6 +216,8 @@ components:
   - name: Logstash
     containers:
       - image_name: quay.io/getelk/logstash
+        version: latest
+        source: public
 monitors:
   custom:
     - name: whenever
@@ -297,6 +311,8 @@ components:
   - name: Logstash
     containers:
       - image_name: quay.io/getelk/logstash
+        source: public
+        version: latest
 monitors:
   custom:
     - name: whenever

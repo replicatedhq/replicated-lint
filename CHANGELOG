@@ -329,3 +329,6 @@
 
 0.12.10 /2018-07-17
     * Add `assets.v1.terraform` and `lifecycle.v1.terraform` to `projects/replicated-ship`
+
+0.12.11 2018-07-18
+    * Core: Add `source` and `image_name` as required fields for `components.*.containers`

@@ -25,6 +25,7 @@ components:
   containers:
   - image_name: wlaoh/counter
     name: '{{repl ConfigOption "not_existent" }}'
+    source: public
       `,
     }],
     right: [{

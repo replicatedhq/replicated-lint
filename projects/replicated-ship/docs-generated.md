@@ -157,7 +157,60 @@ assets:
 
     
 
+## `terraform-asset-requires-terraform-lifecycle`
+
+lifecycle should include a `terraform` step when a `terraform` asset is defined
 
 
-*Generated at Thu Jun 21 2018 14:15:04 GMT-0700 (PDT)*
+
+
+
+#### Examples:
+
+*Incorrect*: terraform asset without terraform lifecycle step
+
+```yaml---
+assets:
+  v1:
+    - terraform:
+        inline: provider "google" {}
+lifecycle:
+  v1:
+    - render: {}
+
+```
+
+
+*Incorrect*: terraform lifecycle step without terraform asset
+
+```yaml---
+assets:
+  v1: {}
+lifecycle:
+  v1:
+    - terraform: {}
+
+```
+
+
+
+*Correct*: terraform asset and terraform lifecycle step
+
+```yaml---
+assets:
+  v1:
+    - terraform:
+        inline: provider "google" {}
+lifecycle:
+  v1:
+    - terraform: {}
+
+```
+
+
+    
+
+
+
+*Generated at Wed Jul 18 2018 10:10:20 GMT-0700 (PDT)*
 

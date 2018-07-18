@@ -135,4 +135,68 @@
                   contents: echo "running installs"
                   dest: ./scripts/install.sh
 
-
+- name: terraform-asset-requires-terraform-lifecycle
+  type: warn
+  message: lifecycle should include a `terraform` step when a `terraform` asset is defined
+  test:
+    Or:
+      preds:
+        - And:
+            preds:
+              - AnyOf:
+                  path: "assets.v1"
+                  pred:
+                    Exists:
+                      path: "terraform"
+              - Not:
+                  pred:
+                    AnyOf:
+                      path: "lifecycle.v1"
+                      pred:
+                        Exists:
+                          path: "terraform"
+        - And:
+            preds:
+              - AnyOf:
+                  path: "lifecycle.v1"
+                  pred:
+                    Exists:
+                      path: "terraform"
+              - Not:
+                  pred:
+                    AnyOf:
+                      path: "assets.v1"
+                      pred:
+                        Exists:
+                          path: "terraform"
+  examples:
+    wrong:
+      - description: terraform asset without terraform lifecycle step
+        yaml: |
+          ---
+          assets:
+            v1:
+              - terraform:
+                  inline: provider "google" {}
+          lifecycle:
+            v1:
+              - render: {}
+      - description: terraform lifecycle step without terraform asset
+        yaml: |
+          ---
+          assets:
+            v1: {}
+          lifecycle:
+            v1:
+              - terraform: {}
+    right:
+      - description: terraform asset and terraform lifecycle step
+        yaml: |
+          ---
+          assets:
+            v1:
+              - terraform:
+                  inline: provider "google" {}
+          lifecycle:
+            v1:
+              - terraform: {}

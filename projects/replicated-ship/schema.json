@@ -142,6 +142,19 @@
                   "source"
                 ]
               },
+              "terraform": {
+                "description": "A `terraform` asset contains a templatable terraform config file.",
+                "type": "object",
+                "properties": {
+                  "inline": {
+                    "type": "string",
+                    "description": "A complete Terraform configuration file"
+                  }
+                },
+                "required": [
+                  "inline"
+                ]
+              },
               "helm": {
                 "description": "A `helm` asset will template and render an existing helm chart. You can either reference an existing chart in a private or public github repo, or your installer runbook can include assets to drop an existing helm chart at `local.chart_root`.",
                 "examples": [
@@ -463,6 +476,11 @@
                 "examples": [
                   {}
                 ],
+                "type": "object",
+                "required": []
+              },
+              "terraform": {
+                "description": "A `terraform` step will apply a `terraform` asset after confirming a plan with the user",
                 "type": "object",
                 "required": []
               }

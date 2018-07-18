@@ -324,5 +324,5 @@
 0.12.8 /2018-07-17
     * Add `lifecycle.notes` to enter note as part of upload
 
-0.12.9 /2018-07-17
+0.12.9 /2018-07-18
     * Update `assets.v1.web` schemas in `projects/replicated-ship`

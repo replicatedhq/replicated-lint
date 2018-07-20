@@ -1,0 +1,11 @@
+{
+  "v1": {
+    "name": "Policy Name",
+      "resources": {
+        "allowed": [
+          "**/*"
+        ]
+        "denied": []
+      }
+  }
+}

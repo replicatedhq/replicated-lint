@@ -1,0 +1,27 @@
+---
+- name: policy-require-string-in-name
+  type: error
+  message: name have to be string
+  test:
+    AllOf:
+      path: v1
+      pred:
+        Not:
+          pred:
+            Exists:
+              path: name
+  examples:
+    wrong:
+      - description: name is empty
+        yaml: |
+          ---
+          name: ""
+      - description: name is array
+        yaml: |
+          ---
+          name: []
+    right:
+      - description: name has a name
+        yaml: |
+          ---
+          name: "Policy name"

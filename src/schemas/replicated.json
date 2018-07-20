@@ -1,0 +1,657 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "Component": {
+            "properties": {
+                "cluster": {
+                    "type": "string"
+                },
+                "cluster_host_count": {
+                    "$ref": "#/definitions/ComponentClusterHostCount"
+                },
+                "conflicts": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "containers": {
+                    "items": {
+                        "$ref": "#/definitions/Container"
+                    },
+                    "type": "array"
+                },
+                "host_requirements": {
+                    "$ref": "#/definitions/HostRequirements"
+                },
+                "host_volumes": {
+                    "items": {
+                        "$ref": "#/definitions/HostVolume"
+                    },
+                    "type": "array"
+                },
+                "logs": {
+                    "$ref": "#/definitions/LogOptions"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "tags": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "type": "object"
+        },
+        "ComponentClusterHostCount": {
+            "properties": {
+                "max": {
+                    "type": "string"
+                },
+                "min": {
+                    "type": "string"
+                },
+                "strategy": {
+                    "description": "Strategy\n  - \"autoscale\" api version >= 2.7.0\n  - \"random\" api version >= 2.5.0",
+                    "type": "string"
+                },
+                "threshold_degraded": {
+                    "type": "string"
+                },
+                "threshold_healthy": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ConfigChildItem": {
+            "properties": {
+                "default": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "recommended": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "type": "object"
+        },
+        "ConfigOption": {
+            "properties": {
+                "items": {
+                    "items": {
+                        "$ref": "#/definitions/ConfigChildItem"
+                    },
+                    "type": "array"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "type"
+            ],
+            "type": "object"
+        },
+        "ConfigSection": {
+            "properties": {
+                "items": {
+                    "items": {
+                        "$ref": "#/definitions/ConfigOption"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "items"
+            ],
+            "type": "object"
+        },
+        "Container": {
+            "properties": {
+                "allocate_tty": {
+                    "type": "string"
+                },
+                "cluster": {
+                    "type": "string"
+                },
+                "cluster_instance_count": {
+                    "$ref": "#/definitions/ContainerClusterInstanceCount"
+                },
+                "cmd": {
+                    "type": "string"
+                },
+                "config_files": {
+                    "items": {
+                        "$ref": "#/definitions/ContainerConfigFile"
+                    },
+                    "type": "array"
+                },
+                "content_trust": {
+                    "$ref": "#/definitions/ContentTrust"
+                },
+                "cpu_shares": {
+                    "type": "string"
+                },
+                "customer_files": {
+                    "items": {
+                        "$ref": "#/definitions/ContainerCustomerFile"
+                    },
+                    "type": "array"
+                },
+                "display_name": {
+                    "type": "string"
+                },
+                "dynamic": {
+                    "type": "string"
+                },
+                "entrypoint": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "env_vars": {
+                    "items": {
+                        "$ref": "#/definitions/ContainerEnvVar"
+                    },
+                    "type": "array"
+                },
+                "ephemeral": {
+                    "type": "boolean"
+                },
+                "extra_hosts": {
+                    "items": {
+                        "$ref": "#/definitions/ContainerExtraHost"
+                    },
+                    "type": "array"
+                },
+                "hostname": {
+                    "type": "string"
+                },
+                "image_name": {
+                    "type": "string"
+                },
+                "logs": {
+                    "$ref": "#/definitions/LogOptions"
+                },
+                "memory_limit": {
+                    "type": "string"
+                },
+                "memory_swap_limit": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "network_mode": {
+                    "type": "string"
+                },
+                "pid_mode": {
+                    "type": "string"
+                },
+                "ports": {
+                    "items": {
+                        "$ref": "#/definitions/ContainerPort"
+                    },
+                    "type": "array"
+                },
+                "privileged": {
+                    "type": "boolean"
+                },
+                "publish_events": {
+                    "items": {
+                        "$ref": "#/definitions/ContainerEvent"
+                    },
+                    "type": "array"
+                },
+                "restart": {
+                    "$ref": "#/definitions/ContainerRestartPolicy"
+                },
+                "security_cap_add": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "security_options": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "support_commands": {
+                    "items": {
+                        "$ref": "#/definitions/ContainerSupportCommand"
+                    },
+                    "type": "array"
+                },
+                "support_files": {
+                    "items": {
+                        "$ref": "#/definitions/ContainerSupportFile"
+                    },
+                    "type": "array"
+                },
+                "suppress_restart": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "ulimits": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "version": {
+                    "type": "string"
+                },
+                "volumes": {
+                    "items": {
+                        "$ref": "#/definitions/ContainerVolume"
+                    },
+                    "type": "array"
+                },
+                "volumes_from": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "when": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "image_name",
+                "name",
+                "privileged",
+                "source",
+                "version",
+                "volumes_from"
+            ],
+            "type": "object"
+        },
+        "ContainerClusterInstanceCount": {
+            "properties": {
+                "initial": {
+                    "type": "string"
+                },
+                "max": {
+                    "type": "string"
+                },
+                "threshold_degraded": {
+                    "type": "string"
+                },
+                "threshold_healthy": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ContainerConfigFile": {
+            "properties": {
+                "contents": {
+                    "type": "string"
+                },
+                "file_mode": {
+                    "type": "string"
+                },
+                "file_owner": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "owner": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "ref": {
+                    "type": "string"
+                },
+                "repo": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "filename"
+            ],
+            "type": "object"
+        },
+        "ContainerCustomerFile": {
+            "properties": {
+                "file_mode": {
+                    "type": "string"
+                },
+                "file_owner": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "when": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ContainerEnvVar": {
+            "properties": {
+                "is_excluded_from_support": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "static_val": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                },
+                "when": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ContainerEvent": {
+            "properties": {
+                "args": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "data": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "subscriptions": {
+                    "items": {
+                        "$ref": "#/definitions/ContainerEventSubscription"
+                    },
+                    "type": "array"
+                },
+                "timeout": {
+                    "minimum": 0,
+                    "type": "integer"
+                },
+                "trigger": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ContainerEventSubscription": {
+            "properties": {
+                "action": {
+                    "type": "string"
+                },
+                "component": {
+                    "type": "string"
+                },
+                "container": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ContainerExtraHost": {
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "hostname": {
+                    "type": "string"
+                },
+                "when": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "address",
+                "hostname"
+            ],
+            "type": "object"
+        },
+        "ContainerPort": {
+            "properties": {
+                "interface": {
+                    "type": "string"
+                },
+                "port_type": {
+                    "type": "string"
+                },
+                "private_port": {
+                    "type": "string"
+                },
+                "public_port": {
+                    "type": "string"
+                },
+                "when": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "private_port"
+            ],
+            "type": "object"
+        },
+        "ContainerRestartPolicy": {
+            "properties": {
+                "max": {
+                    "minimum": 0,
+                    "type": "integer"
+                },
+                "policy": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "ContainerSupportCommand": {
+            "properties": {
+                "command": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "filename": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "filename"
+            ],
+            "type": "object"
+        },
+        "ContainerSupportFile": {
+            "properties": {
+                "filename": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "filename"
+            ],
+            "type": "object"
+        },
+        "ContainerVolume": {
+            "properties": {
+                "container_path": {
+                    "type": "string"
+                },
+                "host_path": {
+                    "type": "string"
+                },
+                "is_ephemeral": {
+                    "type": "string"
+                },
+                "is_excluded_from_backup": {
+                    "type": "string"
+                },
+                "options": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "owner": {
+                    "type": "string"
+                },
+                "permission": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "container_path",
+                "host_path"
+            ],
+            "type": "object"
+        },
+        "ContentTrust": {
+            "properties": {
+                "public_key_fingerprint": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "public_key_fingerprint"
+            ],
+            "type": "object"
+        },
+        "HostRequirements": {
+            "properties": {
+                "cpu_cores": {
+                    "type": "string"
+                },
+                "cpu_mhz": {
+                    "type": "string"
+                },
+                "disk_space": {
+                    "type": "string"
+                },
+                "docker_version": {
+                    "type": "string"
+                },
+                "memory": {
+                    "type": "string"
+                },
+                "replicated_version": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "HostVolume": {
+            "properties": {
+                "host_path": {
+                    "type": "string"
+                },
+                "is_ephemeral": {
+                    "type": "string"
+                },
+                "is_excluded_from_backup": {
+                    "type": "string"
+                },
+                "min_disk_space": {
+                    "type": "string"
+                },
+                "owner": {
+                    "type": "string"
+                },
+                "permission": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "host_path"
+            ],
+            "type": "object"
+        },
+        "LogOptions": {
+            "properties": {
+                "max_files": {
+                    "type": "string"
+                },
+                "max_size": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Monitors": {
+            "properties": {
+                "cpuacct": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "memory": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "properties": {
+        "components": {
+            "items": {
+                "$ref": "#/definitions/Component"
+            },
+            "type": "array"
+        },
+        "config": {
+            "items": {
+                "$ref": "#/definitions/ConfigSection"
+            },
+            "type": "array"
+        },
+        "monitors": {
+            "$ref": "#/definitions/Monitors"
+        },
+        "replicated_api_version": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "replicated_api_version"
+    ],
+    "type": "object"
+}
+

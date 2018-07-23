@@ -14,15 +14,13 @@
 						"allowed": {
 							"type": "array",
 							"items": {
-								"type": "string",
-								"pattern": "^(([a-zA-Z0-9]+|\\*\\*?)\\/)*(([a-zA-Z0-9]+|\\*\\*?))$"
+								"type": "string"
 							}
 						},
 						"denied": {
 							"type": "array",
 							"items": {
-								"type": "string",
-								"pattern": "^(([a-zA-Z0-9]+|\\*\\*?)\\/)*(([a-zA-Z0-9]+|\\*\\*?))$"
+								"type": "string"
 							}
 						}
 					}

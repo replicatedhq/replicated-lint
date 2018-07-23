@@ -1,2 +1,63 @@
---- 
-[]
+---
+- name: allowed-valid-policy
+  type: error
+  message: Policy is not valid, check valid policies here in the link
+  links: [
+    "https://help.replicated.com/"
+  ]
+  test:
+    AnyOf:
+      path: v1.resources.allowed
+      pred:
+        NotMatch:
+          path: ""
+          pattern: ^(([a-zA-Z0-9]+|\*\*?)\/)*(([a-zA-Z0-9]+|\*\*?))$
+  examples:
+    wrong:
+      - description: Policy is not valid
+        yaml: |
+          ---
+          v1:
+            resources:
+              allowed: 
+                - "//"                   
+    right:
+      - description: Policy is valid
+        yaml: |
+          ---
+          v1:
+            resources:
+              allowed:
+                - "**/*"
+
+- name: denied-valid-policy
+  type: error
+  message: Policy is not valid, check valid policies here in the link
+  links: [
+    "https://help.replicated.com/"
+  ]
+  test:
+    AnyOf:
+      path: v1.resources.denied
+      pred:
+        NotMatch:
+          path: ""
+          pattern: ^(([a-zA-Z0-9]+|\*\*?)\/)*(([a-zA-Z0-9]+|\*\*?))$
+  examples:
+    wrong:
+      - description: Policy is not valid
+        yaml: |
+          ---
+          v1:
+            resources:
+              denied: 
+                - "//"                   
+    right:
+      - description: Policy is valid
+        yaml: |
+          ---
+          v1:
+            resources:
+              denied:
+                - "**/*"
+            

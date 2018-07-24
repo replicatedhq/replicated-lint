@@ -126,7 +126,7 @@ export interface Test {
     pattern: string;
   };
   NotMatch?: {
-    path: string;
+    path?: string;
     pattern: string;
   };
   Neq?: {

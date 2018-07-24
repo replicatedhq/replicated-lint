@@ -1,0 +1,63 @@
+---
+- name: allowed-valid-policy
+  type: error
+  message: This is not a valid policy
+  links: [
+    "https://help.replicated.com/docs/vendor-rbac"
+  ]
+  test:
+    AnyOf:
+      path: v1.resources.allowed
+      pred:
+        NotMatch:
+          path: ""
+          pattern: ^(([a-zA-Z0-9]+|\*\*?)\/)*(([a-zA-Z0-9]+|\*\*?))$
+  examples:
+    wrong:
+      - description: Policy is not valid
+        yaml: |
+          ---
+          v1:
+            resources:
+              allowed: 
+                - "//"                   
+    right:
+      - description: Policy is valid
+        yaml: |
+          ---
+          v1:
+            resources:
+              allowed:
+                - "**/*"
+
+- name: denied-valid-policy
+  type: error
+  message: This is not a valid policy
+  links: [
+    "https://help.replicated.com/docs/vendor-rbac"
+  ]
+  test:
+    AnyOf:
+      path: v1.resources.denied
+      pred:
+        NotMatch:
+          path: ""
+          pattern: ^(([a-zA-Z0-9]+|\*\*?)\/)*(([a-zA-Z0-9]+|\*\*?))$
+  examples:
+    wrong:
+      - description: Policy is not valid
+        yaml: |
+          ---
+          v1:
+            resources:
+              denied: 
+                - "//"                   
+    right:
+      - description: Policy is valid
+        yaml: |
+          ---
+          v1:
+            resources:
+              denied:
+                - "**/*"
+            

@@ -63,7 +63,8 @@ export class NotMatch implements Predicate<any> {
   }
 
   public test(object: any): RuleMatchedAt {
-    const value = _.get(object, this.path);
+    const value = this.path ? _.get(object, this.path) : object;
+
     const matched = !this.check.test(value as any);
 
     return { matched, paths: [this.path] };

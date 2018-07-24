@@ -1,9 +1,9 @@
 ---
 - name: allowed-valid-policy
   type: error
-  message: Policy is not valid, check valid policies here in the link
+  message: This is not a valid policy. Check valid policies here in the link
   links: [
-    "https://help.replicated.com/"
+    "https://help.replicated.com/docs/vendor-rbac"
   ]
   test:
     AnyOf:
@@ -32,7 +32,7 @@
 
 - name: denied-valid-policy
   type: error
-  message: Policy is not valid, check valid policies here in the link
+  message: This is not a valid policy. Check valid policies here in the link
   links: [
     "https://help.replicated.com/"
   ]

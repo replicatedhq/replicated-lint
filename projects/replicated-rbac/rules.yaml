@@ -1,7 +1,7 @@
 ---
 - name: allowed-valid-policy
   type: error
-  message: This is not a valid policy. Check valid policies here in the link
+  message: This is not a valid policy
   links: [
     "https://help.replicated.com/docs/vendor-rbac"
   ]
@@ -32,7 +32,7 @@
 
 - name: denied-valid-policy
   type: error
-  message: This is not a valid policy. Check valid policies here in the link
+  message: This is not a valid policy
   links: [
     "https://help.replicated.com/docs/vendor-rbac"
   ]

@@ -34,7 +34,7 @@
   type: error
   message: This is not a valid policy. Check valid policies here in the link
   links: [
-    "https://help.replicated.com/"
+    "https://help.replicated.com/docs/vendor-rbac"
   ]
   test:
     AnyOf:

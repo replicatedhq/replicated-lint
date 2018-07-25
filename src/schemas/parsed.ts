@@ -198,6 +198,9 @@ export const schema: JSONSchema4 = {
         "script": {
           "type": "string",
         },
+        "restore_script": {
+          "type": "string",
+        },
         "swarm": {
           "type": "object",
           "properties": {
@@ -242,6 +245,9 @@ export const schema: JSONSchema4 = {
                 "type": ["string", "boolean"],
               },
               "script": {
+                "type": "string",
+              },
+              "restore_script": {
                 "type": "string",
               },
               "kubernetes": {

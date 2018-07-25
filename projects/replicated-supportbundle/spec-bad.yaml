@@ -1,3 +1,7 @@
 ---
 specs: []
+collect:
+  v1: []
+analyze:
+  v1alpha1: []
 lifecycle: []

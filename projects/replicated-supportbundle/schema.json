@@ -9,8 +9,8 @@
       "description": "A list of analyzers to run on the collect spec",
       "type": "object",
       "properties": {
-        "v1alpha1": {
-          "description": "The v1alpha1 analyze definition",
+        "v1": {
+          "description": "The v1 analyze definition",
           "type": "array",
           "items": {
             "description": "A list of analyzers to run on the collect spec",

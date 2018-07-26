@@ -340,3 +340,6 @@
     * Added analyze spec to replicated-supportbundle schema
     * replicated-supportbundle specs is now an alias of collect.v1
     * replicated-supportbundle collect.v1.meta.labels added patternProperties
+
+0.13.1 2018-07-25
+    * Analyze v1 spec

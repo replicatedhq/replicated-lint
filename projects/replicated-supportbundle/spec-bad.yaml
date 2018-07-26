@@ -3,5 +3,5 @@ specs: []
 collect:
   v1: []
 analyze:
-  v1alpha1: []
+  v1: []
 lifecycle: []

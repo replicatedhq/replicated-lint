@@ -332,3 +332,6 @@
 
 0.12.11 2018-07-18
     * Core: Add `source` and `image_name` as required fields for `components.*.containers`
+
+0.12.12 2018-07-25
+    * Core: Add `restore_script` property to backup and backup strategies

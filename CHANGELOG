@@ -335,3 +335,8 @@
 
 0.12.12 2018-07-25
     * Core: Add `restore_script` property to backup and backup strategies
+
+0.13.0 2018-07-25
+    * Added analyze spec to replicated-supportbundle schema
+    * replicated-supportbundle specs is now an alias of collect.v1
+    * replicated-supportbundle collect.v1.meta.labels added patternProperties

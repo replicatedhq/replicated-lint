@@ -136,3 +136,33 @@ lifecycle:
 
 
 
+collect:
+  v1:
+
+    - kubernetes.resource-list:
+        kind: nodes
+      output_dir: /kubernetes/resource-list/nodes
+      meta:
+        labels:
+          analyze: kubernetes-resource-list-nodes
+
+    - kubernetes.version: {}
+      output_dir: /kubernetes/version
+      meta:
+        labels:
+          analyze: kubernetes-version
+
+analyze:
+  v1alpha1:
+
+    - kubernetes.total-memory:
+        minimum: 20Gi
+      collect_refs:
+        - selector:
+            analyze: kubernetes-resource-list-nodes
+
+    - kubernetes.version:
+        semver_minimum: 1.10.0
+      collect_refs:
+        - selector:
+            analyze: kubernetes-version

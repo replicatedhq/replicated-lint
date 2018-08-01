@@ -347,3 +347,6 @@
 0.13.2 2018-07-31
     * Add Amazon EKS asset to Ship schema
     * Add 'path' property to Terraform lifecycle step in Ship schema
+
+0.13.3 2018-08-01
+    * Fix bug in `rbac` pattern rule in `projects/replicated-rbac`

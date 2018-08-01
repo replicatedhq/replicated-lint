@@ -11,7 +11,7 @@
       pred:
         NotMatch:
           path: ""
-          pattern: ^(([a-zA-Z0-9]+|\*\*?)\/)*(([a-zA-Z0-9]+|\*\*?))$
+          pattern: ^(([a-zA-Z0-9_-]+|\*\*?)\/)*(([a-zA-Z0-9_-]+|\*\*?))$
   examples:
     wrong:
       - description: Policy is not valid
@@ -42,7 +42,7 @@
       pred:
         NotMatch:
           path: ""
-          pattern: ^(([a-zA-Z0-9]+|\*\*?)\/)*(([a-zA-Z0-9]+|\*\*?))$
+          pattern: ^(([a-zA-Z0-9_-]+|\*\*?)\/)*(([a-zA-Z0-9_-]+|\*\*?))$
   examples:
     wrong:
       - description: Policy is not valid

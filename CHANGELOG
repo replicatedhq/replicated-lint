@@ -343,3 +343,7 @@
 
 0.13.1 2018-07-25
     * Analyze v1 spec
+
+0.13.2 2018-07-31
+    * Add Amazon EKS asset to Ship schema
+    * Add 'path' property to Terraform lifecycle step in Ship schema

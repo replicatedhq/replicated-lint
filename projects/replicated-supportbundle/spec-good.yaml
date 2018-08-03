@@ -118,7 +118,8 @@ specs:
     namespace: default
  - kubernetes.resource-list:
     output_dir: /kubernetes/resource-list/pods
-    kind: pods
+    kind: deploy
+    group_version: apps/v1beta1
     namespace: default
 
 

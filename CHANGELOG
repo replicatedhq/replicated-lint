@@ -350,3 +350,7 @@
 
 0.13.3 2018-08-01
     * Fix bug in `rbac` pattern rule in `projects/replicated-rbac`
+
+0.13.4 2018-08-02
+    * replicated-supportbundle kubernetes.resource-list allows for additional resources in Kubernetes v1.11
+    * replicated-supportbundle kubernetes.resource-list optional group_version argument

@@ -4860,6 +4860,12 @@
                     "kind": "deployments"
                   },
                   {
+                    "output_dir": "/kubernetes/resources/deployments-apps-v1beta2",
+                    "namespace": "default",
+                    "kind": "deployments",
+                    "group_version": "apps/v1beta2"
+                  },
+                  {
                     "output_dir": "/kubernetes/resources/services",
                     "kind": "svc"
                   }
@@ -4875,6 +4881,15 @@
                   "description": {
                     "type": "string"
                   },
+                  "group_version": {
+                    "description": "Optionally override the default group and version for the resource kind (in the format \"group/version\").",
+                    "examples": [
+                      "apps/v1beta2",
+                      "rbac.authorization.k8s.io/v1beta1"
+                    ],
+                    "pattern": "^(([a-z\\.]+)\\/(v\\d(?:(?:alpha|beta)\\d)?))$",
+                    "type": "string"
+                  },
                   "include_empty": {
                     "type": "boolean"
                   },
@@ -4884,7 +4899,7 @@
                       "deployments",
                       "replicasets"
                     ],
-                    "pattern": "^(componentstatuses|cs|configmaps|cm|daemonsets|ds|deployments|deploy|endpoints|ep|events|ev|horizontalpodautoscalers|hpa|ingresses|ing|jobs|limitranges|limits|namespaces|ns|networkpolicies|netpol|nodes|no|persistentvolumeclaims|pvc|persistentvolumes|pv|pods|po|podsecuritypolicies|psp|podtemplates|replicasets|rs|replicationcontrollers|rc|resourcequotas|quota|storageclasses|statefulsets|serviceaccounts|sa|services|svc|secrets)$",
+                    "pattern": "^(certificatesigningrequests|csr|clusterrolebindings|clusterroles|componentstatuses|cs|configmaps|cm|controllerrevisions|cronjobs|cj|daemonsets|ds|deployments|deploy|endpoints|ep|events|horizontalpodautoscalers|hpa|ingresses|ing|jobs|limitranges|limits|mutatingwebhookconfigurations|namespaces|ns|networkpolicies|netpol|nodes|no|persistentvolumeclaims|pvc|persistentvolumes|pv|poddisruptionbudgets|pdb|pods|po|podsecuritypolicies|psp|podtemplates|replicasets|rs|replicationcontrollers|rc|resourcequotas|quota|rolebindings|roles|secrets|serviceaccounts|sa|services|svc|statefulsets|sts|storageclasses|validatingwebhookconfigurations|volumeattachments)$",
                     "type": "string"
                   },
                   "meta": {

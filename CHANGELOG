@@ -354,3 +354,8 @@
 0.13.4 2018-08-02
     * replicated-supportbundle kubernetes.resource-list allows for additional resources in Kubernetes v1.11
     * replicated-supportbundle kubernetes.resource-list optional group_version argument
+
+0.13.5 2018-08-07
+    * replicated-ship's amazon_elastic_kubernetes_service asset has been renamed to amazon_eks
+    * replicated-ship 'kubectl_apply' lifecycle step added
+

@@ -11,8 +11,8 @@
           "items": {
             "type": "object",
             "properties": {
-              "amazon_elastic_kubernetes_service": {
-                "description": "An `amazon_elastic_kubernetes_service` asset generates a terraform file that will create an Amazon EKS Cluster",
+              "amazon_eks": {
+                "description": "An `amazon_eks` asset generates a terraform file that will create an Amazon EKS Cluster",
                 "examples": [
                   {
                     "cluster_name": "existing-vpc-cluster",
@@ -141,7 +141,7 @@
                     "type": "string"
                   },
                   "dest": {
-                    "description": "The path within `terraform/` to place the generated file. Defaults to `amazon_elastic_kubernetes_service.tf`",
+                    "description": "The path within `terraform/` to place the generated file. Defaults to `amazon_eks.tf`",
                     "type": "string"
                   },
                   "existing_vpc": {
@@ -690,13 +690,35 @@
           "items": {
             "type": "object",
             "properties": {
-              "helmIntro": {
-                "type": "object"
-              },
-              "helmValues": {
-                "type": "object"
+              "kubectl_apply": {
+                "description": "A `kubectl_apply` step will run `kubectl apply` with the provided file path and kubeconfig.",
+                "examples": [
+                  {
+                    "path": "config.yml"
+                  },
+                  {
+                    "path": "k8s/another.yml",
+                    "kubeconfig": "k8s/generated_kubeconfig"
+                  }
+                ],
+                "type": "object",
+                "properties": {
+                  "kubeconfig": {
+                    "description": "the kubeconfig file to use, overriding the system default",
+                    "type": "string"
+                  },
+                  "path": {
+                    "description": "the file to apply",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
               },
               "kustomize": {
+                "description": "",
+                "examples": [],
                 "type": "object",
                 "properties": {
                   "base_path": {
@@ -705,7 +727,8 @@
                   "dest": {
                     "type": "string"
                   }
-                }
+                },
+                "required": []
               },
               "message": {
                 "description": "A `message` step will print a message to the console or UI.",
@@ -739,6 +762,7 @@
                   {}
                 ],
                 "type": "object",
+                "properties": {},
                 "required": []
               },
               "terraform": {

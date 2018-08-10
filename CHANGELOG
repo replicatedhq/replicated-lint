@@ -359,3 +359,7 @@
     * replicated-ship's amazon_elastic_kubernetes_service asset has been renamed to amazon_eks
     * replicated-ship 'kubectl_apply' lifecycle step added
 
+0.13.6 2018-08-10
+    * replicated-ship now supports `lifecycle.v1.config`
+    * replicated-ship now supports `lifecycle.v1.*.{id,requires,invalidates,description}`
+

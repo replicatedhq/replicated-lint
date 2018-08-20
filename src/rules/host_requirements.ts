@@ -282,9 +282,62 @@ host_requirements:
   },
 };
 
+export const hostDockerStorageSpecsValid: YAMLRule = {
+  name: "prop-hostreq-docker-storage-specs-valid",
+  type: "error",
+  message: "`host_requirements.docker_space` be a positive decimal with a unit of measurement like M, MB, G, or GB",
+  test: {
+    And: {
+      preds: [
+          { IsNotBytesCount: { path: "host_requirements.docker_space" } },
+          { Exists: { path: "host_requirements.docker_space" } },
+      ],
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "Invalid disk size, not a properly formatted size",
+        yaml: `
+---
+host_requirements:
+  docker_space: "128"
+      `,
+      },
+      {
+        description: "Invalid disk size, too many digits past the decimal point",
+        yaml: `
+---
+host_requirements:
+  docker_space: 0.0625EB
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "Valid disk size, 20.0TB",
+        yaml: `
+---
+host_requirements:
+  docker_space: 20.0TB
+      `,
+      },
+      {
+        description: "Valid disk size, 128GB",
+        yaml: `
+---
+host_requirements:
+  docker_space: 128GB
+      `,
+      },
+    ],
+  },
+};
+
 export const all: YAMLRule[] = [
   dockerVersionValid,
   replicatedVersionSemverRange,
   hostSystemRamSpecsValid,
   hostSystemStorageSpecsValid,
+  hostDockerStorageSpecsValid,
 ];

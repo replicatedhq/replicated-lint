@@ -363,3 +363,6 @@
     * replicated-ship now supports `lifecycle.v1.config`
     * replicated-ship now supports `lifecycle.v1.*.{id,requires,invalidates,description}`
 
+0.13.7 2018-08-20
+    * Add `host_requirements.docker_space` and validate that it is a valid byte size
+

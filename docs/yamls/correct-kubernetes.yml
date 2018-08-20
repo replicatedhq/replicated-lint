@@ -18,6 +18,7 @@ host_requirements:
   cpu_mhz: 1000
   memory: 2GB
   disk_space: 10GB
+  docker_space: 5GB
 properties:
   app_url: http://{{repl IngressAddress "test-ingress" 80 }}
   logo_url: http://logonoid.com/images/batman-logo.png

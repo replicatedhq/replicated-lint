@@ -366,3 +366,6 @@
 0.13.7 2018-08-20
     * Add `host_requirements.docker_space` and validate that it is a valid byte size
 
+0.13.8 2018-08-21
+    * replicated-ship now supports the `helm_fetch` method for `helm` assets
+

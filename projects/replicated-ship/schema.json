@@ -12,7 +12,8 @@
             "type": "object",
             "properties": {
               "amazon_eks": {
-                "description": "An `amazon_eks` asset generates a terraform file that will create an Amazon EKS Cluster",
+                "description": "An `amazon_eks` asset generates a terraform file that will create an Amazon EKS Cluster.",
+                "extended_description": "It also populates a template function `AmazonEKS` that takes the name of the cluster and returns the path to the generated kubeconfig for the cluster. This template function is only valid after the asset has been generated as part of the `render` lifecycle step, but can be used by later assets within that step. The file itself is created when the generated terraform is applied, whether by the `terraform` lifecycle step or otherwise. This is intended to be used within the [kubectl_apply](/api/ship-lifecycle/lifecycle/kubectl_apply/) lifecycle step.",
                 "examples": [
                   {
                     "cluster_name": "existing-vpc-cluster",
@@ -416,6 +417,27 @@
                       "path"
                     ]
                   },
+                  "helm_fetch": {
+                    "description": "Configuration for indicating a chart hosted somewhere that would be accessible to the `helm fetch` function.",
+                    "type": "object",
+                    "properties": {
+                      "chart_ref": {
+                        "description": "`chart URL | repo/chartname` as would be passed to `helm fetch`",
+                        "type": "string"
+                      },
+                      "repo_url": {
+                        "description": "repository URL as would be passed to `helm fetch` with the `--repo` flag",
+                        "type": "string"
+                      },
+                      "version": {
+                        "description": "version as would be passed to `helm fetch` with the `--version` flag",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "chart_ref"
+                    ]
+                  },
                   "helm_opts": {
                     "description": "Additional options as would be passed to `helm template`",
                     "type": "array",
@@ -691,7 +713,7 @@
             "type": "object",
             "properties": {
               "config": {
-                "description": "A `config` step will present the user with a screen to customize options as defined in your top-level `config` section",
+                "description": "A `config` step will present the user with a screen to customize options as defined in your top-level `config` section.",
                 "examples": [
                   {}
                 ],
@@ -727,6 +749,10 @@
                   {
                     "path": "k8s/another.yml",
                     "kubeconfig": "k8s/generated_kubeconfig"
+                  },
+                  {
+                    "path": "k8s/another.yml",
+                    "kubeconfig": "{{repl AmazonEKS \"eks_cluster_name\" }}"
                   }
                 ],
                 "type": "object",
@@ -862,6 +888,9 @@
                     "items": {
                       "type": "string"
                     }
+                  },
+                  "root": {
+                    "type": "string"
                   }
                 },
                 "required": []

@@ -736,6 +736,9 @@ export const schema: JSONSchema4 = {
               "disk_space": {
                 "type": "string",
               },
+              "docker_space": {
+                "type": "string",
+              },
               "docker_version": {
                 "type": "string",
               },
@@ -1146,6 +1149,9 @@ export const schema: JSONSchema4 = {
           "type": "integer",
         },
         "disk_space": {
+          "type": "string",
+        },
+        "docker_space": {
           "type": "string",
         },
         "docker_version": {
@@ -1619,6 +1625,9 @@ export const schema: JSONSchema4 = {
                     "type": "integer",
                   },
                   "disk_space": {
+                    "type": "string",
+                  },
+                  "docker_space": {
                     "type": "string",
                   },
                   "docker_version": {

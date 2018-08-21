@@ -17,6 +17,7 @@ host_requirements:
   cpu_mhz: 1000
   memory: 2GB
   disk_space: 10GB
+  docker_space: 5GB
 properties:
   app_url: http://{{repl ConfigOption "hostname" }}
   console_title: Replicated YAML Lint Test Application

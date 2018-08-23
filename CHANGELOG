@@ -369,3 +369,5 @@
 0.13.8 2018-08-21
     * replicated-ship now supports the `helm_fetch` method for `helm` assets
 
+0.13.9 2018-08-23
+    replicated-supportbundle `selinux.notenforcing`, `docker.version`, and `raw` analyzers have been added

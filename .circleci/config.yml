@@ -42,7 +42,8 @@ jobs:
             exit 1
           fi
       - checkout
-      - run:
+      - run: npm install publish@^0.6.0
+      - deploy:
           name: publish
           command: |
             echo -e "$NPM_USERNAME\n$NPM_PASSWORD\n$NPM_EMAIL" | npm login

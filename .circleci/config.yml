@@ -1,0 +1,62 @@
+# Golang CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+version: 2
+
+jobs:
+
+  test:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:8.7
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: we need this old version of yarn for some reason
+          command: sudo npm i -g yarn@0.27.5
+      - run:
+          name: build
+          command: $(npm -g bin)/yarn
+      - save_cache:
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - run:
+          name: coverage
+          command: $(npm -g bin)/yarn cover-xml
+      - run:
+          name: report coverage
+          command: $(npm -g bin)/yarn report-coverage
+
+  deploy:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:8.7
+    steps:
+      - run: |
+          if [ "${CIRCLE_PROJECT_USERNAME}" != "replicatedhq" ]; then
+            echo nope nope nope
+            exit 1
+          fi
+      - checkout
+      - run:
+          name: publish
+          command: |
+            echo -e "$NPM_USERNAME\n$NPM_PASSWORD\n$NPM_EMAIL" | npm login
+            npm run publish-if-version-changed
+
+workflows:
+  version: 2
+  build_accept_deploy:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master

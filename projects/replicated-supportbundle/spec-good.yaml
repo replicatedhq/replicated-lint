@@ -156,6 +156,17 @@ collect:
 analyze:
   v1:
 
+    - selinux.notenforcing: {}
+      collect_refs:
+        - selector:
+            analyze: cmd-selinux-status
+
+    - docker.version:
+        server_version_minimum: 17.06.2
+      collect_refs:
+        - selector:
+            analyze: docker-version
+
     - kubernetes.total-memory:
         minimum: 20Gi
       collect_refs:
@@ -167,3 +178,31 @@ analyze:
       collect_refs:
         - selector:
             analyze: kubernetes-version
+
+    - raw:
+        conditions:
+          - eval:
+              operator: and
+              statements:
+                - '{{repl .Empty}}'
+              variables:
+                - Empty: '{{repl not .Nodes}}'
+            severity: error
+            message: >-
+              Failed to detect Kubernetes total memory
+          - eval:
+              operator: and
+              statements:
+                - '{{repl lt (atoi .Memory) (atoi .Min)}}'
+              variables:
+                - Memory: '{{repl jq .Nodes ".items[].status.capacity.memory" | jqMessagesToStringSlice | sumQuantities}}'
+                - Min: '{{repl parseQuantity "10Gi"}}'
+            severity: error
+            message: >-
+              Total memory for your Kubernetes cluster {{repl (atoi .Memory) | formatQuantity}}B is less than the minimum
+              required memory of 10GiB
+      message: Kubernetes total memory must be at least 10GiB
+      collect_refs:
+        - ref: Nodes
+          selector:
+            analyze: kubernetes-resource-list-nodes

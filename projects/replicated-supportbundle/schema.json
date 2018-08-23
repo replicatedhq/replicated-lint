@@ -45,6 +45,24 @@
                   ]
                 }
               },
+              "docker.version": {
+                "description": "Check that the Docker version meets the required minimum",
+                "examples": [
+                  {
+                    "server_version_minimum": "17.12.1"
+                  }
+                ],
+                "type": "object",
+                "properties": {
+                  "server_version_minimum": {
+                    "description": "The minimum Docker version",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "server_version_minimum"
+                ]
+              },
               "kubernetes.total-memory": {
                 "description": "Check that the total memory for a cluster meets the required minimum",
                 "examples": [
@@ -64,7 +82,7 @@
                 ]
               },
               "kubernetes.version": {
-                "description": "Check that the total memory for a cluster meets the required minimum",
+                "description": "Check that the Kubernetes version meets the required minimum",
                 "examples": [
                   {
                     "semver_minimum": "1.10.0"
@@ -73,7 +91,7 @@
                 "type": "object",
                 "properties": {
                   "semver_minimum": {
-                    "description": "The minimum kubernetes version",
+                    "description": "The minimum Kubernetes version",
                     "type": "string"
                   }
                 },
@@ -103,6 +121,101 @@
                     "type": "string"
                   }
                 }
+              },
+              "raw": {
+                "description": "A fully customizable analyzer (advanced).",
+                "examples": [
+                  {
+                    "conditions": [
+                      {
+                        "eval": {
+                          "operator": "or",
+                          "statements": [
+                            "{{repl .Empty}}",
+                            "{{repl .Fail}}"
+                          ],
+                          "variables": [
+                            {
+                              "Out": "{{repl .Ref | trimSuffix \"\\n\"}}",
+                              "Empty": "{{repl not .Ref}}"
+                            },
+                            {
+                              "Fail": "{{repl ne .Out \"1\"}}"
+                            }
+                          ]
+                        },
+                        "severity": "error",
+                        "message": "Failed to connect to postgres: \"{{repl .Out}}\""
+                      }
+                    ]
+                  }
+                ],
+                "type": "object",
+                "properties": {
+                  "conditions": {
+                    "description": "An array of conditions, evaluated in order, that when met will produce a severity and message.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "eval": {
+                          "type": "object",
+                          "properties": {
+                            "operator": {
+                              "description": "The operator used to evaluate the statements. One of and, or.",
+                              "enum": [
+                                "and",
+                                "or"
+                              ],
+                              "type": "string"
+                            },
+                            "statements": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "variables": {
+                              "type": "array",
+                              "items": {
+                                "description": "Key,value pairs used to define variables",
+                                "patternProperties": {
+                                  ".*": {
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              }
+                            }
+                          },
+                          "required": [
+                            "statements"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "severity": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "severity"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "conditions"
+                ]
+              },
+              "selinux.notenforcing": {
+                "description": "Check that SELinux is not in enforcing mode",
+                "properties": {},
+                "examples": [
+                  {}
+                ],
+                "type": "object"
               },
               "severity": {
                 "description": "Optionally override the default severity",

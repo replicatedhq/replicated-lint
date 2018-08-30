@@ -20,6 +20,10 @@ jobs:
       - run:
           name: build
           command: $(npm -g bin)/yarn
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
       - save_cache:
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
@@ -42,7 +46,8 @@ jobs:
             exit 1
           fi
       - checkout
-      - run: $(npm -g bin)/yarn
+      - attach_workspace:
+          at: .
       - deploy:
           name: publish
           command: |

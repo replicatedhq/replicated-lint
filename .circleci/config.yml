@@ -42,7 +42,7 @@ jobs:
             exit 1
           fi
       - checkout
-      - run: npm install publish@^0.6.0
+      - run: $(npm -g bin)/yarn
       - deploy:
           name: publish
           command: |

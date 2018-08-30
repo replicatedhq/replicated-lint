@@ -1398,6 +1398,21 @@ export const schema: JSONSchema4 = {
         },
       },
     },
+    "terms": {
+      "type": "object",
+      "properties": {
+        "markdown": {
+          "type": "string",
+          "minLength": 1,
+        },
+        "version": {
+          "type": "integer",
+        },
+      },
+      "required": [
+        "markdown",
+      ],
+    },
     "release_notes": {
       "type": "string",
     },

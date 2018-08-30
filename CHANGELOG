@@ -371,3 +371,8 @@
 
 0.13.9 2018-08-23
     replicated-supportbundle `selinux.notenforcing`, `docker.version`, and `raw` analyzers have been added
+
+0.13.10 2018-08-30
+    * replicated-ship now supports `google_gke` assets
+    * replicated-ship's `amazon_eks` asset has had the autoscaling_groups.group_size property changed from an int to a string, allowing templating
+

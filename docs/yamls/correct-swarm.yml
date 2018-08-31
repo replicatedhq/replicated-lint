@@ -26,6 +26,13 @@ properties:
   logo_url: http://www.clipartbest.com/cliparts/aTq/ogz/aTqogze8c.jpg
   shell_alias: charliecli
 
+terms:
+  markdown: |
+    # Terms
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non bibendum orci. Sed quis malesuada nisl, id congue ex. Nunc vestibulum eleifend tellus, vel facilisis odio aliquam non. Quisque ut est quis neque tempor feugiat...
+  version: 1
+
 backup:
   enabled: true
   script: |

@@ -378,3 +378,7 @@
 
 0.13.11 2018-08-30
     * Add terms to Replicated schema defintion
+
+0.13.12 2018-08-31
+    * replicated-ship's `kustomize` lifecycle step now enforces requirements for `base_path` and `dest`
+

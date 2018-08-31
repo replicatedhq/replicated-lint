@@ -376,3 +376,6 @@
     * replicated-ship now supports `google_gke` assets
     * replicated-ship's `amazon_eks` asset has had the autoscaling_groups.group_size property changed from an int to a string, allowing templating
 
+0.13.11 2018-08-31
+    * replicated-ship's `kustomize` lifecycle step now enforces requirements for `base_path` and `dest`
+

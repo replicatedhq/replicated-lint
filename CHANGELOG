@@ -382,3 +382,6 @@
 0.13.12 2018-08-31
     * replicated-ship's `kustomize` lifecycle step now enforces requirements for `base_path` and `dest`
 
+0.13.13 2018-09-06
+    * replicated-ship's `github` asset adds two new parameters `mode` and `strip_path`
+

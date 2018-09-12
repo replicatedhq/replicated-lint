@@ -205,6 +205,103 @@
                   }
                 ]
               },
+              "azure_aks": {
+                "description": "An `azure_aks` asset generates a terraform file that will create an Azure AKS Cluster.",
+                "extended_description": "It also populates a template function `AzureAKS` that takes the name of the cluster and returns the path to the generated kubeconfig for the cluster. This template function is only valid after the asset has been generated as part of the `render` lifecycle step, but can be used by later assets within that step. The file itself is created when the generated terraform is applied, whether by the `terraform` lifecycle step or otherwise. This is intended to be used within the [kubectl_apply](/api/ship-lifecycle/lifecycle/kubectl_apply/) lifecycle step.",
+                "examples": [
+                  {
+                    "tenant_id": "5c87f096-eafc-41e1-82f3-1d2282887dff",
+                    "subscription_id": "75cfa510-7123-4812-89bb-fc0286968bf5",
+                    "service_principal_id": "651ed514-6d89-4e51-adaf-c3d3f6dac5a3",
+                    "service_principal_secret": "hvS/lhixCYsPxXgFt04Ilj14NLU4o8LOAIDSAktrwbo=",
+                    "resource_group": "DefaultResourceGroup-EUS",
+                    "location": "East US",
+                    "kubernetes_version": "v1.11.2",
+                    "cluster_name": "AKS cluster",
+                    "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDdEcdAqClaNZdHAGHhiSBobJo5ZUL3sDfrZbBQinLvx3HN/9UaXp5mimlzhUkUQwX4jPqJ78w52idmXItd55HVboSQ8uKaRicgLLaNhSqrNpb+W3k2RToRPsjuaCi6a8XET0kcma6NaIbae9n0+nKzTtadX/hkrPEMS56BYpnHjQ== user@example.com",
+                    "node_count": "3",
+                    "node_type": "Standard_D1_v2",
+                    "disk_gb": "50"
+                  }
+                ],
+                "type": "object",
+                "properties": {
+                  "cluster_name": {
+                    "description": "The name of the cluster.",
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "dest": {
+                    "description": "The path within `installer/` to place the generated file. Defaults to `google_gke.tf`",
+                    "type": "string"
+                  },
+                  "disk_gb": {
+                    "description": "The size of the disk the the operating system will be installed on for each node in the cluster",
+                    "type": "string"
+                  },
+                  "kubernetes_version": {
+                    "description": "The cluster version to create",
+                    "type": "string"
+                  },
+                  "location": {
+                    "description": "The location of the resource group specified in resource_group",
+                    "type": "string"
+                  },
+                  "mode": {
+                    "description": "Ignored",
+                    "type": "integer"
+                  },
+                  "node_count": {
+                    "description": "The number of nodes to create in the cluster",
+                    "type": "string"
+                  },
+                  "node_type": {
+                    "description": "The size of VM to create for each node in the cluster",
+                    "type": "string"
+                  },
+                  "public_key": {
+                    "description": "Enables SSH access to the nodes in the cluster with the corresponding private key",
+                    "type": "string"
+                  },
+                  "resource_group": {
+                    "description": "The name of a resource group within the subscription specified in subscription_id",
+                    "type": "string"
+                  },
+                  "service_principal_id": {
+                    "description": "The Application ID of a registered application.",
+                    "type": "string"
+                  },
+                  "service_principal_secret": {
+                    "description": "A key associated with a registered application.",
+                    "type": "string"
+                  },
+                  "subscription_id": {
+                    "description": "An Azure subscription ID",
+                    "type": "string"
+                  },
+                  "tenant_id": {
+                    "description": "The tenant ID, also known as Directory ID, from Azure Active Directory",
+                    "type": "string"
+                  },
+                  "when": {
+                    "description": "This asset will be included when 'when' is omitted or true",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "cluster_name",
+                  "location",
+                  "node_count",
+                  "node_type",
+                  "resource_group",
+                  "service_principal_id",
+                  "service_principal_secret",
+                  "subscription_id",
+                  "tenant_id"
+                ]
+              },
               "docker": {
                 "description": "A `docker` asset will pull an image from a public docker registry, registry.replicated.com, or a configured third party registry and produce a tar archive of the container image.",
                 "examples": [

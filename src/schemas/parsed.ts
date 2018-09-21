@@ -1182,6 +1182,9 @@ export const schema: JSONSchema4 = {
               "enabled": {
                 "type": "string",
               },
+              "filter": {
+                "type": "string",
+              },
               "source": {
                 "type": "string",
               },

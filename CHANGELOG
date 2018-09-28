@@ -390,3 +390,6 @@
 
 0.13.15 2018-09-21
     * identity provisioners now support `filter` parameter
+
+0.13.16 2018-09-28
+    * update replicated-ship property names "kubectlApply" and "azure_aks.resource_group_name"

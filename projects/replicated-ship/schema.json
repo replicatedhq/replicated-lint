@@ -214,7 +214,7 @@
                     "subscription_id": "75cfa510-7123-4812-89bb-fc0286968bf5",
                     "service_principal_id": "651ed514-6d89-4e51-adaf-c3d3f6dac5a3",
                     "service_principal_secret": "hvS/lhixCYsPxXgFt04Ilj14NLU4o8LOAIDSAktrwbo=",
-                    "resource_group": "DefaultResourceGroup-EUS",
+                    "resource_group_name": "DefaultResourceGroup-EUS",
                     "location": "East US",
                     "kubernetes_version": "v1.11.2",
                     "cluster_name": "AKS cluster",
@@ -231,10 +231,11 @@
                     "type": "string"
                   },
                   "description": {
+                    "description": "A description for the cluster.",
                     "type": "string"
                   },
                   "dest": {
-                    "description": "The path within `installer/` to place the generated file. Defaults to `google_gke.tf`",
+                    "description": "The path within `installer/` to place the generated file. Defaults to `azure_aks.tf`",
                     "type": "string"
                   },
                   "disk_gb": {
@@ -246,7 +247,7 @@
                     "type": "string"
                   },
                   "location": {
-                    "description": "The location of the resource group specified in resource_group",
+                    "description": "The location of the resource group specified in resource_group_name",
                     "type": "string"
                   },
                   "mode": {
@@ -265,7 +266,7 @@
                     "description": "Enables SSH access to the nodes in the cluster with the corresponding private key",
                     "type": "string"
                   },
-                  "resource_group": {
+                  "resource_group_name": {
                     "description": "The name of a resource group within the subscription specified in subscription_id",
                     "type": "string"
                   },
@@ -295,7 +296,7 @@
                   "location",
                   "node_count",
                   "node_type",
-                  "resource_group",
+                  "resource_group_name",
                   "service_principal_id",
                   "service_principal_secret",
                   "subscription_id",
@@ -938,8 +939,8 @@
                 },
                 "required": []
               },
-              "kubectl_apply": {
-                "description": "A `kubectl_apply` step will run `kubectl apply` with the provided file path and kubeconfig.",
+              "kubectlApply": {
+                "description": "A `kubectlApply` step will run `kubectl apply` with the provided file path and kubeconfig.",
                 "examples": [
                   {
                     "path": "config.yml"
@@ -990,13 +991,14 @@
                 "description": "Kustomize adds an interactive step for last-mile customization of kubernetes YAML manifests. The user will be able to examine all output manifests, and store any desired changes/tweaks separate from the base yaml. For more info on Kustomize, see [kustomize.io](https://kustomize.io).",
                 "examples": [
                   {
-                    "base_path": "./k8s/base",
-                    "dest": "./k8s/overlays/production"
+                    "base": "./k8s/base",
+                    "overlay": "./overlays/production",
+                    "dest": "./rendered.yaml"
                   }
                 ],
                 "type": "object",
                 "properties": {
-                  "base_path": {
+                  "base": {
                     "type": "string"
                   },
                   "description": {
@@ -1014,6 +1016,9 @@
                       "type": "string"
                     }
                   },
+                  "overlay": {
+                    "type": "string"
+                  },
                   "requires": {
                     "type": "array",
                     "items": {
@@ -1022,8 +1027,7 @@
                   }
                 },
                 "required": [
-                  "base_path",
-                  "dest"
+                  "base"
                 ]
               },
               "message": {

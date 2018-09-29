@@ -13,7 +13,7 @@
             "properties": {
               "amazon_eks": {
                 "description": "An `amazon_eks` asset generates a terraform file that will create an Amazon EKS Cluster.",
-                "extended_description": "It also populates a template function `AmazonEKS` that takes the name of the cluster and returns the path to the generated kubeconfig for the cluster. This template function is only valid after the asset has been generated as part of the `render` lifecycle step, but can be used by later assets within that step. The file itself is created when the generated terraform is applied, whether by the `terraform` lifecycle step or otherwise. This is intended to be used within the [kubectl_apply](/api/ship-lifecycle/lifecycle/kubectl_apply/) lifecycle step.",
+                "extended_description": "It also populates a template function `AmazonEKS` that takes the name of the cluster and returns the path to the generated kubeconfig for the cluster. This template function is only valid after the asset has been generated as part of the `render` lifecycle step, but can be used by later assets within that step. The file itself is created when the generated terraform is applied, whether by the `terraform` lifecycle step or otherwise. This is intended to be used within the [kubectlApply](/api/ship-lifecycle/kubectlapply/) lifecycle step.",
                 "examples": [
                   {
                     "cluster_name": "existing-vpc-cluster",
@@ -207,7 +207,7 @@
               },
               "azure_aks": {
                 "description": "An `azure_aks` asset generates a terraform file that will create an Azure AKS Cluster.",
-                "extended_description": "It also populates a template function `AzureAKS` that takes the name of the cluster and returns the path to the generated kubeconfig for the cluster. This template function is only valid after the asset has been generated as part of the `render` lifecycle step, but can be used by later assets within that step. The file itself is created when the generated terraform is applied, whether by the `terraform` lifecycle step or otherwise. This is intended to be used within the [kubectl_apply](/api/ship-lifecycle/lifecycle/kubectl_apply/) lifecycle step.",
+                "extended_description": "It also populates a template function `AzureAKS` that takes the name of the cluster and returns the path to the generated kubeconfig for the cluster. This template function is only valid after the asset has been generated as part of the `render` lifecycle step, but can be used by later assets within that step. The file itself is created when the generated terraform is applied, whether by the `terraform` lifecycle step or otherwise. This is intended to be used within the [kubectlApply](/api/ship-lifecycle/kubectlapply/) lifecycle step.",
                 "examples": [
                   {
                     "tenant_id": "5c87f096-eafc-41e1-82f3-1d2282887dff",
@@ -466,7 +466,7 @@
               },
               "google_gke": {
                 "description": "A `google_gke` asset generates a terraform file that will create a Google GKE Cluster.",
-                "extended_description": "It also populates a template function `GoogleGKE` that takes the name of the cluster and returns the path to the generated kubeconfig for the cluster. This template function is only valid after the asset has been generated as part of the `render` lifecycle step, but can be used by later assets within that step. The file itself is created when the generated terraform is applied, whether by the `terraform` lifecycle step or otherwise. This is intended to be used within the [kubectl_apply](/api/ship-lifecycle/lifecycle/kubectl_apply/) lifecycle step.",
+                "extended_description": "It also populates a template function `GoogleGKE` that takes the name of the cluster and returns the path to the generated kubeconfig for the cluster. This template function is only valid after the asset has been generated as part of the `render` lifecycle step, but can be used by later assets within that step. The file itself is created when the generated terraform is applied, whether by the `terraform` lifecycle step or otherwise. This is intended to be used within the [kubectlApply](/api/ship-lifecycle/kubectlapply/) lifecycle step.",
                 "examples": [
                   {
                     "credentials": "<BASE64 ENCODED STRING>",
@@ -835,61 +835,44 @@
             "type": "object",
             "properties": {
               "description": {
+                "description": "The `description` of a config item should tell end users what data needs to be collected and how it will be used.",
+                "examples": [
+                  "Configure application authentication below."
+                ],
                 "type": "string"
               },
-              "filters": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
               "items": {
+                "description": "The `items` property is a grouping of similar config items.",
+                "examples": [
+                  {
+                    "name": "http_enabled",
+                    "title": "HTTP Enabled",
+                    "help_text": "When enabled we will listen to http",
+                    "type": "bool",
+                    "default": "0"
+                  }
+                ],
                 "type": "array"
               },
               "name": {
+                "description": "The `name` is used to reference an item in a template function.",
+                "examples": [
+                  "authentication"
+                ],
                 "type": "string"
               },
-              "test_proc": {
-                "type": "object",
-                "properties": {
-                  "arg_fields": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "args": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "command": {
-                    "type": "string"
-                  },
-                  "display_name": {
-                    "type": "string"
-                  },
-                  "run_on_save": {
-                    "type": "string"
-                  },
-                  "timeout": {
-                    "type": "integer"
-                  }
-                },
-                "required": [
-                  "display_name",
-                  "command",
-                  "timeout",
-                  "arg_fields",
-                  "args",
-                  "run_on_save"
-                ]
-              },
               "title": {
+                "description": "The `title` is the header of an item displayed to the end user.`",
+                "examples": [
+                  "Authentication"
+                ],
                 "type": "string"
               },
               "when": {
+                "description": "The `when` property is used to control whether an item will be shown to the end user.",
+                "examples": [
+                  "'{{repl or (ConfigOptionEquals \"select_one\" \"external\") (ConfigOptionEquals \"select_one\" \"embedded\")}}'"
+                ],
                 "type": "string"
               }
             },

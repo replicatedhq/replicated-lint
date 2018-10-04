@@ -19,7 +19,7 @@ jobs:
           command: sudo npm i -g yarn@0.27.5
       - run:
           name: build
-          command: $(npm -g bin)/yarn
+          command: yarn
       - persist_to_workspace:
           root: .
           paths:
@@ -30,10 +30,10 @@ jobs:
             - ~/.cache/yarn
       - run:
           name: coverage
-          command: $(npm -g bin)/yarn cover-xml
+          command: yarn cover-xml
       - run:
           name: report coverage
-          command: $(npm -g bin)/yarn report-coverage
+          command: yarn report-coverage
 
   deploy:
     working_directory: ~/repo

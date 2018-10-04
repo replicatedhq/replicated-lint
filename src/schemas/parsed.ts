@@ -626,6 +626,9 @@ export const schema: JSONSchema4 = {
                 "source": {
                   "type": "string",
                 },
+                "stop_timeout": {
+                  "type": ["string", "integer"],
+                },
                 "support_commands": {
                   "type": "array",
                   "items": {

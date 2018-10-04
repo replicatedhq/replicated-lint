@@ -394,5 +394,8 @@
 0.13.16 2018-09-28
     * update replicated-ship property names "kubectlApply" and "azure_aks.resource_group_name"
 
-0.13.16 2018-09-28
+0.13.17 2018-09-28
     * remove replicate-ship config.filters and config.test_proc properties
+
+0.13.18 2018-10-03
+    * Add `stop_timeout` property to containers

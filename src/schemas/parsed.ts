@@ -1044,6 +1044,62 @@ export const schema: JSONSchema4 = {
               "command": {
                 "type": "string",
               },
+              "custom_command": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": ["any", "object"],
+                    "properties": {},
+                    "additionalProperties": true,
+                  },
+                  "id": {
+                    "type": "string",
+                  },
+                  "timeout": {
+                    "type": "integer",
+                  },
+                },
+              },
+              "results": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "condition": {
+                      "type": "object",
+                      "properties": {
+                        "bool_expr": {
+                          "type": "string",
+                        },
+                        "error": {
+                          "type": "boolean",
+                        },
+                        "status_code": {
+                          "type": "integer",
+                        },
+                      },
+                    },
+                    "message": {
+                      "type": ["object", "string"],
+                      "properties": {
+                        "args": {
+                          "type": "object",
+                          "additionalProperties": true,
+                        },
+                        "default_message": {
+                          "type": "string",
+                        },
+                        "id": {
+                          "type": "string",
+                        },
+                      },
+                    },
+                    "status": {
+                      "type": "string",
+                    },
+                  },
+                },
+              },
               "display_name": {
                 "type": "string",
               },

@@ -300,6 +300,20 @@ components:
     version: 1.26.2
     when: false
     dynamic: true
+- name: password-checker
+  containers:
+  - source: public
+    image_name: debian
+    version: stretch
+    when: false
+    cmd: '["/password-checker.sh", "{{repl ConfigOption \"password_box\"}}"]'
+    config_files:
+    - filename: /password-checker.sh
+      contents: |
+        if [ "${#1}" -lt 8 ]; then
+          echo "Password must be at least 8 characters long"
+          exit 123
+        fi
 
 ###########################################################
 # Config Settings
@@ -337,6 +351,36 @@ config:
     type: password
     required: true
     when: '{{repl ConfigOptionEquals "check_box_required" "1"}}'
+    test_proc:
+      run_on_save: true
+      display_name: Is this a strong password?
+      custom_command:
+        id: scheduler
+        timeout: 15
+        data:
+          replicated:
+            component: password-checker
+            container: debian
+      results:
+      - status: success
+        message: Success!
+        condition:
+          status_code: 0
+          error: false
+      - status: error
+        message:
+          default_message: '{{.result}}'
+          args:
+            result: '{{repl .Result }}'
+        condition:
+          status_code: 123
+      - status: warn
+        message:
+          default_message: '{{.error}}'
+          args:
+            error: '{{repl .Error }}'
+        condition:
+          error: true
   - name: phone_number
     type: text
     test_proc:

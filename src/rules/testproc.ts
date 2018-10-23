@@ -122,9 +122,7 @@ export const testProcValidCommand: YAMLRule = {
             {
               And: {
                 preds: [
-                  {
-                    Truthy: { path: "test_proc" },
-                  },
+                  { Truthy: { path: "test_proc.command" } },
                   {
                     NotMatch: {
                       path: "test_proc.command",
@@ -140,7 +138,7 @@ export const testProcValidCommand: YAMLRule = {
                 pred: {
                   And: {
                     preds: [
-                      { Truthy: { path: "test_proc" } },
+                      { Truthy: { path: "test_proc.command" } },
                       {
                         NotMatch: {
                           path: "test_proc.command",
@@ -238,6 +236,33 @@ config:
   items:
   - name: docs_host
     type: text
+      `,
+      },
+      {
+        description: "test_proc.custom_command specified instead of test_proc.command",
+        yaml: `
+---
+config:
+- name: configs
+  title: Configuration
+  items:
+  - name: docs_host
+    type: text
+    test_proc:
+      display_name: Check DNS
+      custom_command:
+        id: scheduler
+        timeout: 15
+        data:
+          replicated:
+            component: password-checker
+            container: debian
+      results:
+      - status: success
+        message: Success!
+        condition:
+          status_code: 0
+          error: false
       `,
       },
     ],

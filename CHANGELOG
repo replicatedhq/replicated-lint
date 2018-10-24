@@ -399,3 +399,6 @@
 
 0.13.18 2018-10-03
     * Add `stop_timeout` property to containers
+
+0.13.19 2018-10-24
+    * Add `kustomizeIntro` property to `replicated-ship`

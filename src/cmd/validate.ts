@@ -36,6 +36,11 @@ export const builder = {
     type: "array",
     "default": [],
   },
+  project: {
+    describe: "name of a project to use instead of defaults",
+    type: "string",
+    "default": "",
+  },
   schema: {
     alias: "s",
     describe: "Path to file containing JSONSchema for the document",
@@ -97,20 +102,29 @@ async function main(argv) {
 }
 
 function lint(inYaml: string, argv: any) {
-  const {extraRules, threshold, reporter, outputDir, excludeDefaults, schema} = argv;
+  const {extraRules, threshold, reporter, outputDir, excludeDefaults, schema, project} = argv;
 
   const justSyntaxChecks: linter.YAMLRule[] = [
     linter.rules.schema.yamlValid,
     linter.rules.schema.yamlNotEmpty,
   ];
 
-  const baseRules: linter.YAMLRule[] =
+  let baseRules: linter.YAMLRule[] =
     excludeDefaults ? justSyntaxChecks : linter.rules.all;
+  let resolvedSchema: any = excludeDefaults ? undefined : replicatedSchema;
+
+  if (project) {
+    const projectModule = linter.projects[project];
+    if (!projectModule) {
+      throw new Error(`couldn't find project ${project}, try one of ${Object.keys(linter.projects)}`);
+    }
+    baseRules = projectModule.rules;
+    resolvedSchema = projectModule.schema;
+  }
 
   const extra = extraRules.map(readExtraRules);
   const rules = baseRules.concat(...extra).filter(ruleNotifiesAt(threshold));
 
-  let resolvedSchema: any = excludeDefaults ? undefined : replicatedSchema;
   if (schema) {
     resolvedSchema = yaml.safeLoad(fs.readFileSync(schema).toString());
   }

@@ -405,3 +405,6 @@
 
 0.13.20 2018-10-24
     * Add `--project` flag to `replicated-lint validate` command to pull schema+rules from another project
+
+0.13.21 2018-10-25
+    * Add support for test procedure custom commands

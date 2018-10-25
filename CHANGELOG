@@ -408,3 +408,6 @@
 
 0.13.21 2018-10-25
     * Add support for test procedure custom commands
+
+0.13.22 2018-10-26
+    * Add write_once property to config item

@@ -906,6 +906,9 @@ export const schema: JSONSchema4 = {
                 "readonly": {
                   "type": "boolean",
                 },
+                "write_once": {
+                  "type": "boolean",
+                },
                 "recommended": {
                   "type": "boolean",
                 },

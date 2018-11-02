@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env npx ts-node
 import * as yargs from "yargs";
 import * as validate from "./validate";
 

@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { lint, hackLintMultidoc } from "../lint";
+import { hackLintMultidoc, lint, Linter } from "../lint";
 import { apiVersion } from "../rules/root";
 
 describe("mesg-yaml-valid", () => {
@@ -39,17 +39,17 @@ describe("mesg-yaml-valid", () => {
       expect(lint(`
 ---
 foo: }`)).to.deep.equal([{
-          type: "error",
-          rule: "mesg-yaml-valid",
-          positions: [{
-            start: {
-              column: 5,
-              line: 2,
-              position: 10,
-            },
-          }],
-          message: `end of the stream or a document separator is expected at line 3, column 6:\n    foo: }\n         ^`,
-        }]);
+        type: "error",
+        rule: "mesg-yaml-valid",
+        positions: [{
+          start: {
+            column: 5,
+            line: 2,
+            position: 10,
+          },
+        }],
+        message: `end of the stream or a document separator is expected at line 3, column 6:\n    foo: }\n         ^`,
+      }]);
     });
   });
 
@@ -60,13 +60,7 @@ describe("lintMultidoc", () => {
     expect(hackLintMultidoc(`---
 foo: {}
 ---
-bar: {}`)).to.deep.equal([{
-        index: 0,
-        findings: [],
-      }, {
-        index: 1,
-        findings: [],
-      }]);
+bar: {}`)).to.deep.equal([]);
   });
   it("should give global indices for multidoc failures", () => {
     const inYaml = `
@@ -86,7 +80,7 @@ fdfsjl: ]
 ---
 bar: {}
 `;
-    expect(hackLintMultidoc(inYaml)).to.deep.equal([{
+    const cases = [{
       index: 0,
       findings: [],
     }, {
@@ -117,7 +111,14 @@ bar: {}
     }, {
       index: 3,
       findings: [],
-    }]);
+    }, {
+      index: 100,
+      findings: [Linter.noDocError()],
+    },
+    ];
+    for (const test of cases) {
+      expect(hackLintMultidoc(inYaml, {multidocIndex: test.index})).to.deep.equal(test.findings);
+    }
   });
 });
 
@@ -134,7 +135,7 @@ replicated_api_version: 2.8.0
 name: Retraced
 `;
 
-    expect(lint(inYaml, { rules: [apiVersion] },
+    expect(lint(inYaml, {rules: [apiVersion]},
     )).to.deep.equal([
       {
         "message": "duplicated mapping key at line 7, column 1:\n    replicated_api_version: 2.8.0\n    ^",

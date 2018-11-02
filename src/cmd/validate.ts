@@ -4,15 +4,9 @@ import * as _ from "lodash";
 import * as linter from "../";
 import * as yaml from "js-yaml";
 import * as fs from "fs";
-import {
-  consoleReporter,
-  junitReporter,
-  readExtraRules,
-  Reporter,
-  ruleNotifiesAt,
-} from "../cmdutil/reporters";
-import {readFromStdin} from "../cmdutil/stdin";
-import {parsed as replicatedSchema} from "../schemas";
+import { consoleReporter, junitReporter, readExtraRules, Reporter, ruleNotifiesAt } from "../cmdutil/reporters";
+import { readFromStdin } from "../cmdutil/stdin";
+import { parsed as replicatedSchema } from "../schemas";
 
 export const name = "validate";
 export const describe = "Lint a yaml document from a file or stdin";
@@ -64,6 +58,11 @@ export const builder = {
     describe: "Exclude default rulesets + schema for replicated yaml, only use rules specified by --extraRules",
     type: "boolean",
     "default": false,
+  },
+  multidocIndex: {
+    describe: "select a document out of a multidoc yaml stream. By default the first document will be read",
+    type: "number",
+    "default": 0,
   },
   _waitForDebugger: {
     describe: "Internal -- sleep 5000ms at command start, helpful for attaching a debugger",
@@ -129,8 +128,8 @@ function lint(inYaml: string, argv: any) {
     resolvedSchema = yaml.safeLoad(fs.readFileSync(schema).toString());
   }
 
-  const opts: linter.LintOpts = {rules, schema: resolvedSchema};
-  const results: linter.RuleTrigger[] = linter.lint(inYaml, opts);
+  const opts: linter.MultidocLintOpts = {rules, schema: resolvedSchema, multidocIndex: argv.multidocIndex};
+  const results: linter.RuleTrigger[] = linter.hackLintMultidoc(inYaml, opts);
 
   reporters[reporter](inYaml, rules, results, outputDir);
 

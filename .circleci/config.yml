@@ -7,16 +7,15 @@ jobs:
 
   test:
     working_directory: ~/repo
+    environment:
+        MOCHA_FILE: test-results/mocha/test-results.xml
     docker:
-      - image: circleci/node:8.7
+      - image: circleci/node:8
     steps:
       - checkout
       - restore_cache:
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
-      - run:
-          name: we need this old version of yarn for some reason
-          command: sudo npm i -g yarn@0.27.5
       - run:
           name: build
           command: yarn
@@ -29,8 +28,10 @@ jobs:
           paths:
             - ~/.cache/yarn
       - run:
-          name: coverage
+          name: test + coverage
           command: yarn cover-xml
+      - store_test_results:
+          path: test-results
       - run:
           name: report coverage
           command: yarn report-coverage
@@ -38,7 +39,7 @@ jobs:
   deploy:
     working_directory: ~/repo
     docker:
-      - image: circleci/node:8.7
+      - image: circleci/node:8
     steps:
       - run: |
           if [ "${CIRCLE_PROJECT_USERNAME}" != "replicatedhq" ]; then

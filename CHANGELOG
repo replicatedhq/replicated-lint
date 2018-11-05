@@ -411,3 +411,6 @@
 
 0.13.22 2018-10-26
     * Add write_once property to config item
+
+0.14.0 2018-11-2
+    * update CLI `replicated-lint validate` to read in multidoc YAML. It will lint the first doc by default, but now supports a flag `--multidocIndex` to select out any document in the stream

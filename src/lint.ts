@@ -1,11 +1,11 @@
 import * as yaml from "js-yaml";
 import * as _ from "lodash";
 import * as ast from "yaml-ast-parser";
+import { YAMLNode } from "yaml-ast-parser";
 import * as tv4 from "tv4";
 import * as rules from "./rules";
 import * as lineColumn from "line-column";
 import { parsed as schema } from "./schemas";
-import { YAMLNode } from "yaml-ast-parser";
 import { astPosition, tokenize } from "./ast";
 import { defaultRegistry, Registry } from "./engine";
 import { JSONSchema4 } from "json-schema";
@@ -31,12 +31,6 @@ function ruleTypeLevel(type: RuleType): number {
 export function ruleTypeLT(t1: RuleType, t2: RuleType): boolean {
   return ruleTypeLevel(t1) < ruleTypeLevel(t2);
 }
-
-export interface LintedDoc {
-  index: number;
-  findings: RuleTrigger[];
-}
-
 export interface RuleTrigger {
   type: RuleType;
   rule: string;
@@ -217,6 +211,7 @@ export interface MultidocLintOpts {
   rules?: YAMLRule[];
   schema?: JSONSchema4;
   registry?: Registry;
+  multidocIndex?: number;
 }
 
 export interface LintOpts extends MultidocLintOpts {
@@ -230,13 +225,11 @@ const DOC_SEPARATOR_LENGTH = DOC_SEPARATOR.length;
 /**
  * uses a hack to split on yaml docs. Avoid using if posible
  */
-export function hackLintMultidoc(inYaml: string, maybeOpts?: MultidocLintOpts): LintedDoc[] {
+export function hackLintMultidoc(inYaml: string, maybeOpts?: MultidocLintOpts): RuleTrigger[] {
+  const targetIndex = maybeOpts ? maybeOpts.multidocIndex : 0;
   // It's just one doc, do the normal thing, but keep signature same
   if (inYaml.indexOf(DOC_SEPARATOR) === -1) {
-    return [{
-      index: 0,
-      findings: lint(inYaml, maybeOpts),
-    }];
+    return lint(inYaml, maybeOpts);
   }
 
   // It's many docs, split it on --- and lint each one,
@@ -246,26 +239,35 @@ export function hackLintMultidoc(inYaml: string, maybeOpts?: MultidocLintOpts): 
   let offset = inYaml.indexOf(DOC_SEPARATOR) + DOC_SEPARATOR_LENGTH;
   const lineColumnFinder = lineColumn(inYaml);
 
-  return _.map(docs, (doc, index) => {
-    const linted = new Linter(doc, {
-      rules: opts.rules,
-      registry: opts.registry,
-      lineColumnFinder,
-      offset,
-    }).lint();
-
+  let index = 0;
+  for (const doc of docs) {
+    if (index === targetIndex) {
+      return new Linter(doc, {
+        rules: opts.rules,
+        registry: opts.registry,
+        lineColumnFinder,
+        offset,
+      }).lint();
+    }
     offset += doc.length + DOC_SEPARATOR_LENGTH;
-    return ({
-      index,
-      findings: linted,
-    });
-  });
+    index += 1;
+  }
+  return [Linter.noDocError()];
 }
 
 export class Linter {
 
   public static withDefaults(inYaml: string): Linter {
-    return new Linter(inYaml, { rules: rules.all, schema });
+    return new Linter(inYaml, {rules: rules.all, schema});
+  }
+
+  public static noDocError(): RuleTrigger {
+    return {
+      type: "error",
+      rule: "mesg-yaml-not-empty",
+      message: "Document must not be empty",
+    };
+
   }
 
   private readonly inYaml: string;
@@ -276,6 +278,8 @@ export class Linter {
   private readonly lineColumnFinder: any;
   private readonly offset: number;
 
+  private readonly multidocIndex: number;
+
   constructor(inYaml: string, maybeOpts?: LintOpts) {
     const opts: LintOpts = maybeOpts || {};
     this.inYaml = inYaml;
@@ -284,12 +288,13 @@ export class Linter {
     this.lineColumnFinder = opts.lineColumnFinder || lineColumn(inYaml);
     this.rules = opts.rules;
     this.schema = opts.schema;
+    this.multidocIndex = opts.multidocIndex || 0;
   }
 
   public lint(): RuleTrigger[] {
 
     if (!this.inYaml) {
-      return [this.noDocError()];
+      return [Linter.noDocError()];
     }
     let root;
     try {
@@ -299,7 +304,7 @@ export class Linter {
     }
 
     if (!root) {
-      return [this.noDocError()];
+      return [Linter.noDocError()];
     }
 
     const yamlAST: YAMLNode = ast.safeLoad(this.inYaml, null) as any;
@@ -336,15 +341,6 @@ export class Linter {
     };
   }
 
-  private noDocError(): RuleTrigger {
-    return {
-      type: "error",
-      rule: "mesg-yaml-not-empty",
-      message: "Document must not be empty",
-    };
-
-  }
-
   private evaluateRules(root: any, yamlAST: YAMLNode): RuleTrigger[] {
     if (_.isEmpty(this.rules)) {
       return [];
@@ -354,7 +350,7 @@ export class Linter {
 
     _.forEach(this.rules!, (rule: YAMLRule) => {
 
-      let result: RuleMatchedAt = { matched: false };
+      let result: RuleMatchedAt = {matched: false};
       const compiled = this.registry.compile(rule.test);
       try {
         result = compiled.test(root);
@@ -376,8 +372,8 @@ export class Linter {
         }
 
         const message = _.isEmpty(positions) ?
-            rule.message :
-            `${rule.message} [${positions[0].path}]`;
+          rule.message :
+          `${rule.message} [${positions[0].path}]`;
 
         ruleTriggers.push({
           type: rule.type,
@@ -401,8 +397,8 @@ export class Linter {
       }
 
       const message = _.isEmpty(positions) ?
-          err.message :
-          `${err.message} [${positions[0].path}]`;
+        err.message :
+        `${err.message} [${positions[0].path}]`;
 
       return {
         rule: "prop-schema-valid",
@@ -413,7 +409,6 @@ export class Linter {
     });
 
   }
-
 }
 
 /**

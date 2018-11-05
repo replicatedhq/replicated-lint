@@ -20,13 +20,13 @@ export class And<T> implements Predicate<T> {
     for (const pred of this.preds) {
       const result = pred.test(root);
       if (!result.matched) {
-        return { matched: false };
+        return {matched: false};
       }
 
       _.forEach(result.paths!, p => paths.push(p));
     }
 
-    return { matched: true, paths };
+    return {matched: true, paths};
   }
 
 }
@@ -37,8 +37,8 @@ export class Match implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
-      private readonly check: RegExp,
+    private readonly path: string,
+    private readonly check: RegExp,
   ) {
   }
 
@@ -47,7 +47,7 @@ export class Match implements Predicate<any> {
     const value = _.get(object, this.path);
     const matched = this.check.test(value as any);
 
-    return { matched, paths: [this.path] };
+    return {matched, paths: [this.path]};
   }
 }
 
@@ -57,8 +57,8 @@ export class NotMatch implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
-      private readonly check: RegExp,
+    private readonly path: string,
+    private readonly check: RegExp,
   ) {
   }
 
@@ -67,7 +67,7 @@ export class NotMatch implements Predicate<any> {
 
     const matched = !this.check.test(value as any);
 
-    return { matched, paths: [this.path] };
+    return {matched, paths: [this.path]};
   }
 }
 
@@ -77,13 +77,13 @@ export class WhenExpressionConfigInvalid implements Predicate<any> {
   }
 
   constructor(
-      private readonly configOptionExists: ConfigOptionExists,
+    private readonly configOptionExists: ConfigOptionExists,
   ) {
   }
 
   public test(root: any): RuleMatchedAt {
     if (!_.has(root, "config")) {
-      return { matched: false };
+      return {matched: false};
     }
 
     const configOptionsReferenced = [] as FoundValue[];
@@ -146,8 +146,8 @@ export class Semver implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
-      private readonly required: boolean,
+    private readonly path: string,
+    private readonly required: boolean,
   ) {
   }
 
@@ -155,14 +155,14 @@ export class Semver implements Predicate<any> {
     const value = _.get(root, this.path);
 
     if (!value && this.required) {
-      return { matched: true, paths: [] };
+      return {matched: true, paths: []};
     }
 
     if (value && !semver.valid(value)) {
-      return { matched: true, paths: [this.path] };
+      return {matched: true, paths: [this.path]};
     }
 
-    return { matched: false };
+    return {matched: false};
   }
 }
 
@@ -172,15 +172,15 @@ export class AnyOf<T_Root, T_El> implements Predicate<T_Root> {
   }
 
   constructor(
-      private readonly collectionPath: string,
-      private readonly pred: Predicate<T_El>,
+    private readonly collectionPath: string,
+    private readonly pred: Predicate<T_El>,
   ) {
   }
 
   public test(root: any): RuleMatchedAt {
     const collection: T_El[] = _.get<T_Root, T_El[]>(root, this.collectionPath);
     if (!_.isArray(collection)) {
-      return { matched: false };
+      return {matched: false};
     }
 
     const matchedPaths: string[] = _.flatMap(collection, (obj: T_El, index) => {
@@ -191,7 +191,7 @@ export class AnyOf<T_Root, T_El> implements Predicate<T_Root> {
       return [];
     });
 
-    return { matched: !_.isEmpty(matchedPaths), paths: matchedPaths };
+    return {matched: !_.isEmpty(matchedPaths), paths: matchedPaths};
   }
 }
 
@@ -209,7 +209,7 @@ export class AllOf<T_Root, T_El> implements Predicate<T_Root> {
   public test(root: any): RuleMatchedAt {
     const collection: T_El[] = _.get<T_Root, T_El[]>(root, this.collectionPath);
     if (!_.isArray(collection)) {
-      return { matched: false };
+      return {matched: false};
     }
 
     const matchedPaths: string[] = _.flatMap(collection, (obj: T_El, index) => {
@@ -220,7 +220,7 @@ export class AllOf<T_Root, T_El> implements Predicate<T_Root> {
       return [];
     });
 
-    return { matched: matchedPaths.length === collection.length, paths: matchedPaths };
+    return {matched: matchedPaths.length === collection.length, paths: matchedPaths};
   }
 }
 
@@ -231,8 +231,8 @@ export class Dot implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
-      private readonly pred: Predicate<any>,
+    private readonly path: string,
+    private readonly pred: Predicate<any>,
   ) {
   }
 
@@ -241,7 +241,7 @@ export class Dot implements Predicate<any> {
 
     const result: RuleMatchedAt = this.pred.test(val);
     if (!result.matched) {
-      return { matched: false };
+      return {matched: false};
     }
 
     return {
@@ -273,8 +273,8 @@ export class Eq<T> implements Predicate<T> {
   }
 
   constructor(
-      private readonly path: string,
-      private readonly value: any,
+    private readonly path: string,
+    private readonly value: any,
   ) {
   }
 
@@ -295,15 +295,15 @@ export class GT implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
-      private readonly value: number,
+    private readonly path: string,
+    private readonly value: number,
   ) {
   }
 
   public test(object: any): RuleMatchedAt {
     const val = _.get(object, this.path);
     if (!_.isNumber(val)) {
-      return { matched: true, paths: [this.path] };
+      return {matched: true, paths: [this.path]};
     }
     return {
       matched: val > this.value,
@@ -321,8 +321,8 @@ export class LT implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
-      private readonly value: number,
+    private readonly path: string,
+    private readonly value: number,
   ) {
   }
 
@@ -331,7 +331,7 @@ export class LT implements Predicate<any> {
     const val = _.get(object, this.path);
 
     if (!_.isNumber(val)) {
-      return { matched: true, paths: [this.path] };
+      return {matched: true, paths: [this.path]};
     }
 
     return {
@@ -365,8 +365,8 @@ export class Neq implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
-      private readonly value: any,
+    private readonly path: string,
+    private readonly value: any,
   ) {
   }
 
@@ -453,7 +453,7 @@ export class Or<T> implements Predicate<T> {
         return result;
       }
     }
-    return { matched: false };
+    return {matched: false};
   }
 }
 
@@ -474,10 +474,10 @@ export class KeyDoesntMatch implements Predicate<any> {
     });
 
     if (!_.isEmpty(paths)) {
-      return { matched: true, paths };
+      return {matched: true, paths};
     }
 
-    return { matched: false };
+    return {matched: false};
   }
 }
 
@@ -505,14 +505,14 @@ export class ConfigOptionExists implements Predicate<any> {
 
   public compareUsageWithDefinedOptions(root: any, usages: FoundValue[]): RuleMatchedAt {
     const configItemNames = _.flatMap(
-        root.config as ConfigSection[],
-        section => this.configItemNames(section),
+      root.config as ConfigSection[],
+      section => this.configItemNames(section),
     );
     // usages that contain NONE OF configItemNames
     // every usage should match exactly one configItem
     const filtered: FoundValue[] = _.filter(usages, this.isInvalid(configItemNames));
 
-    return { matched: !!filtered.length, paths: _.map(filtered, f => f.path) };
+    return {matched: !!filtered.length, paths: _.map(filtered, f => f.path)};
   }
 
   private configItemNames(section: ConfigSection) {
@@ -557,8 +557,8 @@ export class ConfigOptionIsCircular implements Predicate<ConfigOption> {
     const patternOptionEquals: string = `ConfigOptionEquals "${configOption.name}"`;
 
     const configOptionUsages: FoundValue[] = _.concat(
-        this.valueSearcher.searchContains(configOption, patternOption),
-        this.valueSearcher.searchContains(configOption, patternOptionEquals),
+      this.valueSearcher.searchContains(configOption, patternOption),
+      this.valueSearcher.searchContains(configOption, patternOptionEquals),
     );
 
     return {
@@ -583,17 +583,17 @@ export class MonitorContainerMissing implements Predicate<any> {
 
   public test(root: any): RuleMatchedAt {
     if (!_.has(root, this.monitorPath)) {
-      return { matched: false };
+      return {matched: false};
     }
 
     const monitors: string[] = _.get(root, this.monitorPath) as string[];
 
     if (_.isEmpty(monitors)) {
-      return { matched: false };
+      return {matched: false};
     }
 
     if (_.isEmpty(_.get(root, "components"))) {
-      return { matched: true, paths: [this.monitorPath] };
+      return {matched: true, paths: [this.monitorPath]};
     }
 
     const violations: InvalidMontior[] = _.filter(_.map(monitors, (monitor, index) => {
@@ -601,7 +601,7 @@ export class MonitorContainerMissing implements Predicate<any> {
     })) as any;
 
     if (_.isEmpty(violations)) {
-      return { matched: false };
+      return {matched: false};
     }
 
     return {
@@ -617,7 +617,7 @@ export class MonitorContainerMissing implements Predicate<any> {
     const [component, container] = monitor.split(",");
     const result = isContainerMissing(components, component, container);
     if (result.matched && result.paths && result.paths[0]) {
-      return { index, path: result.paths[0] };
+      return {index, path: result.paths[0]};
     }
   }
 }
@@ -628,8 +628,8 @@ export class SemverRange implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
-      private readonly required: boolean,
+    private readonly path: string,
+    private readonly required: boolean,
   ) {
   }
 
@@ -637,14 +637,14 @@ export class SemverRange implements Predicate<any> {
     const value = _.get(root, this.path);
 
     if (!value && this.required) {
-      return { matched: true, paths: [] };
+      return {matched: true, paths: []};
     }
 
     if (value && !semver.validRange(value)) {
-      return { matched: true, paths: [this.path] };
+      return {matched: true, paths: [this.path]};
     }
 
-    return { matched: false };
+    return {matched: false};
   }
 }
 
@@ -658,19 +658,19 @@ export class AdminCommandContainerMissing implements Predicate<any> {
     const commands: any[] = root.admin_commands;
 
     if (_.isEmpty(commands)) {
-      return { matched: false };
+      return {matched: false};
     }
 
     if (isKubernetesApp(commands)) { // it's probably kubernetes, we're not gonna check
-      return { matched: false };
+      return {matched: false};
     }
 
     if (isSwarmApp(commands)) { // it's probably swarm, we're not gonna check
-      return { matched: false };
+      return {matched: false};
     }
 
     if (_.isEmpty(_.get(root, "components"))) {
-      return { matched: true, paths: ["admin_commands"] };
+      return {matched: true, paths: ["admin_commands"]};
     }
 
     const paths = [] as string[];
@@ -680,7 +680,7 @@ export class AdminCommandContainerMissing implements Predicate<any> {
         return;
       }
 
-      let { component, container } = command;
+      let {component, container} = command;
 
       // for oldstyle
       if (!_.isEmpty(command.image)) {
@@ -711,7 +711,7 @@ export class AdminCommandContainerMissing implements Predicate<any> {
       }
     });
 
-    return { matched: !_.isEmpty(paths), paths };
+    return {matched: !_.isEmpty(paths), paths};
   }
 
 }
@@ -726,18 +726,18 @@ function isSwarmApp(schedulerSourced: any[]) {
 
 function isContainerMissing(components: any[], component: string, container: string): RuleMatchedAt {
   // fail if component missing
-  const componentIndex: any = _.findIndex(components, { name: component });
+  const componentIndex: any = _.findIndex(components, {name: component});
   if (componentIndex === -1) {
-    return { matched: true, paths: [`components`] };
+    return {matched: true, paths: [`components`]};
   }
 
   // fail if container missing
-  const c = _.find(components[componentIndex].containers, { image_name: container });
+  const c = _.find(components[componentIndex].containers, {image_name: container});
   if (!c) {
-    return { matched: true, paths: [`components.${componentIndex}`] };
+    return {matched: true, paths: [`components.${componentIndex}`]};
   }
 
-  return { matched: false };
+  return {matched: false};
 }
 
 interface EventSubscription {
@@ -757,7 +757,7 @@ export class EventSubscriptionContainerMissing implements Predicate<any> {
   public test(root: any): RuleMatchedAt {
 
     if (_.isEmpty(_.get(root, "components"))) {
-      return { matched: false };
+      return {matched: false};
     }
 
     const subscriptions: any[] = _.flatMap(root.components, (component: any, componentIndex: number) => {
@@ -782,7 +782,7 @@ export class EventSubscriptionContainerMissing implements Predicate<any> {
     });
 
     if (_.isEmpty(invalidSubscriptions)) {
-      return { matched: false };
+      return {matched: false};
     }
 
     return {
@@ -803,23 +803,23 @@ export class MoreThan<T> implements Predicate<any> {
   }
 
   constructor(
-      private readonly limit: number,
-      private readonly values: T[],
+    private readonly limit: number,
+    private readonly values: T[],
   ) {
   }
 
   public test(root: T[]): RuleMatchedAt {
     const matching: number[] = _.filter(
-        _.flatMap(this.values, (val) => {
-          return _.map(root, (supplied, index) => {
-            return supplied === val ? index : -1;
-          });
-        }),
-        i => i !== -1,
+      _.flatMap(this.values, (val) => {
+        return _.map(root, (supplied, index) => {
+          return supplied === val ? index : -1;
+        });
+      }),
+      i => i !== -1,
     );
 
     if (matching.length <= this.limit) {
-      return { matched: false };
+      return {matched: false};
     }
 
     return {
@@ -838,23 +838,23 @@ export class NotBoolString implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
+    private readonly path: string,
   ) {
   }
 
   public test(root): RuleMatchedAt {
     const val = _.get(root, this.path);
     if (_.isBoolean(val)) {
-      return { matched: false };
+      return {matched: false};
     }
 
     if (_.isString(val)) {
       if (/^(true|false|1|0|{{repl.*)$/.test(val)) {
-        return { matched: false };
+        return {matched: false};
       }
     }
 
-    return { matched: true, paths: [this.path] };
+    return {matched: true, paths: [this.path]};
   }
 }
 
@@ -868,7 +868,7 @@ export class InvalidURL implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
+    private readonly path: string,
   ) {
   }
 
@@ -881,10 +881,10 @@ export class InvalidURL implements Predicate<any> {
     const hasSpace = parsed.hostname.indexOf(" ") !== -1;
 
     if (isHttp && hasHostname && !hasSpace) {
-      return { matched: false };
+      return {matched: false};
     }
 
-    return { matched: true, paths: [this.path] };
+    return {matched: true, paths: [this.path]};
   }
 }
 
@@ -892,25 +892,25 @@ function isContainerNameMissing(components: any[], containerName: string): RuleM
 
   for (const component of components) {
     // console.log(`checking for container ${containerName} in component ${util.inspect(component, false, 100, true)}`);
-    const c = _.find(component.containers, { name: containerName });
+    const c = _.find(component.containers, {name: containerName});
     if (c) {
-      return { matched: false };
+      return {matched: false};
     }
   }
 
-  return { matched: true, paths: ["components"] };
+  return {matched: true, paths: ["components"]};
 }
 
 function collapseMatches(matches: RuleMatchedAt[]): RuleMatchedAt {
   return _.reduce(
-      matches,
-      (match, acc) => (
-          {
-            matched: match.matched || acc.matched,
-            paths: _.concat(match.paths || [], acc.paths || []),
-          }
-      ),
-      { matched: false, paths: [] as string[] },
+    matches,
+    (match, acc) => (
+      {
+        matched: match.matched || acc.matched,
+        paths: _.concat(match.paths || [], acc.paths || []),
+      }
+    ),
+    {matched: false, paths: [] as string[]},
   );
 }
 
@@ -921,12 +921,12 @@ export class ContainerVolumesFromMissing implements Predicate<any> {
 
   public test(root: any): RuleMatchedAt {
     if (_.isEmpty(root.components)) {
-      return { matched: false };
+      return {matched: false};
 
     }
     const matches: RuleMatchedAt[] = _.flatMap(root.components, (component: Component, componentIndex) => {
       if (_.isEmpty(component.containers)) {
-        return [{ matched: false }];
+        return [{matched: false}];
       }
       return _.flatMap(component.containers!, (container: Container, containerIndex) => {
 
@@ -938,7 +938,7 @@ export class ContainerVolumesFromMissing implements Predicate<any> {
             };
           }
 
-          return { matched: false };
+          return {matched: false};
         });
       });
     });
@@ -970,12 +970,12 @@ export class ArrayMemberFieldsNotUnique implements Predicate<any> {
       const value: any = _.get(item, this.path);
 
       if (_.isEmpty(value)) {
-        return { matched: false };
+        return {matched: false};
       }
 
       if (_.isUndefined(seenValues[value])) {
         seenValues[value] = `${index}.${this.path}`;
-        return { matched: false };
+        return {matched: false};
       }
 
       return {
@@ -997,24 +997,24 @@ export class ContainerNamesNotUnique implements Predicate<any> {
 
   public test(root: any): RuleMatchedAt {
     if (_.isEmpty(root.components)) {
-      return { matched: false };
+      return {matched: false};
     }
 
     const seenNames = {} as any;
     const matches = _.flatMap(root.components, (component: Component, componentIndex) => {
       if (_.isEmpty(component.containers)) {
-        return [{ matched: false }];
+        return [{matched: false}];
       }
 
       return _.map(component.containers!, (container: Container, containerIndex) => {
         if (_.isEmpty(container.name)) {
 
-          return { matched: false };
+          return {matched: false};
         }
 
         if (_.isUndefined(seenNames[container.name])) {
           seenNames[container.name] = `components.${componentIndex}.containers.${containerIndex}.name`;
-          return { matched: false };
+          return {matched: false};
         }
 
         return {
@@ -1039,19 +1039,24 @@ export class SemverMinimum implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
-      private readonly minimum: string,
+    private readonly path: string,
+    private readonly minimum: string,
   ) {
   }
 
   public test(root: any): RuleMatchedAt {
     const value = _.get(root, this.path);
 
+    // zero is valid, but anything else falsey will blow up
+    if (!value && value !== 0) {
+      return {matched: true, paths: [this.path]};
+    }
+
     if (semver.lt(value, this.minimum)) {
       return {matched: true, paths: [this.path]};
     }
 
-    return { matched: false };
+    return {matched: false};
   }
 }
 
@@ -1061,7 +1066,7 @@ export class IsNotUint implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
+    private readonly path: string,
   ) {
   }
 
@@ -1072,14 +1077,14 @@ export class IsNotUint implements Predicate<any> {
     // if this is a number >=0, and an integer, we'll call it a uint
     if (_.isNumber(val)) {
       if (Number.isInteger(val) && val >= 0) {
-        return { matched: false };
+        return {matched: false};
       }
     }
 
     // if this is a string of digits, with no leading 0s, we'll still call it a uint
     if (_.isString(val)) {
       if (/^(0|[1-9]\d*)$/.test(val)) {
-        return { matched: false };
+        return {matched: false};
       }
     }
 
@@ -1097,18 +1102,18 @@ export class CustomRequirementsNotUnique implements Predicate<any> {
 
   public test(root: any): RuleMatchedAt {
     if (_.isEmpty(root.custom_requirements)) {
-      return { matched: false };
+      return {matched: false};
     }
 
     const seenNames = {} as any;
     const matches = _.flatMap(root.custom_requirements, (requirement: any, requirementIndex) => {
       if (_.isUndefined(requirement.id)) {
-        return [{ matched: false }];
+        return [{matched: false}];
       }
 
       if (_.isUndefined(seenNames[requirement.id])) {
         seenNames[requirement.id] = `requirements.${requirementIndex}.id`;
-        return { matched: false };
+        return {matched: false};
       }
 
       return {
@@ -1163,12 +1168,12 @@ export class ContainerVolumesFromSubscription implements Predicate<any> {
 
   public test(root: any): RuleMatchedAt {
     if (_.isEmpty(root.components)) {
-      return { matched: false };
+      return {matched: false};
 
     }
     const matches: RuleMatchedAt[] = _.flatMap(root.components, (component: Component, componentIndex) => {
       if (_.isEmpty(component.containers)) {
-        return [{ matched: false }];
+        return [{matched: false}];
       }
       return _.flatMap(component.containers!, (container, containerIndex) => {
 
@@ -1205,7 +1210,7 @@ export class ContainerVolumesFromSubscription implements Predicate<any> {
               paths: [`components.${componentIndex}.containers.${containerIndex}.volumes_from.${nameIndex}`],
             };
           }
-          return { matched: false };
+          return {matched: false};
         });
       });
     });
@@ -1220,7 +1225,7 @@ export class IsNotBytesCount implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
+    private readonly path: string,
   ) {
   }
 
@@ -1231,7 +1236,7 @@ export class IsNotBytesCount implements Predicate<any> {
     // check against a regular expression to ensure number:unit format
     if (_.isString(val)) {
       if (/^(\d+(?:\.\d{1,3})?)([KMGTPE]B?)$/i.test(val.trim())) {
-        return { matched: false };
+        return {matched: false};
       }
     }
 
@@ -1248,7 +1253,7 @@ export class IsNotKubernetesQuantity implements Predicate<any> {
   }
 
   constructor(
-      private readonly path: string,
+    private readonly path: string,
   ) {
   }
 
@@ -1258,14 +1263,14 @@ export class IsNotKubernetesQuantity implements Predicate<any> {
 
     if (_.isNumber(val)) {
       if (val >= 0) {
-        return { matched: false};
+        return {matched: false};
       }
     }
 
     // check against a regular expression to ensure format
     if (_.isString(val)) {
       if (/^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$/.test(val.trim())) {
-        return { matched: false };
+        return {matched: false};
       }
     }
 
@@ -1282,16 +1287,16 @@ export class Not<T_El> implements Predicate<T_El> {
   }
 
   constructor(
-      private readonly pred: Predicate<T_El>,
+    private readonly pred: Predicate<T_El>,
   ) {
   }
 
   public test(root: any): RuleMatchedAt {
     const result = this.pred.test(root);
     if (!result.matched && _.isUndefined(result.paths)) {
-      return { matched: !result.matched, paths: [""] };
+      return {matched: !result.matched, paths: [""]};
     } else {
-      return { matched: !result.matched, paths: result.paths };
+      return {matched: !result.matched, paths: result.paths};
     }
   }
 }

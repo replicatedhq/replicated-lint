@@ -414,3 +414,6 @@
 
 0.14.0 2018-11-2
     * update CLI `replicated-lint validate` to read in multidoc YAML. It will lint the first doc by default, but now supports a flag `--multidocIndex` to select out any document in the stream
+
+0.14.1 2018-11-6
+    * Support using labels to identify containers for the docker exec command in support bundle project

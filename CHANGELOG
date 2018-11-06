@@ -421,5 +421,8 @@
 0.14.2 2018-11-6
     * Updates for [vulnerable dependencies](https://github.com/replicatedhq/replicated-lint/pull/158)
 
-0.14.2 2018-11-6
+0.14.3 2018-11-6
     * Updates for [vulnerable dependencies](https://github.com/replicatedhq/replicated-lint/pull/166)
+
+0.14.4 2018-11-6
+    * Updated missing generated files.

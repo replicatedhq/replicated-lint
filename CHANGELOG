@@ -417,5 +417,9 @@
 
 0.14.1 2018-11-6
     * Support using labels to identify containers for the docker exec command in support bundle project
+
 0.14.2 2018-11-6
     * Updates for [vulnerable dependencies](https://github.com/replicatedhq/replicated-lint/pull/158)
+
+0.14.2 2018-11-6
+    * Updates for [vulnerable dependencies](https://github.com/replicatedhq/replicated-lint/pull/166)

@@ -1,8 +1,8 @@
 # replicated-lint
 
 [![CircleCI](https://circleci.com/gh/replicatedhq/replicated-lint/tree/master.svg?style=svg&circle-token=9ae2573df7075cff352d329eb7f88d52037872b5)](https://circleci.com/gh/replicatedhq/replicated-lint/tree/master)
-[![Code Climate](https://codeclimate.com/github/replicatedhq/replicated-lint/badges/gpa.svg)](https://codeclimate.com/github/replicatedhq/replicated-lint) 
-[![Test Coverage](https://codeclimate.com/github/replicatedhq/replicated-lint/badges/coverage.svg)](https://codeclimate.com/github/replicatedhq/replicated-lint) 
+[![Code Climate](https://codeclimate.com/github/replicatedhq/replicated-lint/badges/gpa.svg)](https://codeclimate.com/github/replicatedhq/replicated-lint)
+[![Test Coverage](https://codeclimate.com/github/replicatedhq/replicated-lint/badges/coverage.svg)](https://codeclimate.com/github/replicatedhq/replicated-lint)
 
 YAML linting tools for Replicated applications.
 
@@ -32,7 +32,7 @@ Results that have issues will look something like:
 { type: 'info',
   rule: 'prop-configitem-testproc-run-on-save',
   message: 'If a config item\'s test_proc.run_on_save is not set to \'true\', test_proc\'s will not be checked automatically. Consider setting your test_proc\'s run_on_save to automatically validate inputs',
-  positions: 
+  positions:
    [ { path: 'config.1.items.2.test_proc',
        start: { position: 8130, line: 325, column: 4 },
        end: { position: 8322, line: 331, column: 0 } },
@@ -131,6 +131,23 @@ To watch files and re-run tests on changes, use the `tdd` script
 ./tdd
 ```
 
+### Before committing
+
+Run
+
+```sh
+make project-import PROJECT=<project-name>
+```
+
+Where `<project-name>` is the project being updated and should be one of
+ - replicated-supportbundle
+ - replicated-entitlements
+ - replicated-rbac
+ - replicated-ship
+
+ For more up to date list check the project directory listing.
+
+
 ### Regenerating the documentation
 
 `replicated-lint docs gen` will print reference documentation stdout as markdown. `yarn docs` will write it to `docs/gen.md`.
@@ -156,9 +173,9 @@ import * as linter from "replicated-lint";
 const yaml = `
 ---
 replicated_api_version: 2.8.0
-components: 
+components:
   - name: ELK
-    containers: 
+    containers:
       - image: getelk/search`;
 
 
@@ -170,11 +187,11 @@ console.log(ruleViolations); // []
 ### Custom Rule Sets
 
 `linter.rules.all` can be substituted or extended with custom rule
-definitions. A rule's `test` field should return `{ matched: true }` 
+definitions. A rule's `test` field should return `{ matched: true }`
 when the rule is triggered by invalid JSON.
 
 ```typescript
-import * as linter from "replicated-lint"; 
+import * as linter from "replicated-lint";
 
 const yaml = `
 ---
@@ -257,9 +274,9 @@ const yaml = `
 ---
 spam: eggs`;
 
-const ruleViolations = linter.lint(yaml, { rules }); 
+const ruleViolations = linter.lint(yaml, { rules });
 console.log(ruleViolations); // []
 ```
 
-Custom implementations of `engine.Registry` can also be passed as a third argument to `linter.lint`, otherwise a default 
+Custom implementations of `engine.Registry` can also be passed as a third argument to `linter.lint`, otherwise a default
 registry will be used.

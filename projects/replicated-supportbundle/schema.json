@@ -396,6 +396,18 @@
                         "-t"
                       ]
                     }
+                  },
+                  {
+                    "labels": [
+                      "container.name.label=loadbalancer"
+                    ],
+                    "output_dir": "/www/debug/",
+                    "exec_config": {
+                      "Cmd": [
+                        "nginx",
+                        "-t"
+                      ]
+                    }
                   }
                 ],
                 "_ext_outputs": [
@@ -416,6 +428,28 @@
                       "supergoodtool-www"
                     ],
                     "type": "string"
+                  },
+                  "labels": {
+                    "description": "Labels shared by the container(s) in which the command will be executed",
+                    "example": [
+                      "container.name.label"
+                    ],
+                    "examples": [
+                      [
+                        "container.name.label"
+                      ],
+                      [
+                        "container.name.label=myContainerName"
+                      ],
+                      [
+                        "container.name.label=myContainerName",
+                        "cluster.name=primary"
+                      ]
+                    ],
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   },
                   "description": {
                     "type": "string"
@@ -519,8 +553,19 @@
                   }
                 },
                 "required": [
-                  "container",
                   "exec_config"
+                ],
+                "oneOf": [
+                  {
+                    "required": [
+                      "container"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "labels"
+                    ]
+                  }
                 ]
               },
               "docker.container-inspect": {

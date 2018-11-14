@@ -457,7 +457,7 @@
                     "type": "string"
                   },
                   "proxy": {
-                    "description": "If true, the asset will be proxied through the api; otherwise, assets will be downloaded locally via the client. This value will override any the key of source.",
+                    "description": "If true, the asset will be proxied through the api and access will be validated on release creation. Otherwise, assets will be downloaded locally via the client.",
                     "type": "string"
                   }
                 },
@@ -465,7 +465,7 @@
                   "repo",
                   "path",
                   "dest",
-                  "source"
+                  "proxy"
                 ]
               },
               "google_gke": {

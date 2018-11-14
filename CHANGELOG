@@ -428,4 +428,4 @@
     * Updated missing generated files.
 
 0.14.5 2018-11-14
-    * Add source key to ship github assets
+    * Add proxy key to ship github assets to replace source key

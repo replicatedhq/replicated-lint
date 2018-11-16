@@ -445,7 +445,7 @@
                     "type": "string"
                   },
                   "source": {
-                    "description": "One of `public` or `private`, if `private`, access to the repo can be validated on release creation",
+                    "description": "One of `public` or `private`, if `private`, access to the repo can be validated on release creation. Please use the proxy key in favor of source.",
                     "type": "string"
                   },
                   "strip_path": {
@@ -458,14 +458,13 @@
                   },
                   "proxy": {
                     "description": "If true, the asset will be proxied through the api and access will be validated on release creation. Otherwise, assets will be downloaded locally via the client.",
-                    "type": "string"
+                    "type": "boolean"
                   }
                 },
                 "required": [
                   "repo",
                   "path",
-                  "dest",
-                  "proxy"
+                  "dest"
                 ]
               },
               "google_gke": {

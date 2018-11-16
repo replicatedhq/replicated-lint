@@ -407,7 +407,7 @@
                     "path": "k8s-yamls/",
                     "dest": "./k8s/",
                     "strip_path": "",
-                    "proxy": "true"
+                    "proxy": true
                   },
                   {
                     "repo": "github.com/replicatedhq/ship",
@@ -416,7 +416,7 @@
                     "dest": "./docs{{repl Add 1 1}}/",
                     "mode": 644,
                     "strip_path": "{{repl ParseBool \"true\"}}",
-                    "proxy": "false"
+                    "proxy": false
                   }
                 ],
                 "type": "object",

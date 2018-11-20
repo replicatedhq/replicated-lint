@@ -429,3 +429,6 @@
 
 0.14.5 2018-11-19
     * Remove `test.sh` and `install.sh` recommendations for `replicated-ship` project
+
+0.14.6 2018-11-20
+    * Add proxy key to ship github assets to replace source key

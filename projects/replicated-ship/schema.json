@@ -406,17 +406,17 @@
                     "ref": "8fcaebe55af67fe6789fa678faaa76fa867fbc",
                     "path": "k8s-yamls/",
                     "dest": "./k8s/",
-                    "source": "private",
-                    "strip_path": ""
+                    "strip_path": "",
+                    "proxy": true
                   },
                   {
                     "repo": "github.com/replicatedhq/ship",
                     "ref": "master",
                     "path": "hack/docs/",
                     "dest": "./docs{{repl Add 1 1}}/",
-                    "source": "public",
                     "mode": 644,
-                    "strip_path": "{{repl ParseBool \"true\"}}"
+                    "strip_path": "{{repl ParseBool \"true\"}}",
+                    "proxy": false
                   }
                 ],
                 "type": "object",
@@ -445,7 +445,7 @@
                     "type": "string"
                   },
                   "source": {
-                    "description": "One of `public` or `private`, if `private`, access to the repo can be validated on release creation",
+                    "description": "One of `public` or `private`, if `private`, access to the repo can be validated on release creation. Please use the proxy key in favor of source.",
                     "type": "string"
                   },
                   "strip_path": {
@@ -455,13 +455,16 @@
                   "when": {
                     "description": "This asset will be included when 'when' is omitted or true",
                     "type": "string"
+                  },
+                  "proxy": {
+                    "description": "If true, the asset will be proxied through the api and access will be validated on release creation. Otherwise, assets will be downloaded locally via the client.",
+                    "type": "boolean"
                   }
                 },
                 "required": [
                   "repo",
                   "path",
-                  "dest",
-                  "source"
+                  "dest"
                 ]
               },
               "google_gke": {

@@ -712,6 +712,9 @@ export const schema: JSONSchema4 = {
                       "permission": {
                         "type": "string",
                       },
+                      "when": {
+                        "type": ["string", "boolean"],
+                      },
                     },
                   },
                 },
@@ -997,6 +1000,9 @@ export const schema: JSONSchema4 = {
                     },
                     "timeout": {
                       "type": "integer",
+                    },
+                    "when": {
+                      "type": ["string", "boolean"],
                     },
                   },
                 },

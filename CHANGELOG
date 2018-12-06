@@ -432,3 +432,7 @@
 
 0.14.6 2018-11-20
     * Add proxy key to ship github assets to replace source key
+
+0.14.7 2018-12-5
+    * Add `when` property to `test_proc` config items
+    * Add `when` property to container volumes

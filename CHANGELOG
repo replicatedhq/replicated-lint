@@ -436,3 +436,6 @@
 0.14.7 2018-12-5
     * Add `when` property to `test_proc` config items
     * Add `when` property to container volumes
+
+0.14.8 2018-12-7
+    * Fix proxy key in ship GitHub and Helm assets

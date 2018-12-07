@@ -406,17 +406,17 @@
                     "ref": "8fcaebe55af67fe6789fa678faaa76fa867fbc",
                     "path": "k8s-yamls/",
                     "dest": "./k8s/",
-                    "strip_path": "",
-                    "proxy": true
+                    "proxy": true,
+                    "strip_path": ""
                   },
                   {
                     "repo": "github.com/replicatedhq/ship",
                     "ref": "master",
                     "path": "hack/docs/",
                     "dest": "./docs{{repl Add 1 1}}/",
+                    "proxy": false,
                     "mode": 644,
-                    "strip_path": "{{repl ParseBool \"true\"}}",
-                    "proxy": false
+                    "strip_path": "{{repl ParseBool \"true\"}}"
                   }
                 ],
                 "type": "object",
@@ -436,6 +436,10 @@
                     "description": "Path in repo from which to pull file or directory",
                     "type": "string"
                   },
+                  "proxy": {
+                    "description": "Boolean true or false, determines whether a repository is fetched via the Replicated API. Should be used for private repos.",
+                    "type": "boolean"
+                  },
                   "ref": {
                     "description": "Reference to a github commit to pull, usually a SHA or a tag -- usage of branches is supported but discouraged as content could change within a single Ship release",
                     "type": "string"
@@ -445,7 +449,7 @@
                     "type": "string"
                   },
                   "source": {
-                    "description": "One of `public` or `private`, if `private`, access to the repo can be validated on release creation. Please use the proxy key in favor of source.",
+                    "description": "Deprecated",
                     "type": "string"
                   },
                   "strip_path": {
@@ -455,10 +459,6 @@
                   "when": {
                     "description": "This asset will be included when 'when' is omitted or true",
                     "type": "string"
-                  },
-                  "proxy": {
-                    "description": "If true, the asset will be proxied through the api and access will be validated on release creation. Otherwise, assets will be downloaded locally via the client.",
-                    "type": "boolean"
                   }
                 },
                 "required": [
@@ -549,7 +549,7 @@
                       "repo": "github.com/replicatedhq/superbigtool-k8s",
                       "ref": "8fcaebe55af67fe6789fa678faaa76fa867fbc",
                       "path": "k8s-yamls/",
-                      "source": "private"
+                      "proxy": true
                     },
                     "dest": "charts/rendered/"
                   },
@@ -588,6 +588,10 @@
                         "description": "Path in repo from which to pull file or directory",
                         "type": "string"
                       },
+                      "proxy": {
+                        "description": "Boolean true or false, determines whether a repository is fetched via the Replicated API. Should be used for private repos.",
+                        "type": "boolean"
+                      },
                       "ref": {
                         "description": "Reference to a github commit to pull, usually a SHA or a tag -- usage of branches is supported but discouraged as content could change within a single Ship release",
                         "type": "string"
@@ -597,7 +601,7 @@
                         "type": "string"
                       },
                       "source": {
-                        "description": "One of `public` or `private`, if `private`, access to the repo can be validated on release creation",
+                        "description": "Deprecated",
                         "type": "string"
                       },
                       "when": {

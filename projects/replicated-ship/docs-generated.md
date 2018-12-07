@@ -59,104 +59,6 @@ lifecycle:
 
     
 
-## `assets-require-test-script`
-
-assets require a test script in `scripts/test.sh`
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: Missing test script
-
-```yaml---
-assets:
-  v1:
-    - inline:
-        contents: echo "installing app"
-        dest: scripts/install.sh
-
-```
-
-
-
-*Correct*: Includes a test script
-
-```yaml---
-assets:
-  v1:
-    - inline:
-        contents: echo "running tests"
-        dest: scripts/test.sh
-
-```
-
-
-*Correct*: Includes a test script
-
-```yaml---
-assets:
-  v1:
-    - inline:
-        contents: echo "running tests"
-        dest: ./scripts/test.sh
-
-```
-
-
-    
-
-## `assets-require-install-script`
-
-assets require an install script in `scripts/install.sh`
-
-
-
-
-
-#### Examples:
-
-*Incorrect*: Missing install script
-
-```yaml---
-assets:
-  v1:
-    - inline:
-        contents: echo "running tests"
-        dest: scripts/test.sh
-
-```
-
-
-
-*Correct*: Includes an install script
-
-```yaml---
-assets:
-  v1:
-    - inline:
-        contents: echo "running installs"
-        dest: scripts/install.sh
-
-```
-
-
-*Correct*: Includes an install script
-
-```yaml---
-assets:
-  v1:
-    - inline:
-        contents: echo "running installs"
-        dest: ./scripts/install.sh
-
-```
-
-
-    
-
 ## `terraform-asset-requires-terraform-lifecycle`
 
 lifecycle should include a `terraform` step when a `terraform` asset is defined
@@ -212,5 +114,5 @@ lifecycle:
 
 
 
-*Generated at Fri Sep 28 2018 18:18:10 GMT-0700 (PDT)*
+*Generated at Fri Dec 07 2018 10:42:41 GMT-0800 (Pacific Standard Time)*
 

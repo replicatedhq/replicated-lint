@@ -439,3 +439,6 @@
 
 0.14.8 2018-12-7
     * Fix proxy key in ship GitHub and Helm assets
+
+0.14.8 2018-12-14
+    * Handle errors that are out of range

@@ -322,15 +322,28 @@ export class Linter {
     const positions = [] as Range[];
 
     if (err.mark && err.mark.position) {
-      positions.push(
-        {
-          start: {
-            column: this.lineColumnFinder.fromIndex(err.mark.position + this.offset).col - 1,
-            line: this.lineColumnFinder.fromIndex(err.mark.position + this.offset).line - 1,
-            position: err.mark.position + this.offset,
+      const errPosition = this.lineColumnFinder.fromIndex(err.mark.position + this.offset);
+      if (errPosition) { // check if error is in range. Else, default error to end of document.
+        positions.push(
+          {
+            start: {
+              column: errPosition.col - 1,
+              line: errPosition.line - 1,
+              position: err.mark.position + this.offset,
+            },
           },
-        },
-      );
+        );
+      } else {
+        positions.push(
+          {
+            start: {
+              column: 0,
+              line: this.lineColumnFinder.lineToIndex.length,
+              position: err.mark.position + this.offset,
+            },
+          },
+        );
+      }
     }
 
     return {

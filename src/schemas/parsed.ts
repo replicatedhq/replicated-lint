@@ -183,6 +183,12 @@ export const schema: JSONSchema4 = {
                 "type": "string",
               },
             },
+            "shared_fs_paths": {
+              "type": "array",
+              "items": {
+                "type": "string",
+              },
+            },
           },
         },
         "pause_all": {
@@ -256,6 +262,12 @@ export const schema: JSONSchema4 = {
                 "type": "object",
                 "properties": {
                   "pvc_names": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                    },
+                  },
+                  "shared_fs_paths": {
                     "type": "array",
                     "items": {
                       "type": "string",
@@ -1370,6 +1382,14 @@ export const schema: JSONSchema4 = {
               "storage": {
                 "type": "string",
               },
+            },
+          },
+        },
+        "shared_fs": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": ["string", "boolean"],
             },
           },
         },

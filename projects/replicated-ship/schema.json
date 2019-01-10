@@ -673,11 +673,7 @@
                   "values_from": {
                     "description": "values_from",
                     "type": "object",
-                    "properties": {
-                      "lifecycle": {
-                        "type": "object"
-                      }
-                    }
+                    "properties": {}
                   },
                   "when": {
                     "description": "This asset will be included when 'when' is omitted or true",
@@ -1153,6 +1149,10 @@
                     "items": {
                       "type": "string"
                     }
+                  },
+                  "when": {
+                    "description": "If 'when' is not empty and evaluates to false, the terraform lifecycle step will be skipped.",
+                    "type": "string"
                   }
                 },
                 "required": []

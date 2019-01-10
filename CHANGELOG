@@ -442,3 +442,7 @@
 
 0.14.9 2018-12-14
     * Handle errors that are out of range
+
+0.14.10 2019-01-10
+    * Add `when` property to `terraform` lifecycle steps
+

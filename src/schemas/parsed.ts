@@ -1118,6 +1118,9 @@ export const schema: JSONSchema4 = {
               "timeout": {
                 "type": "integer",
               },
+              "when": {
+                "type": ["string", "boolean"],
+              },
             },
           },
           "title": {

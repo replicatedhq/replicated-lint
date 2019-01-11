@@ -449,3 +449,5 @@
 0.14.11 2019-01-11
     * Config group `test_proc` missing `when` property
 
+0.14.12 2019-01-11
+    * Add kubernetes shared filesystem config

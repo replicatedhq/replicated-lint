@@ -212,8 +212,72 @@ kubernetes:
   },
 };
 
+export const kubernetesSharedFSEnabledValid: YAMLRule = {
+  name: "prop-kubernetes-shared-fs-enabled-valid",
+  type: "error",
+  message: "`kubernetes.shared_fs.enabled` must be a template or a boolean",
+  test: {
+    And: {
+      preds: [
+        { NotBoolString: { path: "kubernetes.shared_fs.enabled" } },
+        { Exists: { path: "kubernetes.shared_fs.enabled" } },
+      ],
+    },
+  },
+  examples: {
+    wrong: [],
+    right: [
+      {
+        description: "`kubernetes.shared_fs.enabled` == true",
+        yaml: `
+---
+kubernetes:
+  shared_fs:
+    enabled: true
+      `,
+      },
+      {
+        description: "`kubernetes.shared_fs.enabled` == false",
+        yaml: `
+---
+kubernetes:
+  shared_fs:
+    enabled: false
+      `,
+      },
+      {
+        description: "`kubernetes.shared_fs.enabled` == 0 ",
+        yaml: `
+---
+kubernetes:
+  shared_fs:
+    enabled: "0"
+      `,
+      },
+      {
+        description: "`kubernetes.shared_fs.enabled` == 1 ",
+        yaml: `
+---
+kubernetes:
+  shared_fs:
+    enabled: "1"
+      `,
+      },
+      {
+        description: "`kubernetes.shared_fs.enabled` template",
+        yaml: `
+---
+kubernetes:
+  shared_fs:
+    enabled: '{{repl ConfigOption "use_shared_fs"}}'
+      `,
+      },
+    ],
+  },
+};
 export const all: YAMLRule[] = [
   kubernetesServerVersionValid,
   kubernetesTotalMemoryValidation,
   kubernetesPersistentStorageValidation,
+  kubernetesSharedFSEnabledValid,
 ];

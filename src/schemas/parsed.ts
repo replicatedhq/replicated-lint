@@ -1,5 +1,7 @@
 import { JSONSchema4 } from "json-schema";
 
+// NOTE: THIS FILE IS *NOT* GENERATED
+
 export const schema: JSONSchema4 = {
   "$schema": "http://json-schema.org/schema#",
   "type": "object",
@@ -1117,6 +1119,9 @@ export const schema: JSONSchema4 = {
               },
               "timeout": {
                 "type": "integer",
+              },
+              "when": {
+                "type": ["string", "boolean"],
               },
             },
           },

@@ -446,3 +446,6 @@
 0.14.10 2019-01-10
     * Add `when` property to `terraform` lifecycle steps
 
+0.14.11 2019-01-11
+    * Config group `test_proc` missing `when` property
+

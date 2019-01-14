@@ -131,7 +131,7 @@ components:
         yaml: `
 ---
 statsd:
-port: foo
+  port: foo
   `,
       },
       {
@@ -139,8 +139,24 @@ port: foo
         yaml: `
 ---
 graphite:
-port: foo
+  port: foo
   `,
+      },
+      {
+        description: "`carbon.plaintext_port` is not an integer",
+        yaml: `
+---
+carbon:
+  plaintext_port: foo
+`,
+      },
+      {
+        description: "`carbon.pickle_port` is not an integer",
+        yaml: `
+---
+carbon:
+  pickle_port: foo
+`,
       },
       {
         description: "cluster_host_count.min must be an unsigned integer, and this is a boolean",

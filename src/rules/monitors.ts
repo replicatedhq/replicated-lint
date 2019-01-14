@@ -456,6 +456,132 @@ graphite: {}
   },
 };
 
+export const carbonPlaintextPortValid: YAMLRule = {
+  name: "prop-carbon-plaintext-port-valid",
+  type: "error",
+  message: "If specified, `carbon.plaintext_port` must be a valid TCP port",
+  test: {
+    Dot: {
+      path: "carbon",
+      pred: {
+        And: {
+          preds: [
+            { Truthy: { path: "plaintext_port" } },
+            {
+              Or: {
+                preds: [
+                  { GT: { path: "plaintext_port", value: 65535 } },
+                  { LT: { path: "plaintext_port", value: 0 } },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "`carbon.plaintext_port` is negative",
+        yaml: `
+---
+carbon:
+  port: -100
+    `,
+      },
+      {
+        description: "`carbon.plaintext_port` is above the maximum tcp port range",
+        yaml: `
+---
+carbon:
+  plaintext_port: 100000
+    `,
+      },
+    ],
+    right: [
+      {
+        description: "carbon plaintext port valid",
+        yaml: `
+---
+carbon:
+  plaintext_port: 43221
+      `,
+      },
+      {
+        description: "carbon plaintext port not specified",
+        yaml: `
+---
+carbon: {}
+      `,
+      },
+    ],
+  },
+};
+
+export const carbonPicklePortValid: YAMLRule = {
+  name: "prop-carbon-pickle-port-valid",
+  type: "error",
+  message: "If specified, `carbon.pickle_port` must be a valid TCP port",
+  test: {
+    Dot: {
+      path: "carbon",
+      pred: {
+        And: {
+          preds: [
+            { Truthy: { path: "pickle_port" } },
+            {
+              Or: {
+                preds: [
+                  { GT: { path: "pickle_port", value: 65535 } },
+                  { LT: { path: "pickle_port", value: 0 } },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "`carbon.pickle_port` is negative",
+        yaml: `
+---
+carbon:
+  port: -100
+    `,
+      },
+      {
+        description: "`carbon.pickle_port` is above the maximum tcp port range",
+        yaml: `
+---
+carbon:
+  pickle_port: 100000
+    `,
+      },
+    ],
+    right: [
+      {
+        description: "carbon pickle port valid",
+        yaml: `
+---
+carbon:
+  pickle_port: 43221
+      `,
+      },
+      {
+        description: "carbon pickle port not specified",
+        yaml: `
+---
+carbon: {}
+      `,
+      },
+    ],
+  },
+};
+
 export const graphiteRetentionValid: YAMLRule = {
   name: "prop-custommetric-retention-valid",
   type: "error",

@@ -291,6 +291,17 @@ export const schema: JSONSchema4 = {
         },
       },
     },
+    "carbon": {
+      "type": "object",
+      "properties": {
+        "plaintext_port": {
+          "type": "integer",
+        },
+        "pickle_port": {
+          "type": "integer",
+        },
+      },
+    },
     "cmds": {
       "type": "array",
       "items": {

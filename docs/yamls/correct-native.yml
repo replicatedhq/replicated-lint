@@ -107,6 +107,9 @@ statsd:
   port: 8891
 graphite:
   port: 8891
+carbon:
+  plaintext_port: 8891
+  pickle_port: 8891
 custom_metrics:
 - target: stats.gauges.myapp100.disk.*.*.*
   retention: "1s:10m,1m:4h,1h:30d"

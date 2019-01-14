@@ -451,3 +451,6 @@
 
 0.14.12 2019-01-11
     * Add kubernetes shared filesystem config
+
+0.14.13 2019-01-14
+    * Add kubernetes shared filesystem config

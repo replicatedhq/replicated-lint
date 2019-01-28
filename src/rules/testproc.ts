@@ -126,7 +126,7 @@ export const testProcValidCommand: YAMLRule = {
                   {
                     NotMatch: {
                       path: "test_proc.command",
-                      pattern: "^(regex_match|validate_json|ldap_auth|ldap_config_validate|file_exists|smtp_auth|certificate_verify|aws_auth|github_app_auth|resolve_host)$",
+                      pattern: "^(regex_match|validate_json|ldap_auth|ldap_config_validate|file_exists|smtp_auth|certificate_verify|aws_auth|github_app_auth|resolve_host|cert|random|echo|publicip|tcp_port_accept|http_status_code|system)$",
                     },
                   },
                 ],
@@ -142,7 +142,7 @@ export const testProcValidCommand: YAMLRule = {
                       {
                         NotMatch: {
                           path: "test_proc.command",
-                          pattern: "^(regex_match|validate_json|ldap_auth|ldap_config_validate|file_exists|smtp_auth|certificate_verify|aws_auth|github_app_auth|resolve_host)$",
+                          pattern: "^(regex_match|validate_json|ldap_auth|ldap_config_validate|file_exists|smtp_auth|certificate_verify|aws_auth|github_app_auth|resolve_host|cert|random|echo|publicip|tcp_port_accept|http_status_code|system)$",
                         },
                       },
                     ],

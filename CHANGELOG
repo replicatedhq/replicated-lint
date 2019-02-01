@@ -463,3 +463,6 @@
 
 0.14.16 2019-02-01
     * Allow `enabled` flags under `identity` be boolean
+
+0.14.17 2019-02-01
+    * Add 'meta.redact' to replicated-supportbundle schema

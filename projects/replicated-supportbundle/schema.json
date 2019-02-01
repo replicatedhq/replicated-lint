@@ -396,18 +396,6 @@
                         "-t"
                       ]
                     }
-                  },
-                  {
-                    "labels": [
-                      "container.name.label=loadbalancer"
-                    ],
-                    "output_dir": "/www/debug/",
-                    "exec_config": {
-                      "Cmd": [
-                        "nginx",
-                        "-t"
-                      ]
-                    }
                   }
                 ],
                 "_ext_outputs": [
@@ -428,28 +416,6 @@
                       "supergoodtool-www"
                     ],
                     "type": "string"
-                  },
-                  "labels": {
-                    "description": "Labels shared by the container(s) in which the command will be executed",
-                    "example": [
-                      "container.name.label"
-                    ],
-                    "examples": [
-                      [
-                        "container.name.label"
-                      ],
-                      [
-                        "container.name.label=myContainerName"
-                      ],
-                      [
-                        "container.name.label=myContainerName",
-                        "cluster.name=primary"
-                      ]
-                    ],
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
                   },
                   "description": {
                     "type": "string"
@@ -514,6 +480,28 @@
                   "include_empty": {
                     "type": "boolean"
                   },
+                  "labels": {
+                    "description": "Labels shared by the container(s) to run the command in",
+                    "example": [
+                      "container.name.label"
+                    ],
+                    "examples": [
+                      [
+                        "container.name.label"
+                      ],
+                      [
+                        "container.name.label=myContainerName"
+                      ],
+                      [
+                        "container.name.label=myContainerName",
+                        "cluster.name=primary"
+                      ]
+                    ],
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
                   "meta": {
                     "type": "object",
                     "properties": {
@@ -554,18 +542,6 @@
                 },
                 "required": [
                   "exec_config"
-                ],
-                "oneOf": [
-                  {
-                    "required": [
-                      "container"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "labels"
-                    ]
-                  }
                 ]
               },
               "docker.container-inspect": {
@@ -1764,7 +1740,7 @@
                 "type": "object",
                 "properties": {
                   "container": {
-                    "description": "The container name",
+                    "description": "The name of the container to run the command in",
                     "type": "string"
                   },
                   "description": {
@@ -1830,6 +1806,28 @@
                   "include_empty": {
                     "type": "boolean"
                   },
+                  "labels": {
+                    "description": "Labels shared by the container(s) to run the command in",
+                    "example": [
+                      "container.name.label"
+                    ],
+                    "examples": [
+                      [
+                        "container.name.label"
+                      ],
+                      [
+                        "container.name.label=myContainerName"
+                      ],
+                      [
+                        "container.name.label=myContainerName",
+                        "cluster.name=primary"
+                      ]
+                    ],
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
                   "meta": {
                     "type": "object",
                     "properties": {
@@ -1869,7 +1867,6 @@
                   }
                 },
                 "required": [
-                  "container",
                   "exec_config"
                 ]
               },
@@ -5221,6 +5218,95 @@
                   }
                 }
               },
+              "meta.redact": {
+                "description": "A list of scrubbers to apply to all assets. If multiple 'meta.redact' specs are specified, all lists will be used. If a spec specifies a scrubber, it will be run in addition to the global scrubbers.",
+                "examples": [
+                  {
+                    "scrubs": [
+                      {
+                        "regex": "abc",
+                        "replace": "xyz"
+                      }
+                    ],
+                    "output_dir": "redact/"
+                  }
+                ],
+                "_ext_outputs": [
+                  {
+                    "path": "scrubs.json",
+                    "description": "A list of scrubs that were added globally by this item"
+                  }
+                ],
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "include_empty": {
+                    "type": "boolean"
+                  },
+                  "meta": {
+                    "type": "object",
+                    "properties": {
+                      "labels": {
+                        "type": "object",
+                        "properties": {
+                          ".*": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "output_dir": {
+                    "type": "string"
+                  },
+                  "scrub": {
+                    "type": "object",
+                    "properties": {
+                      "regex": {
+                        "type": "string"
+                      },
+                      "replace": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "regex",
+                      "replace"
+                    ]
+                  },
+                  "scrubs": {
+                    "description": "the list of scrubbers to apply to all outputs",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "regex": {
+                          "type": "string"
+                        },
+                        "replace": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "regex",
+                        "replace"
+                      ]
+                    }
+                  },
+                  "timeout_seconds": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "scrubs",
+                  "output_dir"
+                ]
+              },
               "os.hostname": {
                 "description": "Get the hostname",
                 "examples": [
@@ -5458,7 +5544,7 @@
                 "required": []
               },
               "os.read-file": {
-                "description": "Read a file from the filesystem",
+                "description": "Read a file or a directory from the filesystem",
                 "examples": [
                   {
                     "output_dir": "/files/etc/bigtool-conf",

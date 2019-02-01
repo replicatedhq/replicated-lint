@@ -1321,7 +1321,7 @@ export const schema: JSONSchema4 = {
       "type": "object",
       "properties": {
         "enabled": {
-          "type": "string",
+          "type": ["string", "boolean"],
         },
         "provisioner": {
           "type": "string",
@@ -1332,7 +1332,7 @@ export const schema: JSONSchema4 = {
             "type": "object",
             "properties": {
               "enabled": {
-                "type": "string",
+                "type": ["string", "boolean"],
               },
               "filter": {
                 "type": "string",

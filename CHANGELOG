@@ -460,3 +460,6 @@
 
 0.14.15 2019-02-01
     * Linter now allows templates in the `components.containers.cluster_instance_count` sub-keys
+
+0.14.16 2019-02-01
+    * Allow `enabled` flags under `identity` be boolean

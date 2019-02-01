@@ -600,7 +600,7 @@ components:
 export const containerClusterInstanceCountInitialUint: YAMLRule = {
   name: "prop-component-container-instance-count-initial-uint",
   type: "error",
-  message: "Container's cluster_instance_count property `initial` must be an unsigned integer",
+  message: "Container's cluster_instance_count property `initial` must be an unsigned integer or a template",
   test: {
     AnyOf: {
       path: "components",
@@ -610,7 +610,7 @@ export const containerClusterInstanceCountInitialUint: YAMLRule = {
           pred: {
             And: {
               preds: [
-                {IsNotUint: {path: "cluster_instance_count.initial"}},
+                {NotUintString: {path: "cluster_instance_count.initial"}},
                 {Exists: {path: "cluster_instance_count.initial"}},
               ],
             },
@@ -647,6 +647,19 @@ components:
     source: public
       `,
       },
+      {
+        description: "cluster_instance_count.initial must be an unsigned integer, and this is not even numeric",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      initial: "abc"
+    image_name: redis
+    version: latest
+    source: public
+      `,
+      },
     ],
     right: [
       {
@@ -662,6 +675,19 @@ components:
     source: public
       `,
       },
+      {
+        description: "cluster_instance_count.initial is a template",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      initial: '{{repl GiveMeAValue}}'
+    image_name: redis
+    version: latest
+    source: public
+      `,
+      },
     ],
   },
 };
@@ -669,7 +695,7 @@ components:
 export const containerClusterInstanceCountMaxUint: YAMLRule = {
   name: "prop-component-container-instance-count-max-uint",
   type: "error",
-  message: "Container's cluster_instance_count property `max` must be an unsigned integer",
+  message: "Container's cluster_instance_count property `max` must be an unsigned integer or a template",
   test: {
     AnyOf: {
       path: "components",
@@ -679,7 +705,7 @@ export const containerClusterInstanceCountMaxUint: YAMLRule = {
           pred: {
             And: {
               preds: [
-                {IsNotUint: {path: "cluster_instance_count.max"}},
+                {NotUintString: {path: "cluster_instance_count.max"}},
                 {Exists: {path: "cluster_instance_count.max"}},
               ],
             },
@@ -718,6 +744,19 @@ components:
     source: public
       `,
       },
+      {
+        description: "cluster_instance_count.max is a template",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      max: '{{repl GiveMeAValue}}'
+    image_name: redis
+    version: latest
+    source: public
+      `,
+      },
     ],
   },
 };
@@ -725,7 +764,7 @@ components:
 export const containerClusterInstanceCountDegradedUint: YAMLRule = {
   name: "prop-component-container-instance-count-degraded-uint",
   type: "error",
-  message: "Container's cluster_instance_count property `threshold_degraded` must be an unsigned integer",
+  message: "Container's cluster_instance_count property `threshold_degraded` must be an unsigned integer or a template",
   test: {
     AnyOf: {
       path: "components",
@@ -735,7 +774,7 @@ export const containerClusterInstanceCountDegradedUint: YAMLRule = {
           pred: {
             And: {
               preds: [
-                {IsNotUint: {path: "cluster_instance_count.threshold_degraded"}},
+                {NotUintString: {path: "cluster_instance_count.threshold_degraded"}},
                 {Exists: {path: "cluster_instance_count.threshold_degraded"}},
               ],
             },
@@ -774,6 +813,19 @@ components:
     source: public
       `,
       },
+      {
+        description: "cluster_instance_count.threshold_degraded is a template",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      threshold_degraded: '{{repl GiveMeAValue}}'
+    image_name: redis
+    version: latest
+    source: public
+      `,
+      },
     ],
   },
 };
@@ -781,7 +833,7 @@ components:
 export const containerClusterInstanceCountHealthyUint: YAMLRule = {
   name: "prop-component-container-instance-count-healthy-uint",
   type: "error",
-  message: "Container's cluster_instance_count property `threshold_healthy` must be an unsigned integer",
+  message: "Container's cluster_instance_count property `threshold_healthy` must be an unsigned integer or a template",
   test: {
     AnyOf: {
       path: "components",
@@ -791,7 +843,7 @@ export const containerClusterInstanceCountHealthyUint: YAMLRule = {
           pred: {
             And: {
               preds: [
-                {IsNotUint: {path: "cluster_instance_count.threshold_healthy"}},
+                {NotUintString: {path: "cluster_instance_count.threshold_healthy"}},
                 {Exists: {path: "cluster_instance_count.threshold_healthy"}},
               ],
             },
@@ -825,6 +877,19 @@ components:
 - containers:
   - cluster_instance_count:
       threshold_healthy: "5"
+    image_name: redis
+    version: latest
+    source: public
+      `,
+      },
+      {
+        description: "cluster_instance_count.threshold_healthy is a template",
+        yaml: `
+---
+components:
+- containers:
+  - cluster_instance_count:
+      threshold_healthy: '{{repl GiveMeAValue}}'
     image_name: redis
     version: latest
     source: public

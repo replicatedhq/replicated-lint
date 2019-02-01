@@ -90,6 +90,9 @@ export interface Test {
   NotBoolString?: {
     path: string;
   };
+  NotUintString?: {
+    path: string;
+  };
   InvalidURL?: {
     path: string;
   };

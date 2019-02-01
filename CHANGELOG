@@ -457,3 +457,6 @@
 
 0.14.14 2019-01-28
     * Added test procs: cert, random, echo, publicip, tcp_port_accept, http_status_code, system
+
+0.14.15 2019-02-01
+    * Linter now allows templates in the `components.containers.cluster_instance_count` sub-keys

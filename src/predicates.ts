@@ -830,6 +830,42 @@ export class MoreThan<T> implements Predicate<any> {
 }
 
 /**
+ * NotUintString matches if the target is not a parseable uint or a template
+ */
+export class NotUintString implements Predicate<any> {
+  public static fromJson(self: any): NotUintString {
+    return new NotUintString(self.path);
+  }
+
+  constructor(
+    private readonly path: string,
+  ) {
+  }
+
+  public test(root): RuleMatchedAt {
+    const val = _.get(root, this.path);
+    if (_.isNumber(val)) {
+      if (Number.isInteger(val) && val >= 0) {
+        return {matched: false};
+      }
+    }
+
+    if (_.isString(val)) {
+      // if this is a string of digits, with no leading 0s, we'll still call it a uint
+      if (/^(0|[1-9]\d*)$/.test(val)) {
+        return {matched: false};
+      }
+      // if this is a template, it could become an int.  that's not for us to test.
+      if (/^({{repl.*)$/.test(val)) {
+        return {matched: false};
+      }
+    }
+
+    return {matched: true, paths: [this.path]};
+  }
+}
+
+/**
  * NotBoolString matches if the target is not a parseable bool or a template
  */
 export class NotBoolString implements Predicate<any> {

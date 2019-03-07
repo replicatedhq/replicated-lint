@@ -163,6 +163,11 @@ version: '3.3'
 services:
   mysql:
     image: mysql
+---
+# kind: scheduler-swarm
+
+this is not valid yaml
+{
       `,
       },
     ],

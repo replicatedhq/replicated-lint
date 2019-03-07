@@ -466,3 +466,6 @@
 
 0.14.17 2019-02-01
     * Add 'meta.redact' to replicated-supportbundle schema
+
+0.15.0 2019-03-07
+    * Allow passing multidoc yaml to linter, though only the first document will be linted

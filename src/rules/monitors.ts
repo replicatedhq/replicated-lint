@@ -166,7 +166,7 @@ services:
 ---
 # kind: scheduler-swarm
 
-this is not valid yaml
+#this is not valid yaml
 {
       `,
       },

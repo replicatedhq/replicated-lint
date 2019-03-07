@@ -3,12 +3,12 @@ import { YAMLRule } from "../lint";
 export const cpuMonitorContainerExists: YAMLRule = {
   name: "prop-monitors-cpuacct-container-exists",
   type: "error",
-  message: "Entries in `monitors.cpuacct` must have matching component+container or the scheduler must be swarm",
+  message: "Entries in `monitors.cpuacct` must have matching component+container if the scheduler is Native",
   test: {
     And: {
       preds: [
         { MonitorContainerMissing: { monitorPath: "monitors.cpuacct"} },
-        { Not: { pred: { Exists: { path: "swarm"} } } },
+        { IsNative: { } },
       ],
     },
   },
@@ -61,14 +61,19 @@ monitors:
       `,
       },
       {
-        description: "All `cpuacct` monitors are valid if the scheduler is swarm",
+        description: "All `cpuacct` monitors are valid if the scheduler is not native",
         yaml: `
 ---
 monitors:
   cpuacct:
     - swarmstash
-swarm:
-  minimum_node_count: "1"
+---
+# kind: scheduler-swarm
+
+version: '3.3'
+services:
+  mysql:
+    image: mysql
       `,
       },
       {
@@ -86,12 +91,12 @@ monitors:
 export const memMonitorContainerExists: YAMLRule = {
   name: "prop-monitors-memory-container-exists",
   type: "error",
-  message: "Entries in `monitors.memory` must have matching component+container or the scheduler must be swarm",
+  message: "Entries in `monitors.memory` must have matching component+container if the scheduler is Native",
   test: {
     And: {
       preds: [
         { MonitorContainerMissing: { monitorPath: "monitors.memory"} },
-        { Not: { pred: { Exists: { path: "swarm"} } } },
+        { IsNative: { } },
       ],
     },
   },
@@ -151,8 +156,13 @@ monitors:
 monitors:
   memory:
     - swarmstash
-swarm:
-  minimum_node_count: "1"
+---
+# kind: scheduler-swarm
+
+version: '3.3'
+services:
+  mysql:
+    image: mysql
       `,
       },
     ],

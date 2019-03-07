@@ -72,6 +72,7 @@ export interface Test {
   IsEmpty?: {
     path: string;
   };
+  IsNative?: {};
   IsNotBytesCount?: {
     path: string;
   };
@@ -258,6 +259,8 @@ export function hackLintMultidoc(inYaml: string, maybeOpts?: MultidocLintOpts): 
   return [Linter.noDocError()];
 }
 
+export let docCount: number;
+
 export class Linter {
 
   public static withDefaults(inYaml: string): Linter {
@@ -301,10 +304,18 @@ export class Linter {
     }
     let root;
     try {
-      root = yaml.safeLoad(this.inYaml);
+      root = yaml.safeLoadAll(this.inYaml);
     } catch (err) {
       return [this.loadYamlError(err)];
     }
+
+    if (root.length === 0) {
+      return [this.loadYamlError("no documents in stream")];
+    } else {
+      docCount = root.length;
+    }
+
+    root = root[0];
 
     if (!root) {
       return [Linter.noDocError()];

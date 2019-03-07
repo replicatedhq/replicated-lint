@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import * as semver from "semver";
 import * as urlParse from "url-parse";
-import { Predicate, RuleMatchedAt } from "./lint";
+import { Predicate, RuleMatchedAt, docCount } from "./lint";
 import { FoundValue, TraverseSearcher, ValueSearcher, ValueTraverser } from "./traverse";
 import { Component, ConfigChildItem, ConfigOption, ConfigSection, Container } from "./replicated";
 import { Registry } from "./engine";
@@ -1333,6 +1333,24 @@ export class Not<T_El> implements Predicate<T_El> {
       return {matched: !result.matched, paths: [""]};
     } else {
       return {matched: !result.matched, paths: result.paths};
+    }
+  }
+}
+
+export class IsNative implements Predicate<any> {
+  public static fromJson(): IsNative {
+    return new IsNative();
+  }
+
+  public test(root: any): RuleMatchedAt {
+    if (!root) {
+      return {matched: false};
+    }
+
+    if (docCount === 1) {
+      return {matched: true, paths: []};
+    } else {
+      return {matched: false};
     }
   }
 }

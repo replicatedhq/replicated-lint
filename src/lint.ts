@@ -231,32 +231,14 @@ const DOC_SEPARATOR_LENGTH = DOC_SEPARATOR.length;
  */
 export function hackLintMultidoc(inYaml: string, maybeOpts?: MultidocLintOpts): RuleTrigger[] {
   const targetIndex = maybeOpts ? maybeOpts.multidocIndex : 0;
-  // It's just one doc, do the normal thing, but keep signature same
-  if (inYaml.indexOf(DOC_SEPARATOR) === -1) {
-    return lint(inYaml, maybeOpts);
-  }
-
-  // It's many docs, split it on --- and lint each one,
-  // tracking offset for accurate global line/column computation
   const opts = maybeOpts || {};
-  const docs = inYaml.split(DOC_SEPARATOR).slice(1);
-  let offset = inYaml.indexOf(DOC_SEPARATOR) + DOC_SEPARATOR_LENGTH;
-  const lineColumnFinder = lineColumn(inYaml);
 
-  let index = 0;
-  for (const doc of docs) {
-    if (index === targetIndex) {
-      return new Linter(doc, {
-        rules: opts.rules,
-        registry: opts.registry,
-        lineColumnFinder,
-        offset,
-      }).lint();
-    }
-    offset += doc.length + DOC_SEPARATOR_LENGTH;
-    index += 1;
-  }
-  return [Linter.noDocError()];
+  return new Linter(inYaml, {
+    rules: opts.rules,
+    schema: opts.schema,
+    registry: opts.registry,
+    multidocIndex: targetIndex,
+  }).lint();
 }
 
 export let docCount: number;
@@ -281,8 +263,8 @@ export class Linter {
   private readonly schema?: any;
 
   private readonly registry: Registry;
-  private readonly lineColumnFinder: any;
-  private readonly offset: number;
+  private lineColumnFinder: any;
+  private offset: number;
 
   private readonly multidocIndex: number;
 
@@ -302,20 +284,35 @@ export class Linter {
     if (!this.inYaml) {
       return [Linter.noDocError()];
     }
-    let root;
+
+    let docs = this.inYaml.split(DOC_SEPARATOR);
+    if (docs.length > 1) {
+      docs = docs.slice(1);
+    }
+
+    docCount = docs.length;
+    if (docs.length < this.multidocIndex) {
+      return [Linter.noDocError()];
+    }
+
+    this.offset = this.inYaml.indexOf(DOC_SEPARATOR) + DOC_SEPARATOR_LENGTH;
+    this.lineColumnFinder = lineColumn(this.inYaml);
+
+    let index = 0;
+    for (const doc of docs) {
+      if (index === this.multidocIndex) {
+        break;
+      }
+      this.offset += doc.length + DOC_SEPARATOR_LENGTH;
+      index += 1;
+    }
+
+    let root: any;
     try {
-      root = yaml.safeLoadAll(this.inYaml);
+      root = yaml.safeLoad(docs[this.multidocIndex]);
     } catch (err) {
       return [this.loadYamlError(err)];
     }
-
-    if (root.length === 0) {
-      return [this.loadYamlError("no documents in stream")];
-    } else {
-      docCount = root.length;
-    }
-
-    root = root[0];
 
     if (!root) {
       return [Linter.noDocError()];

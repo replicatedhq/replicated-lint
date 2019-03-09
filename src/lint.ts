@@ -288,15 +288,13 @@ export class Linter {
     let docs = this.inYaml.split(DOC_SEPARATOR);
     if (docs.length > 1) {
       docs = docs.slice(1);
+      this.offset += this.inYaml.indexOf(DOC_SEPARATOR) + DOC_SEPARATOR_LENGTH;
     }
 
     docCount = docs.length;
     if (docs.length < this.multidocIndex) {
       return [Linter.noDocError()];
     }
-
-    this.offset = this.inYaml.indexOf(DOC_SEPARATOR) + DOC_SEPARATOR_LENGTH;
-    this.lineColumnFinder = lineColumn(this.inYaml);
 
     let index = 0;
     for (const doc of docs) {

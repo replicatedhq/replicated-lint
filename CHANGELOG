@@ -466,3 +466,8 @@
 
 0.14.17 2019-02-01
     * Add 'meta.redact' to replicated-supportbundle schema
+
+0.14.18 2019-03-13
+    * Add support for `lifecycle.v1.helmValues` to ship schema
+    * Add support for `lifecycle.v1.kustomizeIntro` to ship schema
+    * Add support for `lifecycle.v1.render.assets.v1` to ship schema

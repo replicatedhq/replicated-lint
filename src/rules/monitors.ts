@@ -8,7 +8,14 @@ export const cpuMonitorContainerExists: YAMLRule = {
     And: {
       preds: [
         { MonitorContainerMissing: { monitorPath: "monitors.cpuacct"} },
-        { Not: { pred: { Exists: { path: "swarm"} } } },
+        {
+          And: {
+            preds: [
+              { Not: { pred: { Exists: { path: "swarm"} } } },
+              { IsNotScheduler: { scheduler: "swarm"} },
+            ],
+          },
+        },
       ],
     },
   },

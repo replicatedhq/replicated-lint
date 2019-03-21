@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import * as semver from "semver";
 import * as urlParse from "url-parse";
-import { Predicate, RuleMatchedAt } from "./lint";
+import { Predicate, RuleMatchedAt, TestOpts } from "./lint";
 import { FoundValue, TraverseSearcher, ValueSearcher, ValueTraverser } from "./traverse";
 import { Component, ConfigChildItem, ConfigOption, ConfigSection, Container } from "./replicated";
 import { Registry } from "./engine";
@@ -14,11 +14,11 @@ export class And<T> implements Predicate<T> {
   constructor(private readonly preds: Array<Predicate<T>>) {
   }
 
-  public test(root: T): RuleMatchedAt {
+  public test(root: T, testOpts: TestOpts): RuleMatchedAt {
     const paths: string[] = [];
 
     for (const pred of this.preds) {
-      const result = pred.test(root);
+      const result = pred.test(root, testOpts);
       if (!result.matched) {
         return {matched: false};
       }
@@ -446,9 +446,9 @@ export class Or<T> implements Predicate<T> {
   constructor(private readonly preds: Array<Predicate<T>>) {
   }
 
-  public test(root: T): RuleMatchedAt {
+  public test(root: T, testOpts: TestOpts): RuleMatchedAt {
     for (const pred of this.preds) {
-      const result = pred.test(root);
+      const result = pred.test(root, testOpts);
       if (result.matched) {
         return result;
       }
@@ -1334,5 +1334,25 @@ export class Not<T_El> implements Predicate<T_El> {
     } else {
       return {matched: !result.matched, paths: result.paths};
     }
+  }
+}
+
+export class IsNotScheduler implements Predicate<any> {
+  public static fromJson(obj: { scheduler: string }): IsNotScheduler {
+    return new IsNotScheduler(obj.scheduler);
+  }
+
+  constructor(
+    private readonly scheduler: string,
+  ) {
+  }
+
+  public test({}, { scheduler }: TestOpts): RuleMatchedAt {
+    if (scheduler !== "") {
+      return {
+        matched: scheduler !== this.scheduler,
+      };
+    }
+    return { matched: false };
   }
 }

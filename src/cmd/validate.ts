@@ -40,6 +40,10 @@ export const builder = {
     describe: "Path to file containing JSONSchema for the document",
     type: "string",
   },
+  scheduler: {
+    describe: "Optional scheduler argument. Can be: native, swarm, or k8s",
+    type: "string",
+  },
   reporter: {
     alias: "r",
     describe: "Output Format to use",
@@ -128,7 +132,7 @@ function lint(inYaml: string, argv: any) {
     resolvedSchema = yaml.safeLoad(fs.readFileSync(schema).toString());
   }
 
-  const opts: linter.MultidocLintOpts = {rules, schema: resolvedSchema, multidocIndex: argv.multidocIndex};
+  const opts: linter.MultidocLintOpts = {rules, schema: resolvedSchema, multidocIndex: argv.multidocIndex, scheduler: argv.scheduler};
   const results: linter.RuleTrigger[] = linter.hackLintMultidoc(inYaml, opts);
 
   reporters[reporter](inYaml, rules, results, outputDir);

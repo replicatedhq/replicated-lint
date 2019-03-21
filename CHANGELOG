@@ -472,5 +472,5 @@
     * Add support for `lifecycle.v1.kustomizeIntro` to ship schema
     * Add support for `lifecycle.v1.render.assets.v1` to ship schema
 
-0.14.18 2019-03-21
+0.14.19 2019-03-21
     * Add scheduler to be passed as a command line argument or constructor param

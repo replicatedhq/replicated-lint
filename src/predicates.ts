@@ -1353,6 +1353,6 @@ export class IsNotScheduler implements Predicate<any> {
         matched: scheduler !== this.scheduler,
       };
     }
-    return { matched: false };
+    return { matched: true };
   }
 }

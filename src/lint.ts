@@ -44,6 +44,7 @@ export interface RuleTrigger {
 export interface Example {
   description: string;
   yaml: string;
+  scheduler?: string;
 }
 
 export interface Examples {
@@ -269,8 +270,9 @@ export function hackLintMultidoc(inYaml: string, maybeOpts?: MultidocLintOpts): 
 
 export class Linter {
 
-  public static withDefaults(inYaml: string, scheduler?: string): Linter {
-    return new Linter(inYaml, {rules: rules.all, schema, scheduler});
+  public static withDefaults(inYaml: string, maybeOpts: LintOpts = {}): Linter {
+    const { scheduler = "" } = maybeOpts;
+    return new Linter(inYaml, {rules: rules.all, schema, scheduler });
   }
 
   public static noDocError(): RuleTrigger {
@@ -448,8 +450,9 @@ export function lint(inYaml: string, maybeOpts?: LintOpts): RuleTrigger[] {
  * and document schema
  *
  * @param inYaml           yaml to lint
+ * @param maybeOpts        LintOpts
  * @returns RuleTrigger[]  will be empty if linting passes
  */
-export function defaultLint(inYaml: string, scheduler?: string): RuleTrigger[] {
-  return Linter.withDefaults(inYaml, scheduler).lint();
+export function defaultLint(inYaml: string, maybeOpts?: LintOpts): RuleTrigger[] {
+  return Linter.withDefaults(inYaml, maybeOpts).lint();
 }

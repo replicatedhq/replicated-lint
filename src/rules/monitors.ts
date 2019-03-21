@@ -51,6 +51,16 @@ monitors:
     - Logstash,quay.io/getelk/logstash
     `,
       },
+      {
+        description: "`cpuacct` monitor references a component that does not exist and no scheduler specified",
+        yaml: `
+---
+monitors:
+  cpuacct:
+    - swarmstash
+      `,
+        scheduler: "",
+      },
     ],
     right: [{
         description: "All `cpuacct` monitors reference existing containers",
@@ -68,7 +78,7 @@ monitors:
       `,
       },
       {
-        description: "All `cpuacct` monitors are valid if the scheduler is swarm",
+        description: "All `cpuacct` monitors are valid if the swarm path exists",
         yaml: `
 ---
 monitors:
@@ -77,6 +87,16 @@ monitors:
 swarm:
   minimum_node_count: "1"
       `,
+      },
+      {
+        description: "All `cpuacct` monitors are valid if the scheduler is specified as swarm",
+        yaml: `
+---
+monitors:
+  cpuacct:
+    - swarmstash
+      `,
+        scheduler: "swarm",
       },
       {
         description: "No monitors, no containers",
@@ -98,7 +118,14 @@ export const memMonitorContainerExists: YAMLRule = {
     And: {
       preds: [
         { MonitorContainerMissing: { monitorPath: "monitors.memory"} },
-        { Not: { pred: { Exists: { path: "swarm"} } } },
+        {
+          And: {
+            preds: [
+              { Not: { pred: { Exists: { path: "swarm"} } } },
+              { IsNotScheduler: { scheduler: "swarm"} },
+            ],
+          },
+        },
       ],
     },
   },
@@ -134,6 +161,16 @@ monitors:
     - Logstash,quay.io/getelk/logstash
     `,
       },
+      {
+        description: "`memacct` monitor references a component that does not exist and no scheduler specified",
+        yaml: `
+---
+monitors:
+  memory:
+    - swarmstash
+      `,
+        scheduler: "",
+      },
     ],
     right: [
       {
@@ -161,6 +198,16 @@ monitors:
 swarm:
   minimum_node_count: "1"
       `,
+      },
+      {
+        description: "All `cpuacct` monitors are valid if the scheduler is specified as swarm",
+        yaml: `
+---
+monitors:
+  memory:
+    - swarmstash
+      `,
+        scheduler: "swarm",
       },
     ],
   },

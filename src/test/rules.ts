@@ -41,7 +41,7 @@ describe("linter.rules.all", () => {
       for (const example of rule.examples!.right) {
         describe(example.description, () => {
           it("should pass linting", () => {
-            const result = lint(example.yaml, {rules: [rule], schema});
+            const result = lint(example.yaml, {rules: [rule], schema, scheduler: example.scheduler });
             expect(result).to.deep.equal([]);
           });
         });
@@ -50,7 +50,7 @@ describe("linter.rules.all", () => {
       for (const example of rule.examples!.wrong) {
         describe(`${example.description}`, () => {
           it("should fail linting", () => {
-            const result = lint(example.yaml, {rules: [rule], schema});
+            const result = lint(example.yaml, {rules: [rule], schema, scheduler: example.scheduler });
             expect(result).to.have.deep.property("[0].rule", rule.name);
           });
         });

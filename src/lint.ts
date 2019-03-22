@@ -44,6 +44,7 @@ export interface RuleTrigger {
 export interface Example {
   description: string;
   yaml: string;
+  scheduler?: string;
 }
 
 export interface Examples {
@@ -156,6 +157,9 @@ export interface Test {
   MonitorContainerMissing?: {
     monitorPath: string;
   };
+  IsNotScheduler?: {
+    scheduler: string;
+  };
 
   ContainerNamesNotUnique?: {};
   ConfigOptionExists?: {};
@@ -194,8 +198,12 @@ export interface RuleMatchedAt {
   paths?: string[];
 }
 
+export interface TestOpts {
+  scheduler?: string;
+}
+
 export interface Predicate<T> {
-  test(root: T): RuleMatchedAt;
+  test(root: T, testOps?: TestOpts): RuleMatchedAt;
 }
 
 export interface Range {
@@ -215,6 +223,7 @@ export interface MultidocLintOpts {
   schema?: JSONSchema4;
   registry?: Registry;
   multidocIndex?: number;
+  scheduler?: string;
 }
 
 export interface LintOpts extends MultidocLintOpts {
@@ -250,6 +259,7 @@ export function hackLintMultidoc(inYaml: string, maybeOpts?: MultidocLintOpts): 
         registry: opts.registry,
         lineColumnFinder,
         offset,
+        scheduler: opts.scheduler,
       }).lint();
     }
     offset += doc.length + DOC_SEPARATOR_LENGTH;
@@ -260,8 +270,9 @@ export function hackLintMultidoc(inYaml: string, maybeOpts?: MultidocLintOpts): 
 
 export class Linter {
 
-  public static withDefaults(inYaml: string): Linter {
-    return new Linter(inYaml, {rules: rules.all, schema});
+  public static withDefaults(inYaml: string, maybeOpts: LintOpts = {}): Linter {
+    const { scheduler = "" } = maybeOpts;
+    return new Linter(inYaml, {rules: rules.all, schema, scheduler });
   }
 
   public static noDocError(): RuleTrigger {
@@ -283,6 +294,8 @@ export class Linter {
 
   private readonly multidocIndex: number;
 
+  private readonly scheduler: string;
+
   constructor(inYaml: string, maybeOpts?: LintOpts) {
     const opts: LintOpts = maybeOpts || {};
     this.inYaml = inYaml;
@@ -292,6 +305,7 @@ export class Linter {
     this.rules = opts.rules;
     this.schema = opts.schema;
     this.multidocIndex = opts.multidocIndex || 0;
+    this.scheduler = opts.scheduler || "";
   }
 
   public lint(): RuleTrigger[] {
@@ -360,7 +374,9 @@ export class Linter {
       let result: RuleMatchedAt = {matched: false};
       const compiled = this.registry.compile(rule.test);
       try {
-        result = compiled.test(root);
+        result = compiled.test(root, {
+          scheduler: this.scheduler,
+        });
       } catch (err) {
         console.log(`error testing rule ${rule.type}:${rule.name}`, err);
         // ignore errors for now
@@ -434,8 +450,9 @@ export function lint(inYaml: string, maybeOpts?: LintOpts): RuleTrigger[] {
  * and document schema
  *
  * @param inYaml           yaml to lint
+ * @param maybeOpts        LintOpts
  * @returns RuleTrigger[]  will be empty if linting passes
  */
-export function defaultLint(inYaml: string): RuleTrigger[] {
-  return Linter.withDefaults(inYaml).lint();
+export function defaultLint(inYaml: string, maybeOpts?: LintOpts): RuleTrigger[] {
+  return Linter.withDefaults(inYaml, maybeOpts).lint();
 }

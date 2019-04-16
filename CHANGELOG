@@ -474,3 +474,6 @@
 
 0.14.19 2019-03-21
     * Add scheduler to be passed as a command line argument or constructor param
+
+0.14.20 2019-04-16
+    * components.cluster_host_count and components.containers.cluster_instance_count uint properties now accept templates

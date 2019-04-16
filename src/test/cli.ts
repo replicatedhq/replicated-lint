@@ -92,11 +92,11 @@ describe("replicated-lint", () => {
           input: "]]]:",
         });
         expect(status).to.equal(1);
-        expect(stripAnsi(stdout.toString())).to.contain("{ type: 'error',\n" +
-          "  rule: 'mesg-yaml-valid',\n" +
-          "  message: 'end of the stream or a document separator is expected at line 1, column 1:\\n    ]]]:\\n    ^',\n" +
-          "  positions: [] }\n",
-        );
+        expect(stripAnsi(stdout.toString())).to.contain(`{ type: 'error',
+  rule: 'mesg-yaml-valid',
+  message:
+   'end of the stream or a document separator is expected at line 1, column 1:\\n    ]]]:\\n    ^',
+  positions: [] }`);
       });
     });
     describe("--multidocIndex", () => {

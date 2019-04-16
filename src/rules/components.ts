@@ -410,14 +410,14 @@ components:
 export const containerClusterHostCountMinUint: YAMLRule = {
   name: "prop-component-container-host-count-min-uint",
   type: "error",
-  message: "Container's cluster_host_count property `min` must be an unsigned integer",
+  message: "Container's cluster_host_count property `min` must be an unsigned integer or template",
   test: {
     AnyOf: {
       path: "components",
       pred: {
         And: {
           preds: [
-            {IsNotUint: {path: "cluster_host_count.min"}},
+            {IsNotUintString: {path: "cluster_host_count.min"}},
             {Exists: {path: "cluster_host_count.min"}},
           ],
         },
@@ -446,6 +446,15 @@ components:
     min: 3
       `,
       },
+      {
+        description: "cluster_host_count.min is a template",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    min: '{{repl if LicenseFieldValue "cluster"}}2{{repl else}}0{{repl end}}'
+      `,
+      },
     ],
   },
 };
@@ -453,14 +462,14 @@ components:
 export const containerClusterHostCountMaxUint: YAMLRule = {
   name: "prop-component-container-host-count-max-uint",
   type: "error",
-  message: "Container's cluster_host_count property `max` must be an unsigned integer",
+  message: "Container's cluster_host_count property `max` must be an unsigned integer or template",
   test: {
     AnyOf: {
       path: "components",
       pred: {
         And: {
           preds: [
-            {IsNotUint: {path: "cluster_host_count.max"}},
+            {IsNotUintString: {path: "cluster_host_count.max"}},
             {Exists: {path: "cluster_host_count.max"}},
           ],
         },
@@ -489,6 +498,15 @@ components:
     max: 10
       `,
       },
+      {
+        description: "cluster_host_count.max is a template",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    max: '{{repl if LicenseFieldValue "cluster"}}3{{repl else}}1{{repl end}}'
+      `,
+      },
     ],
   },
 };
@@ -496,14 +514,14 @@ components:
 export const containerClusterHostCountHealthyUint: YAMLRule = {
   name: "prop-component-container-host-count-healthy-uint",
   type: "error",
-  message: "Container's cluster_host_count property `threshold_healthy` must be an unsigned integer",
+  message: "Container's cluster_host_count property `threshold_healthy` must be an unsigned integer or template",
   test: {
     AnyOf: {
       path: "components",
       pred: {
         And: {
           preds: [
-            {IsNotUint: {path: "cluster_host_count.threshold_healthy"}},
+            {IsNotUintString: {path: "cluster_host_count.threshold_healthy"}},
             {Exists: {path: "cluster_host_count.threshold_healthy"}},
           ],
         },
@@ -532,6 +550,15 @@ components:
     threshold_healthy: 5
       `,
       },
+      {
+        description: "cluster_host_count.threshold_healthy is a template",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    threshold_healthy: '{{repl if LicenseFieldValue "cluster"}}3{{repl else}}1{{repl end}}'
+      `,
+      },
     ],
   },
 };
@@ -546,7 +573,7 @@ export const containerClusterHostCountDegradedUint: YAMLRule = {
       pred: {
         And: {
           preds: [
-            {IsNotUint: {path: "cluster_host_count.threshold_degraded"}},
+            {IsNotUintString: {path: "cluster_host_count.threshold_degraded"}},
             {Exists: {path: "cluster_host_count.threshold_degraded"}},
           ],
         },
@@ -573,6 +600,15 @@ components:
 components:
 - cluster_host_count:
     threshold_degraded: 2
+      `,
+      },
+      {
+        description: "cluster_host_count.threshold_degraded is a template",
+        yaml: `
+---
+components:
+- cluster_host_count:
+    threshold_degraded: '{{repl if LicenseFieldValue "cluster"}}3{{repl else}}1{{repl end}}'
       `,
       },
     ],

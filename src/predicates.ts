@@ -1131,6 +1131,37 @@ export class IsNotUint implements Predicate<any> {
   }
 }
 
+export class IsNotUintString implements Predicate<any> {
+  public static fromJson(obj: any): IsNotUintString {
+    return new IsNotUintString(obj.path);
+  }
+
+  constructor(
+    private readonly path: string,
+  ) {
+  }
+
+  public test(root): RuleMatchedAt {
+    const val = _.get(root, this.path);
+
+    // if this is a number >=0, and an integer, we'll call it a uint
+    if (_.isNumber(val)) {
+      if (Number.isInteger(val) && val >= 0) {
+        return {matched: false};
+      }
+    }
+
+    // string may be digits or a Replicated template
+    if (_.isString(val)) {
+      if (/^(0|[1-9]\d*|{{repl.*)$/.test(val)) {
+        return {matched: false};
+      }
+    }
+
+    return {matched: true, paths: [this.path]};
+  }
+}
+
 export class CustomRequirementsNotUnique implements Predicate<any> {
   public static fromJson(): CustomRequirementsNotUnique {
     return new CustomRequirementsNotUnique();

@@ -37,7 +37,7 @@
                       "$ref": "#/definitions/analyzeInsight"
                     },
                     "labels": {
-                      "description": "Key,value pairs used to organize and identify the condition (unused)",
+                      "description": "Key,value pairs used to organize and identify the condition",
                       "patternProperties": {
                         ".*": {
                           "type": "string"
@@ -46,7 +46,7 @@
                       "type": "object"
                     },
                     "name": {
-                      "description": "The name of the condition (unused)",
+                      "description": "The name of the condition",
                       "type": "string"
                     }
                   },
@@ -355,7 +355,7 @@
                       "type": "object"
                     },
                     "labels": {
-                      "description": "Key,value pairs used to organize and identify the variable (unused)",
+                      "description": "Key,value pairs used to organize and identify the variable",
                       "patternProperties": {
                         ".*": {
                           "type": "string"
@@ -7623,7 +7623,7 @@
           "type": "string"
         },
         "labels": {
-          "description": "Key,value pairs used to organize and identify the condition (unused)",
+          "description": "Key,value pairs used to organize and identify the condition",
           "patternProperties": {
             ".*": {
               "type": "string"
@@ -7632,7 +7632,7 @@
           "type": "object"
         },
         "name": {
-          "description": "Name of the condition (unused)",
+          "description": "Name of the condition",
           "type": "string"
         },
         "not": {
@@ -7807,7 +7807,7 @@
           "type": "string"
         },
         "labels": {
-          "description": "Key,value pairs used to organize and identify the insight (unused)",
+          "description": "Key,value pairs used to organize and identify the insight",
           "patternProperties": {
             ".*": {
               "type": "string"
@@ -7816,7 +7816,7 @@
           "type": "object"
         },
         "name": {
-          "description": "The name of the insight (unused)",
+          "description": "The name of the insight",
           "type": "string"
         },
         "primary": {

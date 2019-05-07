@@ -7616,7 +7616,7 @@
           "type": "object"
         },
         "eval": {
-          "description": "Evaluates a templated string. \"{{repl .Ref}} can be used to refer to a variableRef.\"",
+          "description": "Evaluates a templated string. \"{{repl .Ref}}\" can be used to refer to a variableRef.",
           "examples": [
             "{{repl eq .Ref \"centos\"}}"
           ],

@@ -477,3 +477,6 @@
 
 0.14.20 2019-04-16
     * components.cluster_host_count and components.containers.cluster_instance_count uint properties now accept templates
+
+0.15.0 2019-05-07
+    * Analyze v1 spec final

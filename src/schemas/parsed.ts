@@ -1343,6 +1343,9 @@ export const schema: JSONSchema4 = {
             },
           },
         },
+        "enable_reset_request": {
+          "type": "string",
+        },
       },
     },
     "images": {

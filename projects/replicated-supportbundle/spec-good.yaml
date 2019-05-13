@@ -1,4 +1,3 @@
----
 specs:
 
 # get the ca cert from inside the container, by copying the file
@@ -23,7 +22,8 @@ specs:
      container_list_options:
        All: true
        Filters:
-         com.superbigtool.onprem: true
+         label:
+           - com.superbigtool.onprem=true
      description: "The docker inspect for all the containers labeled with com.superbigtool.onprem"
      output_dir: /docker/inspect
 
@@ -32,7 +32,8 @@ specs:
      container_list_options:
        All: true
        Filters:
-         com.superbigtool.onprem: true
+         label:
+           - com.superbigtool.onprem=true
      container_logs_options:
        Timestamps: true
      description: "The docker logs for all the containers labeled with com.superbigtool.onprem"
@@ -155,54 +156,60 @@ collect:
 
 analyze:
   v1:
+    - name: os.uptime
+      labels:
+        iconKey: os_uptime
+        desiredPosition: "7"
+      insight:
+        primary: '{{repl .osUptime | seconds | humanDuration}}'
+        detail: '{{repl .osUptime | seconds | humanDuration}} total uptime since last boot'
+        severity: info
+      registerVariables:
+        - name: osUptime
+          osUptime: {}
+      evaluateConditions:
+        - condition:
+            not:
+              empty: {}
+              variableRef: osUptime
+          insightOnFalse:
+            primary: Unknown
+            detail: Could not determine uptime. Ensure your specs include a command `os.uptime`.
+            severity: debug
 
-    - selinux.notenforcing: {}
-      collect_refs:
-        - selector:
-            analyze: cmd-selinux-status
-
-    - docker.version:
-        server_version_minimum: 17.06.2
-      collect_refs:
-        - selector:
-            analyze: docker-version
-
-    - kubernetes.total-memory:
-        minimum: 20Gi
-      collect_refs:
-        - selector:
-            analyze: kubernetes-resource-list-nodes
-
-    - kubernetes.version:
-        semver_minimum: 1.10.0
-      collect_refs:
-        - selector:
-            analyze: kubernetes-version
-
-    - raw:
-        conditions:
-          - eval:
-              operator: and
-              statements:
-                - '{{repl .Empty}}'
-              variables:
-                - Empty: '{{repl not .Nodes}}'
-            severity: error
-            message: >-
-              Failed to detect Kubernetes total memory
-          - eval:
-              operator: and
-              statements:
-                - '{{repl lt (atoi .Memory) (atoi .Min)}}'
-              variables:
-                - Memory: '{{repl jq .Nodes ".items[].status.capacity.memory" | jqMessagesToStringSlice | sumQuantities}}'
-                - Min: '{{repl parseQuantity "10Gi"}}'
-            severity: error
-            message: >-
-              Total memory for your Kubernetes cluster {{repl (atoi .Memory) | formatQuantity}}B is less than the minimum
-              required memory of 10GiB
-      message: Kubernetes total memory must be at least 10GiB
-      collect_refs:
-        - ref: Nodes
-          selector:
-            analyze: kubernetes-resource-list-nodes
+    - name: docker.devicemapper.isLoopback
+      labels:
+        iconKey: docker_whale
+        desiredPosition: "3"
+      insight:
+        primary: Devicemapper with loopback
+        detail: Docker devicemapper driver in loopback config
+        severity: warn
+      registerVariables:
+        - name: driver
+          fileMatch:
+            pathRegexps:
+              - /docker_info\.json
+            regexpCapture:
+              regexp: '"Driver": *"([^"]+)"'
+              index: 1
+        - name: loopback
+          fileMatch:
+            pathRegexps:
+              - /docker_info\.json
+            regexpCapture:
+              regexp: 'Data loop file'
+              index: 0
+      evaluateConditions:
+        - condition:
+            stringCompare:
+              eq: devicemapper
+            variableRef: driver
+        - condition:
+            not:
+              empty: {}
+              variableRef: loopback
+          insightOnFalse:
+            primary: Devicemapper not in loopback
+            detail: Docker devicemapper driver NOT in loopback config
+            severity: debug

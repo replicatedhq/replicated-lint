@@ -1,4 +1,4 @@
-LINT = replicated-lint
+LINT ?= replicated-lint
 
 deps:
 	npm install -g replicated-lint

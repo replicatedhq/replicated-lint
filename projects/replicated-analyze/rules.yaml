@@ -1,0 +1,30 @@
+---
+
+- name: spec-analyze-tip
+  type: info
+  message: By adding an `analyze` section, you can customize what kinds of insights to surface from your support bundle.
+  links: [
+    "https://help.replicated.com/docs/troubleshoot/analyzers/creating-analyzers/"
+  ]
+  test:
+    IsEmpty:
+      path: analyze
+  examples:
+    wrong:
+      - description: Spec has no `analyze`
+        yaml: |
+          ---
+      - description: Spec `analyze` is empty
+        yaml: |
+          ---
+          analyze: []
+    right:
+      - description: Spec has a `analyze` specified
+        yaml: |
+          ---
+          analyze:
+          - name: processes.configmanagement.puppet
+            insight:
+              primary: Managed By Puppet
+              detail: This server is running a Puppet agent
+              severity: info

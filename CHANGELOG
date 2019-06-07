@@ -483,3 +483,6 @@
 
 0.15.1 2019-05-13
     * Added platform `identity.enable_reset_request` to enable the reset request feature of the provisioning api.
+
+0.16.0 2019-06-07
+    * Separate analyze spec linting as a separate replicated-analyze project.

@@ -486,3 +486,6 @@
 
 0.16.0 2019-06-07
     * Separate analyze spec linting as a separate replicated-analyze project.
+
+0.16.1 2019-06-07
+    * Revert linter import change for backwards compatibility.

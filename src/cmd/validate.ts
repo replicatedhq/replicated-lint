@@ -8,6 +8,14 @@ import { consoleReporter, junitReporter, readExtraRules, Reporter, ruleNotifiesA
 import { readFromStdin } from "../cmdutil/stdin";
 import { parsed as replicatedSchema } from "../schemas";
 
+const projectMap = {
+  "replicated-entitlements": linter.projects.replicatedEntitlements,
+  "replicated-supportbundle": linter.projects.replicatedSupportBundle,
+  "replicated-analyze": linter.projects.replicatedAnalyze,
+  "replicated-ship": linter.projects.replicatedShip,
+  "replicated-rbac": linter.projects.replicatedRbac,
+};
+
 export const name = "validate";
 export const describe = "Lint a yaml document from a file or stdin";
 export const builder = {
@@ -117,9 +125,9 @@ function lint(inYaml: string, argv: any) {
   let resolvedSchema: any = excludeDefaults ? undefined : replicatedSchema;
 
   if (project) {
-    const projectModule = linter.projects[project];
+    const projectModule = linter.projects[projectMap[project]];
     if (!projectModule) {
-      throw new Error(`couldn't find project ${project}, try one of ${Object.keys(linter.projects)}`);
+      throw new Error(`couldn't find project ${project}, try one of ${Object.keys(projectMap)}`);
     }
     baseRules = projectModule.rules;
     resolvedSchema = projectModule.schema;

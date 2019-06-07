@@ -117,7 +117,6 @@ function lint(inYaml: string, argv: any) {
   let resolvedSchema: any = excludeDefaults ? undefined : replicatedSchema;
 
   if (project) {
-    console.log(linter.projects);
     const projectModule = linter.projects[project];
     if (!projectModule) {
       throw new Error(`couldn't find project ${project}, try one of ${Object.keys(linter.projects)}`);

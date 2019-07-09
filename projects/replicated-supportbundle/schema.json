@@ -6177,6 +6177,69 @@
                   "output_dir"
                 ]
               },
+              "meta.watch": {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "properties": {
+                  "defer": {
+                    "type": "boolean"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "include_empty": {
+                    "type": "boolean"
+                  },
+                  "meta": {
+                    "$schema": "http://json-schema.org/draft-04/schema#",
+                    "properties": {
+                      "labels": {
+                        "patternProperties": {
+                          ".*": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "type": "object"
+                  },
+                  "output_dir": {
+                    "type": "string"
+                  },
+                  "scrub": {
+                    "$schema": "http://json-schema.org/draft-04/schema#",
+                    "required": [
+                      "regex",
+                      "replace"
+                    ],
+                    "properties": {
+                      "regex": {
+                        "type": "string"
+                      },
+                      "replace": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "type": "object"
+                  },
+                  "timeout_seconds": {
+                    "type": "integer"
+                  },
+                  "watch_id": {
+                    "type": "string"
+                  },
+                  "watch_name": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "type": "object"
+              },
               "os.hostname": {
                 "description": "Get the hostname",
                 "examples": [
@@ -6994,114 +7057,122 @@
     },
     "lifecycle": {
       "description": "`lifecycle` can be used to customize the end-customer's experience when generating/uploading support bundles",
-      "items": {
-        "description": "`lifecycle` can be used to customize the end-customer's experience when generating/uploading support bundles",
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "properties": {
-          "generate": {
-            "description": "Adds a step that will generate a support bundle. It has one argument, use_defaults",
-            "examples": [
-              {
-                "use_defaults": true
-              }
-            ],
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "properties": {
+        "v1": {
+          "description": "The v1 lifecycle definition",
+          "items": {
+            "description": "`lifecycle` can be used to customize the end-customer's experience when generating/uploading support bundles",
             "$schema": "http://json-schema.org/draft-04/schema#",
             "properties": {
-              "use_defaults": {
-                "description": "Whether to include the default support bundle files - cpu info, docker ps, etc",
-                "type": "boolean"
-              }
-            },
-            "additionalProperties": false,
-            "type": "object"
-          },
-          "message": {
-            "description": "Adds a step to print a message to the end customer",
-            "examples": [
-              {
-                "contents": "This process will collect a number of files from the host system to help you debug your problem"
-              }
-            ],
-            "$schema": "http://json-schema.org/draft-04/schema#",
-            "properties": {
-              "contents": {
-                "description": "is the message",
-                "type": "string"
-              }
-            },
-            "additionalProperties": false,
-            "type": "object",
-            "required": [
-              "contents"
-            ]
-          },
-          "notes": {
-            "description": "Adds a step to prompt the end customer to enter a note to be uploaded with the support bundle",
-            "examples": [
-              {
-                "prompt": "Please enter a note for the support bundle: "
-              }
-            ],
-            "$schema": "http://json-schema.org/draft-04/schema#",
-            "properties": {
-              "prompt": {
-                "description": "the message prompt to display to the end customer for entering a note",
-                "type": "string"
-              }
-            },
-            "additionalProperties": false,
-            "type": "object"
-          },
-          "upload": {
-            "description": "Adds a step in which the end customer can upload a bundle to https://vendor.replicated.com for review by the vendor",
-            "examples": [
-              {
-                "prompt": {
-                  "message": "Would you like to upload your generated support bundle for review? - ",
-                  "accept": "Bundle uploaded! SuperGoodTool support will get back to you within 24 hours",
-                  "decline": "Bundle was not uploaded, please send your bundle to SuperGoodTool support",
-                  "default": true
-                }
-              }
-            ],
-            "$schema": "http://json-schema.org/draft-04/schema#",
-            "properties": {
-              "prompt": {
-                "description": "Allows configuring an interactive prompt for the user to confirm before uploading",
+              "generate": {
+                "description": "Adds a step that will generate a support bundle. It has one argument, use_defaults",
+                "examples": [
+                  {
+                    "use_defaults": true
+                  }
+                ],
                 "$schema": "http://json-schema.org/draft-04/schema#",
                 "properties": {
-                  "accept": {
-                    "description": "A message to display if the user accepts the upload prompt",
-                    "type": "string"
-                  },
-                  "decline": {
-                    "description": "A message to display if the user declines the upload prompt",
-                    "type": "string"
-                  },
-                  "default": {
-                    "description": "The default answer to the prompt",
+                  "use_defaults": {
+                    "description": "Whether to include the default support bundle files - cpu info, docker ps, etc",
                     "type": "boolean"
-                  },
-                  "message": {
-                    "description": "Message to display before prompting",
+                  }
+                },
+                "additionalProperties": false,
+                "type": "object"
+              },
+              "message": {
+                "description": "Adds a step to print a message to the end customer",
+                "examples": [
+                  {
+                    "contents": "This process will collect a number of files from the host system to help you debug your problem"
+                  }
+                ],
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "properties": {
+                  "contents": {
+                    "description": "is the message",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "contents"
+                ]
+              },
+              "notes": {
+                "description": "Adds a step to prompt the end customer to enter a note to be uploaded with the support bundle",
+                "examples": [
+                  {
+                    "prompt": "Please enter a note for the support bundle: "
+                  }
+                ],
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "properties": {
+                  "prompt": {
+                    "description": "the message prompt to display to the end customer for entering a note",
                     "type": "string"
                   }
                 },
                 "additionalProperties": false,
                 "type": "object"
+              },
+              "upload": {
+                "description": "Adds a step in which the end customer can upload a bundle to https://vendor.replicated.com for review by the vendor",
+                "examples": [
+                  {
+                    "prompt": {
+                      "message": "Would you like to upload your generated support bundle for review? - ",
+                      "accept": "Bundle uploaded! SuperGoodTool support will get back to you within 24 hours",
+                      "decline": "Bundle was not uploaded, please send your bundle to SuperGoodTool support",
+                      "default": true
+                    }
+                  }
+                ],
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "properties": {
+                  "prompt": {
+                    "description": "Allows configuring an interactive prompt for the user to confirm before uploading",
+                    "$schema": "http://json-schema.org/draft-04/schema#",
+                    "properties": {
+                      "accept": {
+                        "description": "A message to display if the user accepts the upload prompt",
+                        "type": "string"
+                      },
+                      "decline": {
+                        "description": "A message to display if the user declines the upload prompt",
+                        "type": "string"
+                      },
+                      "default": {
+                        "description": "The default answer to the prompt",
+                        "type": "boolean"
+                      },
+                      "message": {
+                        "description": "Message to display before prompting",
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "type": "object"
+                  }
+                },
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "prompt"
+                ]
               }
             },
             "additionalProperties": false,
-            "type": "object",
-            "required": [
-              "prompt"
-            ]
-          }
-        },
-        "additionalProperties": false,
-        "type": "object"
+            "type": "object"
+          },
+          "type": "array"
+        }
       },
-      "type": "array"
+      "additionalProperties": false,
+      "type": "object"
     }
   },
   "additionalProperties": false,

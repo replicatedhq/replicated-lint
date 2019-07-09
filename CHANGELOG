@@ -491,4 +491,4 @@
     * Revert linter import change for backwards compatibility.
 
 0.17.0 2019-07-09
-    * Support bundle `lifecycle` not includes v1 prefix
+    * Support bundle `lifecycle` now includes v1 prefix

@@ -822,6 +822,20 @@
                   "url",
                   "dest"
                 ]
+              },
+              "collector": {
+                "description": "A `collector` asset defines a Troubleshoot collector spec.",
+                "examples": [
+                ],
+                "type": "object",
+                "properties": {
+                  "spec": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "spec"
+                ]
               }
             }
           }

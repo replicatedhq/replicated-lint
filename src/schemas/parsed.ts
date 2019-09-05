@@ -1405,6 +1405,12 @@ export const schema: JSONSchema4 = {
             "enabled": {
               "type": ["string", "boolean"],
             },
+            "mount_paths": {
+              "type": "array",
+              "items": {
+                "type": "string",
+              },
+            },
           },
         },
         "requirements": {

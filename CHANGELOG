@@ -492,3 +492,6 @@
 
 0.17.0 2019-07-09
     * Support bundle `lifecycle` now includes v1 prefix
+
+0.18.0 2019-09-05
+    * Add kubernetes shared filesystem mount paths

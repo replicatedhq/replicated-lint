@@ -495,3 +495,6 @@
 
 0.18.0 2019-09-05
     * Add kubernetes shared filesystem mount paths
+
+0.18.1 2020-01-13
+    * `container.shm_size` should be an unsigned integer string

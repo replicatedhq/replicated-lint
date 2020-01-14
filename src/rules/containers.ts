@@ -1390,7 +1390,7 @@ components:
 export const containerShmSizeUInt: YAMLRule = {
   name: "prop-component-container-shm-size-uint",
   type: "error",
-  message: "Container's property shm_size must be an unsigned integer",
+  message: "Container's shm_size property must be an unsigned integer or a template",
   test: {
     AnyOf: {
       path: "components",
@@ -1400,7 +1400,7 @@ export const containerShmSizeUInt: YAMLRule = {
           pred: {
             And: {
               preds: [
-                {IsNotUint: {path: "shm_size"}},
+                {NotUintString: {path: "shm_size"}},
                 {Exists: {path: "shm_size"}},
               ],
             },
@@ -1423,6 +1423,18 @@ components:
     source: public
       `,
       },
+      {
+        description: "shm_size must be an unsigned integer, and this is not even numeric",
+        yaml: `
+---
+components:
+- containers:
+  - shm_size: "abc"
+    image_name: redis
+    version: latest
+    source: public
+      `,
+      },
     ],
     right: [
       {
@@ -1432,6 +1444,18 @@ components:
 components:
 - containers:
   - shm_size: 10
+    image_name: redis
+    version: latest
+    source: public
+      `,
+      },
+      {
+        description: "shm_size is a template",
+        yaml: `
+---
+components:
+- containers:
+  - shm_size: '{{repl GiveMeAValue}}'
     image_name: redis
     version: latest
     source: public

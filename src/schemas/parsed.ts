@@ -646,7 +646,7 @@ export const schema: JSONSchema4 = {
                   },
                 },
                 "shm_size": {
-                  "type": "integer",
+                  "type": ["string", "integer"],
                 },
                 "source": {
                   "type": "string",

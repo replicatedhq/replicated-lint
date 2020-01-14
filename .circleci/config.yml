@@ -8,7 +8,7 @@ jobs:
   test:
     working_directory: ~/repo
     environment:
-        MOCHA_FILE: test-results/mocha/test-results.xml
+      MOCHA_FILE: test-results/mocha/test-results.xml
     docker:
       - image: circleci/node:8
     steps:

@@ -80,7 +80,7 @@
     "url-parse": "^1.4.3",
     "yaml-ast-parser": "^0.0.33",
     "yargs": "^9.0.1",
-    "snyk": "^1.108.0"
+    "snyk": "^1.290.1"
   },
   "snyk": true
 }

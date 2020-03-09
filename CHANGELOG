@@ -498,3 +498,6 @@
 
 0.18.1 2020-01-13
     * `container.shm_size` should be an unsigned integer string
+
+0.18.2 2020-03-09
+    * No longer enforce `container.cluster_instance_count.initial == 1` when `container.public_port` set

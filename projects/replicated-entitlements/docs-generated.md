@@ -1,7 +1,7 @@
 
 ## `spec-prop-unique-keys`
 
-Entitleemnt Spec keys must be unique
+Entitlement Spec keys must be unique
 
 
 
@@ -9,17 +9,17 @@ Entitleemnt Spec keys must be unique
 
 #### Examples:
 
-*Incorrect*: spec has duplicated keys
+*Incorrect*: spec has duplicated key `my_field`
 
 ```yaml---
 - name: My Field
-  key: my_field
-  description: My cool field
   type: string
-- name: My Other Field
+  description: My cool field
   key: my_field
-  description: some other field
+- name: My Other Field
   type: number
+  description: some other field
+  key: my_field
 
 ```
 
@@ -44,5 +44,5 @@ Entitleemnt Spec keys must be unique
 
 
 
-*Generated at Sun Jan 14 2018 11:57:40 GMT-0800 (PST)*
+*Generated at Mon Mar 09 2020 12:54:29 GMT-0700 (Pacific Daylight Time)*
 

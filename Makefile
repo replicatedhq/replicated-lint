@@ -20,4 +20,4 @@ project-validate-spec-good:
 project-validate-spec-bad:
 	$(LINT) validate --infile projects/$(PROJECT)/spec-bad.yaml  --excludeDefaults --threshold warn --schema projects/$(PROJECT)/schema.json --extraRules projects/$(PROJECT)/rules.yaml
 
-all: project-import project-verify-rules project-generate-docs project-validate-spec-good project-validate-spec-bad
+all: project-import project-verify-rules project-generate-docs project-validate-spec-good

@@ -185,8 +185,9 @@ export const hostSystemRamSpecsValid: YAMLRule = {
   test: {
     And: {
       preds: [
-          { IsNotBytesCount: { path: "host_requirements.memory" } },
-          { Exists: { path: "host_requirements.memory" } },
+        { IsNotBytesCount: { path: "host_requirements.memory" } },
+        { IsNotRAMCount: { path: "host_requirements.memory" } },
+        { Exists: { path: "host_requirements.memory" } },
       ],
     },
   },
@@ -226,6 +227,14 @@ host_requirements:
   memory: 128KB
       `,
       },
+      {
+        description: "Valid binary memory size, 128KiB",
+        yaml: `
+---
+host_requirements:
+  memory: 128KiB
+      `,
+      },
     ],
   },
 };
@@ -237,8 +246,8 @@ export const hostSystemStorageSpecsValid: YAMLRule = {
   test: {
     And: {
       preds: [
-          { IsNotBytesCount: { path: "host_requirements.disk_space" } },
-          { Exists: { path: "host_requirements.disk_space" } },
+        { IsNotBytesCount: { path: "host_requirements.disk_space" } },
+        { Exists: { path: "host_requirements.disk_space" } },
       ],
     },
   },

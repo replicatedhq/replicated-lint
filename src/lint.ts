@@ -76,6 +76,9 @@ export interface Test {
   IsNotBytesCount?: {
     path: string;
   };
+  IsNotRAMCount?: {
+    path: string;
+  };
   IsNotKubernetesQuantity?: {
     path: string;
   };

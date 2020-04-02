@@ -501,3 +501,6 @@
 
 0.18.2 2020-03-09
     * No longer enforce `container.cluster_instance_count.initial == 1` when `container.public_port` set
+
+0.18.3 2020-04-01
+    * `host_requirements.memory` and `kubernetes.requirements.total_memory` can now be expressed in binary formats

@@ -1283,6 +1283,34 @@ export class IsNotBytesCount implements Predicate<any> {
   }
 }
 
+export class IsNotRAMCount implements Predicate<any> {
+  public static fromJson(obj: any): IsNotRAMCount {
+    return new IsNotRAMCount(obj.path);
+  }
+
+  constructor(
+    private readonly path: string,
+  ) {
+  }
+
+  public test(root: any): RuleMatchedAt {
+
+    const val = _.get(root, this.path);
+
+    // check against a regular expression to ensure number:unit format
+    if (_.isString(val)) {
+      if (/^(\d+(?:\.\d{1,3})?)([KMGTPE]iB?)$/i.test(val.trim())) {
+        return {matched: false};
+      }
+    }
+
+    return {
+      matched: true,
+      paths: [this.path],
+    };
+  }
+}
+
 export class IsNotKubernetesQuantity implements Predicate<any> {
   public static fromJson(obj: any): IsNotKubernetesQuantity {
     return new IsNotKubernetesQuantity(obj.path);

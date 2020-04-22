@@ -75,6 +75,7 @@ export const kubernetesTotalMemoryValidation: YAMLRule = {
     And: {
       preds: [
           { IsNotBytesCount: { path: "kubernetes.requirements.total_memory" } },
+          { IsNotRAMCount: { path: "kubernetes.requirements.total_memory" } },
           { IsNotKubernetesQuantity: { path: "kubernetes.requirements.total_memory" } },
           { Exists: { path: "kubernetes.requirements.total_memory" } },
       ],
@@ -109,6 +110,15 @@ kubernetes:
 kubernetes:
   requirements:
     total_memory: 128KB
+      `,
+      },
+      {
+        description: "Valid binary memory size, 128KiB",
+        yaml: `
+---
+kubernetes:
+  requirements:
+    total_memory: 128KiB
       `,
       },
       {

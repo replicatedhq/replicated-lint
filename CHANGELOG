@@ -504,3 +504,6 @@
 
 0.18.3 2020-04-22
     * `host_requirements.memory` and `kubernetes.requirements.total_memory` can now be expressed in binary formats
+
+0.18.4 2020-04-22
+    * Update to support-bundle schema 0.29.0

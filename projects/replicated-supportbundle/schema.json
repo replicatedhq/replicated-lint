@@ -5399,6 +5399,9 @@
                     "description": "The Kubernetes pod query options (used when querying for a label selector)",
                     "$schema": "http://json-schema.org/draft-04/schema#",
                     "properties": {
+                      "allowWatchBookmarks": {
+                        "type": "boolean"
+                      },
                       "apiVersion": {
                         "type": "string"
                       },
@@ -5407,9 +5410,6 @@
                       },
                       "fieldSelector": {
                         "type": "string"
-                      },
-                      "includeUninitialized": {
-                        "type": "boolean"
                       },
                       "kind": {
                         "type": "string"
@@ -5543,6 +5543,9 @@
                     "description": "The Kubernetes pod query options (used when querying for a label selector)",
                     "$schema": "http://json-schema.org/draft-04/schema#",
                     "properties": {
+                      "allowWatchBookmarks": {
+                        "type": "boolean"
+                      },
                       "apiVersion": {
                         "type": "string"
                       },
@@ -5551,9 +5554,6 @@
                       },
                       "fieldSelector": {
                         "type": "string"
-                      },
-                      "includeUninitialized": {
-                        "type": "boolean"
                       },
                       "kind": {
                         "type": "string"
@@ -5643,6 +5643,9 @@
                         "type": "string"
                       },
                       "follow": {
+                        "type": "boolean"
+                      },
+                      "insecureSkipTLSVerifyBackend": {
                         "type": "boolean"
                       },
                       "kind": {
@@ -5797,6 +5800,9 @@
                     "description": "An instance of metav1.ListOptions",
                     "$schema": "http://json-schema.org/draft-04/schema#",
                     "properties": {
+                      "allowWatchBookmarks": {
+                        "type": "boolean"
+                      },
                       "apiVersion": {
                         "type": "string"
                       },
@@ -5805,9 +5811,6 @@
                       },
                       "fieldSelector": {
                         "type": "string"
-                      },
-                      "includeUninitialized": {
-                        "type": "boolean"
                       },
                       "kind": {
                         "type": "string"
@@ -6078,7 +6081,7 @@
                 "type": "object"
               },
               "meta.redact": {
-                "description": "A list of scrubbers to apply to all assets. If multiple 'meta.redact' specs are specified, all lists will be used. If a spec specifies a scrubber, it will be run in addition to the global scrubbers.",
+                "description": "Redaction to apply to all assets. If multiple 'meta.redact' specs are specified, all lists will be used. If a spec specifies a scrubber, it will be run in addition to the global scrubbers.",
                 "examples": [
                   {
                     "scrubs": [
@@ -6087,6 +6090,9 @@
                         "replace": "xyz"
                       }
                     ],
+                    "files": [
+                      "**/secret.json"
+                    ],
                     "output_dir": "redact/"
                   }
                 ],
@@ -6094,6 +6100,10 @@
                   {
                     "path": "scrubs.json",
                     "description": "A list of scrubs that were added globally by this item"
+                  },
+                  {
+                    "path": "file_redactions.json",
+                    "description": "A list of file redaction patterns that were added globally by this item"
                   }
                 ],
                 "$schema": "http://json-schema.org/draft-04/schema#",
@@ -6103,6 +6113,13 @@
                   },
                   "description": {
                     "type": "string"
+                  },
+                  "files": {
+                    "description": "the list of file patterns to redact",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
                   },
                   "include_empty": {
                     "type": "boolean"

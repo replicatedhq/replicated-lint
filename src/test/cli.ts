@@ -117,7 +117,7 @@ kind: Pod
         const message = `\n${stdout.toString()}\n${stderr.toString()}`;
 
         expect(status).to.equal(0, message);
-        expect(stdout.toString()).to.contain("64/64 checks passed", message);
+        expect(stdout.toString()).to.contain("65/65 checks passed", message);
         expect(stdout.toString()).to.contain("All clear!", message);
       });
       it("1 Should select the second doc from multidoc yaml (and fail because the k8s doc is missing `replicated_api_version`)", () => {

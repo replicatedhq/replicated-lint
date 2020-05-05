@@ -1019,11 +1019,12 @@ export interface ContainerEnvVar {
 // container_port
 /*
 type ContainerPort struct {
-	PrivatePort string `yaml:"private_port" json:"private_port" validate:"required"`
-	PublicPort  string `yaml:"public_port,omitempty" json:"public_port,omitempty" validate:"required_minapiversion=2.8.0"`
-	Interface   string `yaml:"interface,omitempty" json:"interface,omitempty"`
-	PortType    string `yaml:"port_type,omitempty" json:"port_type,omitempty"`
-	When        string `yaml:"when,omitempty" json:"when,omitempty"`
+	PrivatePort       string `yaml:"private_port" json:"private_port" validate:"required"`
+	PublicPort        string `yaml:"public_port,omitempty" json:"public_port,omitempty" validate:"required_minapiversion=2.8.0"`
+	PublicPortInitial string `yaml:"public_port_initial,omitempty" json:"public_port_initial,omitempty" validate:"required_minapiversion=2.8.0"`
+	Interface         string `yaml:"interface,omitempty" json:"interface,omitempty"`
+	PortType          string `yaml:"port_type,omitempty" json:"port_type,omitempty"`
+	When              string `yaml:"when,omitempty" json:"when,omitempty"`
 }
 */
 export interface ContainerPort {
@@ -1036,6 +1037,11 @@ export interface ContainerPort {
    *
    */
   public_port?: string;
+
+  /**
+   *
+   */
+  public_port_initial?: string;
 
   /**
    *

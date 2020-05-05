@@ -570,6 +570,9 @@ export const schema: JSONSchema4 = {
                       "public_port": {
                         "type": ["string", "number"],
                       },
+                      "public_port_initial": {
+                        "type": ["string", "number"],
+                      },
                       "when": {
                         "type": ["string", "boolean"],
                       },

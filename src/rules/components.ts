@@ -407,6 +407,105 @@ components:
   },
 };
 
+export const componentPortInitialMinAPIVersion: YAMLRule = {
+  name: "prop-port-min-api-version",
+  type: "error",
+  message: "The minimum Replicated API version to use container.ports.public_port_initial is 2.8.0",
+  test: {
+    And: {
+      preds: [
+        { SemverMinimum: {path: "replicated_api_version", minimum: "2.8.0"}},
+        {
+          AnyOf: {
+            path: "components",
+            pred: {
+              AnyOf: {
+                path: "containers",
+                pred: {
+                  AnyOf: {
+                    path: "ports",
+                    pred: { Truthy: {path: "public_port_initial"} },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  },
+  examples: {
+    wrong: [
+      {
+        description: "public_port_initial used and replicated api version set to 2.7.0",
+        yaml: `
+---
+replicated_api_version: "2.7.0"
+components:
+- name: DB
+  containers:
+    - source: public
+      ports:
+        - public_port_initial: "10000"
+      image_name: redis
+      version: latest
+
+      `,
+      },
+      {
+        description: "public_port_initial used and replicated api version set to 1.8.5",
+        yaml: `
+---
+replicated_api_version: "1.8.5"
+components:
+- name: DB
+  containers:
+    - source: public
+      ports:
+        - public_port_initial: "10000"
+      image_name: redis
+      version: latest
+
+      `,
+      },
+    ],
+    right: [
+      {
+        description: "public_port_initial used and replicated api version set to 2.8.0",
+        yaml: `
+---
+replicated_api_version: "2.8.0"
+components:
+- name: DB
+  containers:
+    - source: public
+      ports:
+        - public_port_initial: "10000"
+      image_name: redis
+      version: latest
+
+      `,
+      },
+      {
+        description: "public_port_initial used and replicated api version set to 2.8.1",
+        yaml: `
+---
+replicated_api_version: "2.8.1"
+components:
+- name: DB
+  containers:
+    - source: public
+      ports:
+        - public_port_initial: "10000"
+      image_name: redis
+      version: latest
+
+      `,
+      },
+    ],
+  },
+};
+
 export const containerClusterHostCountMinUint: YAMLRule = {
   name: "prop-component-container-host-count-min-uint",
   type: "error",
@@ -621,6 +720,7 @@ export const all: YAMLRule[] = [
   componentHostVolumePathAbsolute,
   componentClusterBoolstring,
   componentPortMinAPIVersion,
+  componentPortInitialMinAPIVersion,
   containerClusterHostCountMinUint,
   containerClusterHostCountMaxUint,
   containerClusterHostCountHealthyUint,

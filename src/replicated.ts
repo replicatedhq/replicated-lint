@@ -570,6 +570,7 @@ type Container struct {
 	CustomerFiles        []*ContainerCustomerFile      `yaml:"customer_files" json:"customer_files" validate:"dive,exists"`
 	EnvVars              []*ContainerEnvVar            `yaml:"env_vars" json:"env_vars" validate:"dive,exists"`
 	Ports                []*ContainerPort              `yaml:"ports,omitempty" json:"ports,omitempty" validate:"dive,exists"`
+	DisablePublishAllPorts BoolString                    `yaml:"disable_publish_all_ports,omitempty" json:"disable_publish_all_ports,omitempty" validate:"omitempty,bool"`
 	LogOptions           LogOptions                    `yaml:"logs" json:"logs"`
 	Volumes              []*ContainerVolume            `yaml:"volumes" json:"volumes" validate:"dive,exists"`
 	VolumesFrom          []string                      `yaml:"volumes_from" json:"volumes_from" validate:"dive,required,containernameexists,requiressubscription"`
@@ -580,6 +581,10 @@ type Container struct {
 	When                 string                        `yaml:"when" json:"when"`
 	Dynamic              string                        `yaml:"dynamic" json:"dynamic"`
 	PidMode              string                        `yaml:"pid_mode" json:"pid_mode"`
+	ShmSize                UintString                    `yaml:"shm_size,omitempty" json:"shm_size,omitempty" validate:"omitempty,uint"`
+	Labels                 []string                      `yaml:"labels" json:"labels"`
+	StopTimeout            UintString                    `yaml:"stop_timeout,omitempty" json:"stop_timeout,omitempty" validate:"omitempty,uint"`
+	OOMKillDisable         BoolString                    `yaml:"oom_kill_disable,omitempty" json:"oom_kill_disable,omitempty" validate:"omitempty,bool"`
 }
 type ContainerRestartPolicy struct {
 	Policy string `yaml:"policy" json:"policy"`
@@ -736,6 +741,11 @@ export interface Container {
   /**
    *
    */
+  disable_publish_all_ports?: BoolString;
+
+  /**
+   *
+   */
   logs?: LogOptions;
 
   /**
@@ -782,6 +792,26 @@ export interface Container {
    *
    */
   pid_mode?: string;
+
+  /**
+   *
+   */
+  shm_size?: UintString;
+
+  /**
+   *
+   */
+  labels?: string[];
+
+  /**
+   *
+   */
+  stop_timeout?: UintString;
+
+  /**
+   *
+   */
+  oom_kill_disable?: BoolString;
 }
 
 export interface ContainerRestartPolicy {

@@ -579,6 +579,9 @@ export const schema: JSONSchema4 = {
                     },
                   },
                 },
+                "disable_publish_all_ports": {
+                  "type": ["string", "boolean"],
+                },
                 "privileged": {
                   "type": "boolean",
                 },
@@ -656,6 +659,9 @@ export const schema: JSONSchema4 = {
                 },
                 "stop_timeout": {
                   "type": ["string", "integer"],
+                },
+                "oom_kill_disable": {
+                  "type": ["string", "boolean"],
                 },
                 "support_commands": {
                   "type": "array",

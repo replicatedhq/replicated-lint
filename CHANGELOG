@@ -517,3 +517,10 @@
 0.18.7 2020-09-10
     * Added `container.disable_publish_all_ports` a boolean or string
     * Added `container.oom_kill_disable` a boolean or string
+
+0.18.8 2021-01-05
+    * Added `container.network` a string
+    * Added `container.network_aliases` an array of strings
+    * Added `container.links` an array of strings
+    * Added `container.ipv4_address` an array of strings
+    * Added `container.ipv6_address` an array of strings

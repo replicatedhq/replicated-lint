@@ -663,6 +663,27 @@ export const schema: JSONSchema4 = {
                 "oom_kill_disable": {
                   "type": ["string", "boolean"],
                 },
+                "network": {
+                  "type": "string",
+                },
+                "network_aliases": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                  },
+                },
+                "links": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                  },
+                },
+                "ipv4_address": {
+                  "type": "string",
+                },
+                "ipv6_address": {
+                  "type": "string",
+                },
                 "support_commands": {
                   "type": "array",
                   "items": {

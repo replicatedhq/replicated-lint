@@ -286,7 +286,8 @@ type Component struct {
 	Cluster          BoolString                `yaml:"cluster" json:"cluster"`
 	ClusterHostCount ComponentClusterHostCount `yaml:"cluster_host_count,omitempty" json:"cluster_host_count,omitempty"`
 	HostRequirements HostRequirements          `yaml:"host_requirements,omitempty" json:"host_requirements,omitempty"`
-	LogOptions       LogOptions                `yaml:"logs" json:"logs"`
+	LogOptions       LogOptions                `yaml:"logs,omitempty" json:"logs,omitempty"`
+	LogConfig        LogConfig                 `yaml:"log_config,omitempty" json:"log_config,omitempty"`
 	HostVolumes      []*HostVolume             `yaml:"host_volumes,omitempty" json:"host_volumes,omitempty"`
 	Containers       []*Container              `yaml:"containers" json:"containers" validate:"dive,exists"` // validate:"min=1"
 }
@@ -337,6 +338,11 @@ export interface Component {
    *
    */
   logs?: LogOptions;
+
+  /**
+   *
+   */
+  log_config?: LogConfig;
 
   /**
    *
@@ -431,11 +437,11 @@ export interface HostRequirements {
   docker_space?: string;
 }
 
-// log_requirements
+// logs
 /*
 type LogOptions struct {
-	MaxSize  string `yaml:"max_size" json:"max_size"`
-	MaxFiles string `yaml:"max_files" json:"max_files"`
+	MaxSize  string `yaml:"max_size,omitempty" json:"max_size,omitempty"`
+	MaxFiles string `yaml:"max_files,omitempty" json:"max_files,omitempty"`
 }
 */
 export interface LogOptions {
@@ -448,6 +454,25 @@ export interface LogOptions {
    *
    */
   max_files?: string;
+}
+
+// log_config
+/*
+type LogConfig struct {
+	Type   string            `yaml:"type" json:"type"`
+	Config map[string]string `yaml:"config,omitempty" json:"config,omitempty"`
+}
+*/
+export interface LogConfig {
+  /**
+   *
+   */
+  type: string;
+
+  /**
+   * @TJS-type: object
+   */
+  config: { [key: string]: string };
 }
 
 // volume
@@ -570,8 +595,9 @@ type Container struct {
 	CustomerFiles        []*ContainerCustomerFile      `yaml:"customer_files" json:"customer_files" validate:"dive,exists"`
 	EnvVars              []*ContainerEnvVar            `yaml:"env_vars" json:"env_vars" validate:"dive,exists"`
 	Ports                []*ContainerPort              `yaml:"ports,omitempty" json:"ports,omitempty" validate:"dive,exists"`
-	DisablePublishAllPorts BoolString                    `yaml:"disable_publish_all_ports,omitempty" json:"disable_publish_all_ports,omitempty" validate:"omitempty,bool"`
-	LogOptions           LogOptions                    `yaml:"logs" json:"logs"`
+	DisablePublishAllPorts BoolString                  `yaml:"disable_publish_all_ports,omitempty" json:"disable_publish_all_ports,omitempty" validate:"omitempty,bool"`
+	LogOptions           LogOptions                    `yaml:"logs,omitempty" json:"logs,omitempty"`
+	LogConfig            LogConfig                     `yaml:"log_config,omitempty" json:"log_config,omitempty"`
 	Volumes              []*ContainerVolume            `yaml:"volumes" json:"volumes" validate:"dive,exists"`
 	VolumesFrom          []string                      `yaml:"volumes_from" json:"volumes_from" validate:"dive,required,containernameexists,requiressubscription"`
 	ExtraHosts           []*ContainerExtraHost         `yaml:"extra_hosts" json:"hosts" validate:"dive,exists"`
@@ -752,6 +778,11 @@ export interface Container {
    *
    */
   logs?: LogOptions;
+
+  /**
+   *
+   */
+  log_config?: LogConfig;
 
   /**
    *

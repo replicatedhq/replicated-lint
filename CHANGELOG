@@ -524,3 +524,6 @@
     * Added `container.links` an array of strings
     * Added `container.ipv4_address` an array of strings
     * Added `container.ipv6_address` an array of strings
+
+0.18.9 2021-05-18
+    * Added `component.log_config` and `container.log_config`

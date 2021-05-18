@@ -538,6 +538,25 @@ export const schema: JSONSchema4 = {
                     },
                   },
                 },
+                "log_config": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                    },
+                    "config": {
+                      "type": "object",
+                      "patternProperties": {
+                        ".*": {
+                          "type": "string",
+                        },
+                      },
+                    },
+                  },
+                  "required": [
+                    "type",
+                  ],
+                },
                 "memory_limit": {
                   "type": "string",
                 },

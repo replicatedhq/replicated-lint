@@ -26,7 +26,7 @@
   ],
   "scripts": {
     "fmt": "tsfmt -r",
-    "prepublish": "rm -rf ./dist && yarn run tslint && tsc -p .",
+    "prepublish": "npm run snyk-protect; rm -rf ./dist && yarn run tslint && tsc -p .",
     "test": "rm -rf ./dist && yarn run tslint && tsc -p . && mocha -r ts-node/register ./src/test/*.ts",
     "rules": "rm -rf ./dist && yarn run tslint && tsc -p . && mocha -r ts-node/register ./src/test/rules.ts",
     "cover": "rm -rf ./dist && yarn run tslint && tsc -p . && istanbul cover _mocha -- ./dist/test/*.js",
@@ -80,7 +80,7 @@
     "url-parse": "^1.4.3",
     "yaml-ast-parser": "^0.0.33",
     "yargs": "^9.0.1",
-    "snyk": "^1.108.0"
+    "snyk": "^1.189.0"
   },
   "snyk": true
 }

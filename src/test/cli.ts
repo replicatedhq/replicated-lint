@@ -27,9 +27,11 @@ describe("replicated-lint", () => {
           input: "",
         });
         expect(status).to.equal(1);
-        expect(stripAnsi(stdout.toString())).to.contain(`{ type: 'error',
+        expect(stripAnsi(stdout.toString())).to.contain(`{
+  type: 'error',
   rule: 'mesg-yaml-not-empty',
-  message: 'Document must not be empty' }
+  message: 'Document must not be empty'
+}
 `);
       });
     });
@@ -94,7 +96,7 @@ describe("replicated-lint", () => {
         expect(status).to.equal(1);
         expect(stripAnsi(stdout.toString())).to.contain("type: 'error'");
         expect(stripAnsi(stdout.toString())).to.contain("rule: 'mesg-yaml-valid'");
-        expect(stripAnsi(stdout.toString())).to.contain("'end of the stream or a document separator is expected at line 1, column 1:\\n    ]]]:\\n    ^'");
+        expect(stripAnsi(stdout.toString())).to.contain("'end of the stream or a document separator is expected at line 1, column 1:\\n\' +\n    \'    ]]]:\\n\' +\n    \'    ^'");
       });
     });
     describe("--multidocIndex", () => {

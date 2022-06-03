@@ -166,8 +166,8 @@ export class Semver implements Predicate<any> {
   }
 }
 
-export class AnyOf<T_Root, T_El> implements Predicate<T_Root> {
-  public static fromJson<R, E>(obj: any, registry: Registry): AnyOf<R, E> {
+export class AnyOf<T_Root extends object, T_El extends keyof T_Root> implements Predicate<T_Root> {
+  public static fromJson<R extends object, E extends keyof R>(obj: any, registry: Registry): AnyOf<R, E> {
     return new AnyOf<R, E>(obj.path, registry.compile(obj.pred));
   }
 
@@ -178,7 +178,7 @@ export class AnyOf<T_Root, T_El> implements Predicate<T_Root> {
   }
 
   public test(root: any): RuleMatchedAt {
-    const collection: T_El[] = _.get<T_Root, T_El[]>(root, this.collectionPath);
+    const collection = _.get<T_Root, T_El>(root, this.collectionPath as T_El);
     if (!_.isArray(collection)) {
       return {matched: false};
     }
@@ -195,8 +195,8 @@ export class AnyOf<T_Root, T_El> implements Predicate<T_Root> {
   }
 }
 
-export class AllOf<T_Root, T_El> implements Predicate<T_Root> {
-  public static fromJson<R, E>(obj: any, registry: Registry): AllOf<R, E> {
+export class AllOf<T_Root extends object, T_El extends keyof T_Root> implements Predicate<T_Root> {
+  public static fromJson<R extends object, E extends keyof R>(obj: any, registry: Registry): AllOf<R, E> {
     return new AllOf<R, E>(obj.path, registry.compile(obj.pred));
   }
 
@@ -207,7 +207,7 @@ export class AllOf<T_Root, T_El> implements Predicate<T_Root> {
   }
 
   public test(root: any): RuleMatchedAt {
-    const collection: T_El[] = _.get<T_Root, T_El[]>(root, this.collectionPath);
+    const collection = _.get<T_Root, T_El>(root, this.collectionPath as T_El);
     if (!_.isArray(collection)) {
       return {matched: false};
     }

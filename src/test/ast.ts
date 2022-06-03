@@ -10,14 +10,14 @@ describe("findNode(s)", () => {
     const loaded: any = ast.safeLoad(`
 ---
 {}
-  `, null);
+  `);
     expect(findNode(loaded, "foo")).to.be.empty;
   });
   it("handles a missing node", () => {
     const loaded: any = ast.safeLoad(`
 ---
 foo: bar
-  `, null);
+  `);
     expect(findNode(loaded, "spam")).to.be.empty;
   });
 
@@ -25,7 +25,7 @@ foo: bar
     const loaded: any = ast.safeLoad(`
 ---
 foo: bar
-  `, null);
+  `);
     const node = findNode(loaded, "foo");
     expect(node).to.have.deep.property("key.value", "foo");
     expect(node).to.have.deep.property("kind", 1);
@@ -37,7 +37,7 @@ foo: bar
 ---
 foo: bar
 baz: boz
-  `, null);
+  `);
     const node = findNode(loaded, "baz");
     expect(node).to.have.deep.property("key.value", "baz");
     expect(node).to.have.deep.property("kind", 1);
@@ -50,7 +50,7 @@ baz: boz
 foo:
   biz: boz
   bar: baz
-  `, null);
+  `);
     const node = findNode(loaded, "foo.bar");
     expect(node).to.have.deep.property("kind", 1);
     expect(node).to.have.deep.property("key.value", "bar");
@@ -63,7 +63,7 @@ foo:
 ---
 foo:
   - bar: baz
-  `, null);
+  `);
     const node = findNode(loaded, "foo.bar");
     expect(node).to.be.undefined;
   });
@@ -72,7 +72,7 @@ foo:
 ---
 foo:
   - bar: baz
-  `, null);
+  `);
     const node = findNode(loaded, "foo.*.bar");
     expect(node).to.have.deep.property("kind", 1);
     expect(node).to.have.deep.property("key.value", "bar");
@@ -84,7 +84,7 @@ foo:
 ---
 foo:
   bar: {}
-  `, null);
+  `);
     const node = findNode(loaded, "foo.bar");
     expect(node).to.have.deep.property("kind", 1);
     expect(node).to.have.deep.property("key.value", "bar");
@@ -97,7 +97,7 @@ foo:
 foo:
   - bar: baz
   - bar: boz
-  `, null);
+  `);
     const nodes = findNodes(loaded, ["foo", "*", "bar"]);
     expect(nodes[0]).to.have.deep.property("kind", 1);
     expect(nodes[0]).to.have.deep.property("key.value", "bar");
@@ -116,7 +116,7 @@ foo:
 foo:
   - baz
   - boz
-  `, null);
+  `);
     const nodes = findNodes(loaded, ["foo"]);
     expect(nodes[0]).to.have.deep.property("value.kind", 3);
     expect(nodes[0]).to.have.deep.property("value.items[0].value", "baz");
@@ -130,7 +130,7 @@ foo:
 foo:
   - baz
   - boz
-  `, null);
+  `);
     const nodes = findNodes(loaded, ["foo", "*"]);
     expect(nodes[0]).to.have.deep.property("kind", 0);
     expect(nodes[0]).to.have.deep.property("value", "baz");
@@ -145,7 +145,7 @@ foo:
 foo:
   - baz
   - boz
-  `, null);
+  `);
     const nodes = findNodes(loaded, ["foo", "1"]);
     expect(nodes.length).to.equal(1);
     expect(nodes[0]).to.have.deep.property("kind", 0);
@@ -159,7 +159,7 @@ foo:
 foo:
   - baz
   - bar: eggs
-  `, null);
+  `);
     const nodes = findNodes(loaded, ["foo", "1", "bar"]);
     expect(nodes.length).to.equal(1);
     expect(nodes[0]).to.have.deep.property("value.kind", 0);
@@ -185,7 +185,7 @@ app:
 configItems:
   folks:
     - name: whatever
-  `, null);
+  `);
     const nodes = findNodes(loaded, ["app", "containers", "*", "env", "REDIS_HOST"]);
     expect(nodes[0]).to.have.deep.property("kind", 1);
     expect(nodes[0]).to.have.deep.property("key.value", "REDIS_HOST");
@@ -222,7 +222,7 @@ configItems:
   folks:
     - name: whatever
   `;
-    const astDoc: any = ast.safeLoad(doc, null);
+    const astDoc: any = ast.safeLoad(doc);
     const lineCol: any = lineColumn(doc);
     let pos: Range[] = astPosition(astDoc, ["foo"], lineCol);
     expect(pos.length).to.equal(1);

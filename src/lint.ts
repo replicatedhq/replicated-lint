@@ -295,8 +295,6 @@ export class Linter {
   private readonly lineColumnFinder: any;
   private readonly offset: number;
 
-  private readonly multidocIndex: number;
-
   private readonly scheduler: string;
 
   constructor(inYaml: string, maybeOpts?: LintOpts) {
@@ -307,7 +305,6 @@ export class Linter {
     this.lineColumnFinder = opts.lineColumnFinder || lineColumn(inYaml);
     this.rules = opts.rules;
     this.schema = opts.schema;
-    this.multidocIndex = opts.multidocIndex || 0;
     this.scheduler = opts.scheduler || "";
   }
 
@@ -327,7 +324,7 @@ export class Linter {
       return [Linter.noDocError()];
     }
 
-    const yamlAST: YAMLNode = ast.safeLoad(this.inYaml, null) as any;
+    const yamlAST: YAMLNode = ast.safeLoad(this.inYaml) as any;
     if (this.schema) {
       const res = tv4.validateMultiple(root, this.schema, false, true);
       if (!res.valid) {

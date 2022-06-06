@@ -531,3 +531,6 @@
 0.19.0 2022-06-03
     * Upgraded Node 8 to 17, TypeScript 2 to 4.
     * Upgraded dependencies to resolve known CVEs.
+
+0.19.1 2022-06-06
+    * Upgraded junit-report-builder to 3.0.0.

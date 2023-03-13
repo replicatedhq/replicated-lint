@@ -616,6 +616,8 @@ type Container struct {
 	Links                  []string                   `yaml:"links,omitempty" json:"links,omitempty" validate:"omitempty"`
 	IPv4Address            string                     `yaml:"ipv4_address,omitempty" json:"ipv4_address,omitempty" validate:"omitempty"`
 	IPv6Address            string                     `yaml:"ipv6_address,omitempty" json:"ipv6_address,omitempty" validate:"omitempty"`
+	User                   string                     `yaml:"user,omitempty" json:"user,omitempty" validate:"omitempty"`
+	ReadonlyRootfs         BoolString                 `yaml:"readonly_rootfs,omitempty" json:"readonly_rootfs,omitempty" validate:"omitempty,bool"`
 }
 type ContainerRestartPolicy struct {
 	Policy string `yaml:"policy" json:"policy"`
@@ -873,6 +875,16 @@ export interface Container {
    *
    */
   ipv6_address?: string;
+
+  /**
+   *
+   */
+  user?: string;
+
+  /**
+   *
+   */
+  readonly_rootfs?: BoolString;
 }
 
 export interface ContainerRestartPolicy {

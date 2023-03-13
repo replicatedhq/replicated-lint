@@ -703,6 +703,12 @@ export const schema: JSONSchema4 = {
                 "ipv6_address": {
                   "type": "string",
                 },
+                "user": {
+                  "type": "string",
+                },
+                "readonly_rootfs": {
+                  "type": ["string", "boolean"],
+                },
                 "support_commands": {
                   "type": "array",
                   "items": {

@@ -538,3 +538,7 @@
 0.19.2 2023-03-13
     * Added `container.user` a string
     * Added `container.readonly_rootfs` a boolean or string
+
+0.19.3 2023-03-23
+    * Added `cmds.readonly_rootfs` a boolean
+    * Added `state.ready.readonly_rootfs` a boolean or string

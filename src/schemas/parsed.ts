@@ -319,6 +319,9 @@ export const schema: JSONSchema4 = {
           "name": {
             "type": "string",
           },
+          "readonly_rootfs": {
+            "type": "boolean",
+          },
         },
       },
     },
@@ -1663,6 +1666,9 @@ export const schema: JSONSchema4 = {
             },
             "timeout": {
               "type": "integer",
+            },
+            "readonly_rootfs": {
+              "type": ["string", "boolean"],
             },
           },
         },
